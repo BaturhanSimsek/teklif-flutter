@@ -11,8 +11,9 @@ class MainScaffold extends ConsumerWidget {
   final String location;
 
   static const _baseTabs = [
-    (path: '/quotes',    icon: Symbols.description, label: 'Teklifler'),
-    (path: '/customers', icon: Symbols.people,       label: 'Müşteriler'),
+    (path: '/dashboard', icon: Symbols.dashboard,    label: 'Dashboard'),
+    (path: '/quotes',    icon: Symbols.description,  label: 'Teklifler'),
+    (path: '/customers', icon: Symbols.people,        label: 'Müşteriler'),
   ];
 
   static const _adminTab =

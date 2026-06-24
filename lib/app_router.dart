@@ -13,6 +13,7 @@ import 'features/quotes/presentation/quote_detail_screen.dart';
 import 'features/admin/presentation/admin_screen.dart';
 import 'features/admin/presentation/company_settings_screen.dart';
 import 'features/auth/presentation/change_password_screen.dart';
+import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
 import 'shared/widgets/main_scaffold.dart';
 
@@ -21,7 +22,7 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter router(RouterRef ref) {
   return GoRouter(
-    initialLocation: '/quotes',
+    initialLocation: '/dashboard',
     redirect: (context, state) async {
       const storage   = FlutterSecureStorage();
       final repo      = ref.read(authRepositoryProvider);
@@ -34,7 +35,7 @@ GoRouter router(RouterRef ref) {
       if (loggedIn && onLogin)  {
         final mustChange = await storage.read(key: AppConstants.mustChangePasswordKey);
         if (mustChange == 'true') return '/change-password';
-        return '/quotes';
+        return '/dashboard';
       }
       if (loggedIn && !onChangePw) {
         final mustChange = await storage.read(key: AppConstants.mustChangePasswordKey);
@@ -56,6 +57,12 @@ GoRouter router(RouterRef ref) {
         builder: (_, state, child) =>
             MainScaffold(child: child, location: state.matchedLocation),
         routes: [
+
+          // ── Dashboard ─────────────────────────────────────────────
+          GoRoute(
+            path: '/dashboard',
+            builder: (_, __) => const DashboardScreen(),
+          ),
 
           // ── Teklifler ──────────────────────────────────────────────
           GoRoute(
