@@ -6,7 +6,7 @@ part of 'quote_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$quotesByCustomerHash() => r'6b31d4441586cee86cbd98a9d73e321997429002';
+String _$allQuotesHash() => r'b5e9f9a6049fbcacea1ae47552d70f55644b7ab5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +29,36 @@ class _SystemHash {
   }
 }
 
-/// See also [quotesByCustomer].
-@ProviderFor(quotesByCustomer)
-const quotesByCustomerProvider = QuotesByCustomerFamily();
+/// See also [allQuotes].
+@ProviderFor(allQuotes)
+const allQuotesProvider = AllQuotesFamily();
 
-/// See also [quotesByCustomer].
-class QuotesByCustomerFamily extends Family<AsyncValue<List<QuoteSummary>>> {
-  /// See also [quotesByCustomer].
-  const QuotesByCustomerFamily();
+/// See also [allQuotes].
+class AllQuotesFamily extends Family<AsyncValue<List<QuoteSummary>>> {
+  /// See also [allQuotes].
+  const AllQuotesFamily();
 
-  /// See also [quotesByCustomer].
-  QuotesByCustomerProvider call(
-    String customerId,
-  ) {
-    return QuotesByCustomerProvider(
-      customerId,
+  /// See also [allQuotes].
+  AllQuotesProvider call({
+    String? customerId,
+    String? search,
+    int page = 1,
+  }) {
+    return AllQuotesProvider(
+      customerId: customerId,
+      search: search,
+      page: page,
     );
   }
 
   @override
-  QuotesByCustomerProvider getProviderOverride(
-    covariant QuotesByCustomerProvider provider,
+  AllQuotesProvider getProviderOverride(
+    covariant AllQuotesProvider provider,
   ) {
     return call(
-      provider.customerId,
+      customerId: provider.customerId,
+      search: provider.search,
+      page: provider.page,
     );
   }
 
@@ -68,33 +74,37 @@ class QuotesByCustomerFamily extends Family<AsyncValue<List<QuoteSummary>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'quotesByCustomerProvider';
+  String? get name => r'allQuotesProvider';
 }
 
-/// See also [quotesByCustomer].
-class QuotesByCustomerProvider
-    extends AutoDisposeFutureProvider<List<QuoteSummary>> {
-  /// See also [quotesByCustomer].
-  QuotesByCustomerProvider(
-    String customerId,
-  ) : this._internal(
-          (ref) => quotesByCustomer(
-            ref as QuotesByCustomerRef,
-            customerId,
+/// See also [allQuotes].
+class AllQuotesProvider extends AutoDisposeFutureProvider<List<QuoteSummary>> {
+  /// See also [allQuotes].
+  AllQuotesProvider({
+    String? customerId,
+    String? search,
+    int page = 1,
+  }) : this._internal(
+          (ref) => allQuotes(
+            ref as AllQuotesRef,
+            customerId: customerId,
+            search: search,
+            page: page,
           ),
-          from: quotesByCustomerProvider,
-          name: r'quotesByCustomerProvider',
+          from: allQuotesProvider,
+          name: r'allQuotesProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$quotesByCustomerHash,
-          dependencies: QuotesByCustomerFamily._dependencies,
-          allTransitiveDependencies:
-              QuotesByCustomerFamily._allTransitiveDependencies,
+                  : _$allQuotesHash,
+          dependencies: AllQuotesFamily._dependencies,
+          allTransitiveDependencies: AllQuotesFamily._allTransitiveDependencies,
           customerId: customerId,
+          search: search,
+          page: page,
         );
 
-  QuotesByCustomerProvider._internal(
+  AllQuotesProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -102,42 +112,53 @@ class QuotesByCustomerProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.customerId,
+    required this.search,
+    required this.page,
   }) : super.internal();
 
-  final String customerId;
+  final String? customerId;
+  final String? search;
+  final int page;
 
   @override
   Override overrideWith(
-    FutureOr<List<QuoteSummary>> Function(QuotesByCustomerRef provider) create,
+    FutureOr<List<QuoteSummary>> Function(AllQuotesRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: QuotesByCustomerProvider._internal(
-        (ref) => create(ref as QuotesByCustomerRef),
+      override: AllQuotesProvider._internal(
+        (ref) => create(ref as AllQuotesRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         customerId: customerId,
+        search: search,
+        page: page,
       ),
     );
   }
 
   @override
   AutoDisposeFutureProviderElement<List<QuoteSummary>> createElement() {
-    return _QuotesByCustomerProviderElement(this);
+    return _AllQuotesProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is QuotesByCustomerProvider && other.customerId == customerId;
+    return other is AllQuotesProvider &&
+        other.customerId == customerId &&
+        other.search == search &&
+        other.page == page;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, customerId.hashCode);
+    hash = _SystemHash.combine(hash, search.hashCode);
+    hash = _SystemHash.combine(hash, page.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -145,18 +166,28 @@ class QuotesByCustomerProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin QuotesByCustomerRef on AutoDisposeFutureProviderRef<List<QuoteSummary>> {
+mixin AllQuotesRef on AutoDisposeFutureProviderRef<List<QuoteSummary>> {
   /// The parameter `customerId` of this provider.
-  String get customerId;
+  String? get customerId;
+
+  /// The parameter `search` of this provider.
+  String? get search;
+
+  /// The parameter `page` of this provider.
+  int get page;
 }
 
-class _QuotesByCustomerProviderElement
+class _AllQuotesProviderElement
     extends AutoDisposeFutureProviderElement<List<QuoteSummary>>
-    with QuotesByCustomerRef {
-  _QuotesByCustomerProviderElement(super.provider);
+    with AllQuotesRef {
+  _AllQuotesProviderElement(super.provider);
 
   @override
-  String get customerId => (origin as QuotesByCustomerProvider).customerId;
+  String? get customerId => (origin as AllQuotesProvider).customerId;
+  @override
+  String? get search => (origin as AllQuotesProvider).search;
+  @override
+  int get page => (origin as AllQuotesProvider).page;
 }
 
 String _$quoteDetailHash() => r'd674faad049cd3454848837225172ee045b43b64';

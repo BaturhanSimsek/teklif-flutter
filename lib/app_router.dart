@@ -29,7 +29,7 @@ GoRouter router(RouterRef ref) {
       GoRoute(
         path: '/quotes',
         builder: (_, state) {
-          final customerId = state.uri.queryParameters['customerId'] ?? 'demo';
+          final customerId = state.uri.queryParameters['customerId'];
           return QuoteListScreen(customerId: customerId);
         },
         routes: [

@@ -14,6 +14,17 @@ class QuoteRepository {
 
   final Dio _dio;
 
+  Future<List<QuoteSummary>> getAll({String? customerId, String? search, int page = 1}) async {
+    final res = await _dio.get('/quotes', queryParameters: {
+      if (customerId != null) 'customerId': customerId,
+      if (search != null && search.isNotEmpty) 'search': search,
+      'page': page,
+      'pageSize': 20,
+    });
+    final list = res.data as List<dynamic>;
+    return list.map((e) => QuoteSummary.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
   Future<List<QuoteSummary>> getByCustomer(String customerId) async {
     final res = await _dio.get('/quotes/by-customer/$customerId');
     final list = res.data as List<dynamic>;
@@ -31,7 +42,7 @@ class QuoteRepository {
   }
 
   Future<void> approve(String quoteId, {bool approve = true}) async {
-    await _dio.patch('/quotes/$quoteId/approve?approve=$approve');
+    await _dio.patch('/quotes/$quoteId/approve', queryParameters: {'approve': approve});
   }
 
   Future<String> revise(String quoteId) async {
