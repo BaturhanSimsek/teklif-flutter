@@ -17,12 +17,14 @@ class MainScaffold extends ConsumerWidget {
   ];
 
   static const _adminTab =
-      (path: '/admin', icon: Symbols.admin_panel_settings, label: 'Yönetim');
+      (path: '/admin',   icon: Symbols.admin_panel_settings, label: 'Yönetim');
+  static const _profileTab =
+      (path: '/profile', icon: Symbols.person,                label: 'Profil');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isAdmin = ref.watch(isAdminProvider).valueOrNull ?? false;
-    final tabs    = [..._baseTabs, if (isAdmin) _adminTab];
+    final tabs    = [..._baseTabs, if (isAdmin) _adminTab, _profileTab];
 
     int currentIndex = 0;
     for (var i = 0; i < tabs.length; i++) {

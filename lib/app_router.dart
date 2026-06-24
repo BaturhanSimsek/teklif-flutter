@@ -15,7 +15,9 @@ import 'features/admin/presentation/admin_screen.dart';
 import 'features/admin/presentation/company_settings_screen.dart';
 import 'features/admin/presentation/form_templates_screen.dart';
 import 'features/auth/presentation/change_password_screen.dart';
+import 'features/auth/presentation/profile_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
+import 'features/products/presentation/product_list_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
 import 'shared/widgets/main_scaffold.dart';
 
@@ -122,7 +124,17 @@ GoRouter router(RouterRef ref) {
                 path: 'templates',
                 builder: (_, __) => const FormTemplatesScreen(),
               ),
+              GoRoute(
+                path: 'products',
+                builder: (_, __) => const ProductListScreen(),
+              ),
             ],
+          ),
+
+          // ── Profil ────────────────────────────────────────────────
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const ProfileScreen(),
           ),
         ],
       ),
