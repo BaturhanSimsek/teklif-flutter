@@ -28,8 +28,9 @@ class AuthRepository {
     await _storage.write(key: AppConstants.refreshTokenKey, value: response.refreshToken);
     await _storage.write(key: AppConstants.tenantIdKey,     value: response.tenantId);
     await _storage.write(key: AppConstants.userEmailKey,    value: response.email);
-    await _storage.write(key: AppConstants.userRoleKey,     value: response.role);
-    await _storage.write(key: AppConstants.userIdKey,       value: response.userId);
+    await _storage.write(key: AppConstants.userRoleKey,           value: response.role);
+    await _storage.write(key: AppConstants.userIdKey,             value: response.userId);
+    await _storage.write(key: AppConstants.mustChangePasswordKey, value: response.mustChangePassword.toString());
 
     return response;
   }

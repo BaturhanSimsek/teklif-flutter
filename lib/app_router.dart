@@ -1,14 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'core/constants/app_constants.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/login_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'features/customers/presentation/customer_list_screen.dart';
 import 'features/customers/presentation/customer_detail_screen.dart';
 import 'features/customers/presentation/customer_form_screen.dart';
 import 'features/quotes/presentation/quote_list_screen.dart';
 import 'features/quotes/presentation/quote_detail_screen.dart';
 import 'features/admin/presentation/admin_screen.dart';
+import 'features/admin/presentation/company_settings_screen.dart';
+import 'features/auth/presentation/change_password_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
 import 'shared/widgets/main_scaffold.dart';
 
@@ -19,17 +23,33 @@ GoRouter router(RouterRef ref) {
   return GoRouter(
     initialLocation: '/quotes',
     redirect: (context, state) async {
-      final repo     = ref.read(authRepositoryProvider);
-      final loggedIn = await repo.isLoggedIn();
-      final onLogin  = state.matchedLocation == '/login';
+      const storage   = FlutterSecureStorage();
+      final repo      = ref.read(authRepositoryProvider);
+      final loggedIn  = await repo.isLoggedIn();
+      final location  = state.matchedLocation;
+      final onLogin   = location == '/login';
+      final onChangePw = location == '/change-password';
+
       if (!loggedIn && !onLogin) return '/login';
-      if (loggedIn && onLogin)  return '/quotes';
+      if (loggedIn && onLogin)  {
+        final mustChange = await storage.read(key: AppConstants.mustChangePasswordKey);
+        if (mustChange == 'true') return '/change-password';
+        return '/quotes';
+      }
+      if (loggedIn && !onChangePw) {
+        final mustChange = await storage.read(key: AppConstants.mustChangePasswordKey);
+        if (mustChange == 'true') return '/change-password';
+      }
       return null;
     },
     routes: [
       GoRoute(
         path: '/login',
         builder: (_, __) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/change-password',
+        builder: (_, __) => const ChangePasswordScreen(forced: true),
       ),
 
       ShellRoute(
@@ -80,6 +100,12 @@ GoRouter router(RouterRef ref) {
           GoRoute(
             path: '/admin',
             builder: (_, __) => const AdminScreen(),
+            routes: [
+              GoRoute(
+                path: 'settings',
+                builder: (_, __) => const CompanySettingsScreen(),
+              ),
+            ],
           ),
         ],
       ),

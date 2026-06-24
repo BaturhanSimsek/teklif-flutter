@@ -28,6 +28,7 @@ mixin _$LoginResponse {
   String get fullName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
+  bool get mustChangePassword => throw _privateConstructorUsedError;
 
   /// Serializes this LoginResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,7 +54,8 @@ abstract class $LoginResponseCopyWith<$Res> {
       String tenantId,
       String fullName,
       String email,
-      String role});
+      String role,
+      bool mustChangePassword});
 }
 
 /// @nodoc
@@ -79,6 +81,7 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
     Object? fullName = null,
     Object? email = null,
     Object? role = null,
+    Object? mustChangePassword = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -113,6 +116,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as String,
+      mustChangePassword: null == mustChangePassword
+          ? _value.mustChangePassword
+          : mustChangePassword // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -133,7 +140,8 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
       String tenantId,
       String fullName,
       String email,
-      String role});
+      String role,
+      bool mustChangePassword});
 }
 
 /// @nodoc
@@ -157,6 +165,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? fullName = null,
     Object? email = null,
     Object? role = null,
+    Object? mustChangePassword = null,
   }) {
     return _then(_$LoginResponseImpl(
       accessToken: null == accessToken
@@ -191,6 +200,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as String,
+      mustChangePassword: null == mustChangePassword
+          ? _value.mustChangePassword
+          : mustChangePassword // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -206,7 +219,8 @@ class _$LoginResponseImpl implements _LoginResponse {
       required this.tenantId,
       required this.fullName,
       required this.email,
-      required this.role});
+      required this.role,
+      this.mustChangePassword = false});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -227,10 +241,13 @@ class _$LoginResponseImpl implements _LoginResponse {
   final String email;
   @override
   final String role;
+  @override
+  @JsonKey()
+  final bool mustChangePassword;
 
   @override
   String toString() {
-    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role)';
+    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role, mustChangePassword: $mustChangePassword)';
   }
 
   @override
@@ -250,13 +267,15 @@ class _$LoginResponseImpl implements _LoginResponse {
             (identical(other.fullName, fullName) ||
                 other.fullName == fullName) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.role, role) || other.role == role));
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.mustChangePassword, mustChangePassword) ||
+                other.mustChangePassword == mustChangePassword));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
-      expiresAt, userId, tenantId, fullName, email, role);
+      expiresAt, userId, tenantId, fullName, email, role, mustChangePassword);
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -283,7 +302,8 @@ abstract class _LoginResponse implements LoginResponse {
       required final String tenantId,
       required final String fullName,
       required final String email,
-      required final String role}) = _$LoginResponseImpl;
+      required final String role,
+      final bool mustChangePassword}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$LoginResponseImpl.fromJson;
@@ -304,6 +324,8 @@ abstract class _LoginResponse implements LoginResponse {
   String get email;
   @override
   String get role;
+  @override
+  bool get mustChangePassword;
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.

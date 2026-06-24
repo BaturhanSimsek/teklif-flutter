@@ -6,14 +6,15 @@ part 'auth_model.g.dart';
 @freezed
 class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
-    required String accessToken,
-    required String refreshToken,
+    required String   accessToken,
+    required String   refreshToken,
     required DateTime expiresAt,
-    required String userId,
-    required String tenantId,
-    required String fullName,
-    required String email,
-    required String role,
+    required String   userId,
+    required String   tenantId,
+    required String   fullName,
+    required String   email,
+    required String   role,
+    @Default(false) bool mustChangePassword,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/user_model.dart';
@@ -22,6 +23,11 @@ class AdminScreen extends ConsumerWidget {
         title: const Text('Yönetim Paneli'),
         centerTitle: false,
         actions: [
+          IconButton(
+            icon: const Icon(Symbols.settings),
+            tooltip: 'Firma Ayarları',
+            onPressed: () => context.push('/admin/settings'),
+          ),
           IconButton(
             icon: const Icon(Symbols.person_add),
             tooltip: 'Kullanıcı Ekle',
