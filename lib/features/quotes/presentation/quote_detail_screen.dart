@@ -43,6 +43,25 @@ class _QuoteDetailView extends StatelessWidget {
     }
   }
 
+  Future<void> _handlePdf(BuildContext ctx, String action) async {
+    final svc = ref.read(pdfServiceProvider);
+    try {
+      if (action == 'share') {
+        await svc.downloadAndShare(quote.id, quote.quoteNumberDisplay);
+      } else if (action == 'pdf_open') {
+        await svc.downloadAndOpen(quote.id, quote.quoteNumberDisplay);
+      } else if (action == 'revise') {
+        final newId = await ref.read(quoteRepositoryProvider).revise(quote.id);
+        if (ctx.mounted) ctx.pushReplacement('/quotes/$newId');
+      }
+    } catch (e) {
+      if (ctx.mounted) {
+        ScaffoldMessenger.of(ctx)
+            .showSnackBar(SnackBar(content: Text('Hata: $e')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final primary     = Theme.of(context).colorScheme.primary;
@@ -71,34 +90,40 @@ class _QuoteDetailView extends StatelessWidget {
                   tooltip: 'Onayı Geri Al',
                   onPressed: () => _approve(context, false),
                 ),
+              // PDF hızlı paylaş butonu
+              IconButton(
+                icon: const Icon(Symbols.ios_share),
+                tooltip: 'PDF Paylaş',
+                onPressed: () => _handlePdf(context, 'share'),
+              ),
               PopupMenuButton<String>(
                 icon: const Icon(Symbols.more_vert),
-                onSelected: (v) async {
-                  if (v == 'revise') {
-                    final newId = await ref.read(quoteRepositoryProvider).revise(quote.id);
-                    if (context.mounted) context.pushReplacement('/quotes/$newId');
-                  } else if (v == 'pdf') {
-                    try {
-                      await ref.read(pdfServiceProvider)
-                          .downloadAndOpen(quote.id, quote.quoteNumberDisplay);
-                    } catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('PDF hatası: $e')));
-                      }
-                    }
-                  }
-                },
+                onSelected: (v) => _handlePdf(context, v),
                 itemBuilder: (_) => const [
                   PopupMenuItem(
-                    value: 'pdf',
+                    value: 'pdf_open',
                     child: Row(children: [
                       Icon(Symbols.picture_as_pdf, size: 18),
                       SizedBox(width: 10),
-                      Text('PDF İndir'),
+                      Text('PDF Görüntüle'),
                     ]),
                   ),
-                  PopupMenuItem(value: 'revise', child: Text('Yeni Revizyon')),
+                  PopupMenuItem(
+                    value: 'share',
+                    child: Row(children: [
+                      Icon(Symbols.share, size: 18),
+                      SizedBox(width: 10),
+                      Text('PDF Paylaş'),
+                    ]),
+                  ),
+                  PopupMenuItem(
+                    value: 'revise',
+                    child: Row(children: [
+                      Icon(Symbols.edit_document, size: 18),
+                      SizedBox(width: 10),
+                      Text('Yeni Revizyon'),
+                    ]),
+                  ),
                 ],
               ),
             ],
