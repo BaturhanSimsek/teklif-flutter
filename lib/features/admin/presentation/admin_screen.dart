@@ -24,6 +24,11 @@ class AdminScreen extends ConsumerWidget {
         centerTitle: false,
         actions: [
           IconButton(
+            icon: const Icon(Symbols.article),
+            tooltip: 'Form Şablonları',
+            onPressed: () => context.push('/admin/templates'),
+          ),
+          IconButton(
             icon: const Icon(Symbols.settings),
             tooltip: 'Firma Ayarları',
             onPressed: () => context.push('/admin/settings'),

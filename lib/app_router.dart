@@ -12,6 +12,7 @@ import 'features/quotes/presentation/quote_list_screen.dart';
 import 'features/quotes/presentation/quote_detail_screen.dart';
 import 'features/admin/presentation/admin_screen.dart';
 import 'features/admin/presentation/company_settings_screen.dart';
+import 'features/admin/presentation/form_templates_screen.dart';
 import 'features/auth/presentation/change_password_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
@@ -111,6 +112,10 @@ GoRouter router(RouterRef ref) {
               GoRoute(
                 path: 'settings',
                 builder: (_, __) => const CompanySettingsScreen(),
+              ),
+              GoRoute(
+                path: 'templates',
+                builder: (_, __) => const FormTemplatesScreen(),
               ),
             ],
           ),
