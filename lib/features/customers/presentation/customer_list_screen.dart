@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../shared/widgets/skeleton.dart';
 import '../data/customer_model.dart';
 import 'customer_providers.dart';
 
@@ -86,7 +87,7 @@ class _CustomerListScreenState extends ConsumerState<CustomerListScreen> {
                   itemBuilder: (ctx, i) => _CustomerCard(customer: list[i]),
                 ),
               ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const SkeletonList(),
         error: (e, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,

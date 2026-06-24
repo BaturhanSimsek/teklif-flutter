@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/skeleton.dart';
 import '../data/product_model.dart';
 import '../data/product_repository.dart';
 import 'product_form_screen.dart';
@@ -39,7 +40,7 @@ class ProductListScreen extends ConsumerWidget {
           onRefresh: () => ref.refresh(_productsProvider.future),
           child: _ProductList(products: list, ref: ref),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const SkeletonList(),
         error:   (e, _) => Center(child: Text('Hata: $e')),
       ),
     );

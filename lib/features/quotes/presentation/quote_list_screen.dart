@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/skeleton.dart';
 import '../data/quote_model.dart';
 import 'quote_providers.dart';
 
@@ -95,7 +96,7 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
                   ),
                 ),
               ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const SkeletonList(),
         error: (e, _) => _ErrorState(
           message: '$e',
           onRetry: () => ref.invalidate(allQuotesProvider),

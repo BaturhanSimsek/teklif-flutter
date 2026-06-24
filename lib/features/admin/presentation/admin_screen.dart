@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/skeleton.dart';
 import '../data/user_model.dart';
 import '../data/user_repository.dart';
 
@@ -50,7 +51,7 @@ class AdminScreen extends ConsumerWidget {
           onRefresh: () => ref.refresh(_usersProvider.future),
           child: _UserList(users: users, ref: ref),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const SkeletonList(),
         error: (e, _) => Center(child: Text('Hata: $e')),
       ),
     );
