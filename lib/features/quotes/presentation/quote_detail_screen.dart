@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import '../../../core/theme/app_colors.dart';
 import '../data/quote_model.dart';
 import '../data/quote_repository.dart';
 import 'quote_providers.dart';
@@ -18,121 +20,251 @@ class QuoteDetailScreen extends ConsumerWidget {
     final async = ref.watch(quoteDetailProvider(quoteId));
 
     return async.when(
-      data: (q) => Scaffold(
-        appBar: AppBar(
-          title: Text(q.quoteNumberDisplay),
-          actions: [
-            if (!q.isApproved)
-              IconButton(
-                icon: const Icon(Icons.check_circle_outline),
-                tooltip: 'Onayla',
-                onPressed: () => _approve(context, ref, q.id, true),
-              ),
-            if (q.isApproved)
-              IconButton(
-                icon: const Icon(Icons.cancel_outlined),
-                tooltip: 'Onayı Geri Al',
-                onPressed: () => _approve(context, ref, q.id, false),
-              ),
-            PopupMenuButton<String>(
-              onSelected: (v) async {
-                if (v == 'revise') {
-                  final newId = await ref.read(quoteRepositoryProvider).revise(q.id);
-                  if (context.mounted) context.pushReplacement('/quotes/$newId');
-                }
-              },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'revise', child: Text('Yeni Revizyon')),
-              ],
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _SectionCard(title: 'Müşteri', children: [
-                _InfoRow('Ad',      q.customerName),
-                _InfoRow('Telefon', q.customerPhone),
-              ]),
-              const SizedBox(height: 12),
-              _SectionCard(title: 'Teklif Bilgileri', children: [
-                _InfoRow('Tarih',     DateFormat('dd.MM.yyyy').format(q.date)),
-                _InfoRow('Ödeme',     q.paymentTerm),
-                _InfoRow('Teslimat',  '${q.deliveryDays} gün'),
-                _InfoRow('İndirim',   '%${q.discountRate.toStringAsFixed(0)}'),
-                _InfoRow('KDV',       '%${q.kdvRate.toStringAsFixed(0)}'),
-                if (q.notes != null) _InfoRow('Notlar', q.notes!),
-              ]),
-              const SizedBox(height: 12),
-              Text('Kalemler', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              ...q.items.map((item) => _ItemCard(item: item)),
-              const SizedBox(height: 12),
-              _TotalsCard(quote: q),
-            ],
-          ),
-        ),
-      ),
+      data: (q) => _QuoteDetailView(quote: q, ref: ref),
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error:   (e, _) => Scaffold(body: Center(child: Text('Hata: $e'))),
+      error: (e, _) => Scaffold(body: Center(child: Text('Hata: $e'))),
     );
   }
+}
 
-  Future<void> _approve(BuildContext ctx, WidgetRef ref, String id, bool approve) async {
+class _QuoteDetailView extends StatelessWidget {
+  const _QuoteDetailView({required this.quote, required this.ref});
+
+  final QuoteDetail quote;
+  final WidgetRef   ref;
+
+  Future<void> _approve(BuildContext ctx, bool approve) async {
     try {
-      await ref.read(quoteRepositoryProvider).approve(id, approve: approve);
-      ref.invalidate(quoteDetailProvider(id));
+      await ref.read(quoteRepositoryProvider).approve(quote.id, approve: approve);
+      ref.invalidate(quoteDetailProvider(quote.id));
     } catch (e) {
-      if (ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('$e')));
-      }
+      if (ctx.mounted) ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('$e')));
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final primary     = Theme.of(context).colorScheme.primary;
+    final statusColor = quote.isApproved ? AppColors.approved : AppColors.pending;
+    final statusBg    = quote.isApproved ? AppColors.approvedBg : AppColors.pendingBg;
+
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          // SliverAppBar — gradient header
+          SliverAppBar(
+            expandedHeight: 180,
+            pinned: true,
+            backgroundColor: primary,
+            foregroundColor: Colors.white,
+            actions: [
+              if (!quote.isApproved)
+                IconButton(
+                  icon: const Icon(Symbols.check_circle, fill: 1),
+                  tooltip: 'Onayla',
+                  onPressed: () => _approve(context, true),
+                ),
+              if (quote.isApproved)
+                IconButton(
+                  icon: const Icon(Symbols.cancel, fill: 1),
+                  tooltip: 'Onayı Geri Al',
+                  onPressed: () => _approve(context, false),
+                ),
+              PopupMenuButton<String>(
+                icon: const Icon(Symbols.more_vert),
+                onSelected: (v) async {
+                  if (v == 'revise') {
+                    final newId = await ref.read(quoteRepositoryProvider).revise(quote.id);
+                    if (context.mounted) context.pushReplacement('/quotes/$newId');
+                  }
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(value: 'revise', child: Text('Yeni Revizyon')),
+                ],
+              ),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [primary.withOpacity(0.85), primary],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 56, 20, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          quote.quoteNumberDisplay,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: statusBg,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                quote.isApproved ? 'Onaylandı' : 'Bekliyor',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: statusColor,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              _curr.format(quote.grandTotal),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // İçerik
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+
+                // Müşteri kartı
+                _InfoCard(
+                  title: 'Müşteri',
+                  icon: Symbols.person,
+                  rows: [
+                    _Row('Ad',      quote.customerName),
+                    _Row('Telefon', quote.customerPhone),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Teklif bilgileri
+                _InfoCard(
+                  title: 'Teklif Bilgileri',
+                  icon: Symbols.info,
+                  rows: [
+                    _Row('Tarih',    DateFormat('dd.MM.yyyy').format(quote.date)),
+                    _Row('Ödeme',    quote.paymentTerm),
+                    _Row('Teslimat', '${quote.deliveryDays} gün'),
+                    _Row('İndirim',  '%${quote.discountRate.toStringAsFixed(0)}'),
+                    _Row('KDV',      '%${quote.kdvRate.toStringAsFixed(0)}'),
+                    if (quote.notes != null) _Row('Notlar', quote.notes!),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Kalemler başlık
+                Row(
+                  children: [
+                    Icon(Symbols.list, size: 18, color: Colors.grey.shade500),
+                    const SizedBox(width: 8),
+                    Text('Kalemler',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w700)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ...quote.items.map((item) => _ItemCard(item: item)),
+                const SizedBox(height: 12),
+
+                // Toplamlar
+                _TotalsCard(quote: quote),
+                const SizedBox(height: 32),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
-class _SectionCard extends StatelessWidget {
-  const _SectionCard({required this.title, required this.children});
-  final String       title;
-  final List<Widget> children;
+// ── Yardımcı modeller ────────────────────────────────────────────────────────
 
-  @override
-  Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.titleSmall),
-              const Divider(height: 12),
-              ...children,
-            ],
-          ),
-        ),
-      );
+class _Row {
+  const _Row(this.label, this.value);
+  final String label, value;
 }
 
-class _InfoRow extends StatelessWidget {
-  const _InfoRow(this.label, this.value);
-  final String label, value;
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({required this.title, required this.icon, required this.rows});
+  final String      title;
+  final IconData    icon;
+  final List<_Row>  rows;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Row(
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 80,
-              child: Text(label, style: const TextStyle(color: Colors.grey)),
-            ),
-            Expanded(
-              child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-            ),
+            Row(children: [
+              Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary, fill: 1),
+              const SizedBox(width: 6),
+              Text(title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.primary,
+                  )),
+            ]),
+            const SizedBox(height: 12),
+            Divider(height: 1, color: Colors.grey.shade100),
+            const SizedBox(height: 12),
+            ...rows.map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: Text(r.label,
+                            style: TextStyle(fontSize: 13, color: Colors.grey.shade500)),
+                      ),
+                      Expanded(
+                        child: Text(r.value,
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                      ),
+                    ],
+                  ),
+                )),
           ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _ItemCard extends StatelessWidget {
@@ -141,37 +273,51 @@ class _ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Card(
+    final primary = Theme.of(context).colorScheme.primary;
+    return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      color: colors.surfaceVariant,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(item.description, style: const TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
-            Row(children: [
-              Text('${item.quantity} ${item.unit}  ×  ${_curr.format(item.unitPrice)}'),
-              const Spacer(),
-              Text(_curr.format(item.total),
-                  style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
-            ]),
-            if (item.customFields.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: item.customFields.entries
-                    .map((e) => Chip(
-                          label: Text('${e.key}: ${e.value}'),
-                          visualDensity: VisualDensity.compact,
-                        ))
-                    .toList(),
-              ),
-            ],
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(item.description,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+          const SizedBox(height: 6),
+          Row(children: [
+            Text('${item.quantity} ${item.unit}  ×  ${_curr.format(item.unitPrice)}',
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade500)),
+            const Spacer(),
+            Text(_curr.format(item.total),
+                style: TextStyle(
+                    color: primary, fontWeight: FontWeight.w700, fontSize: 14)),
+          ]),
+          if (item.customFields.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: item.customFields.entries
+                  .map((e) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: primary.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text('${e.key}: ${e.value}',
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: primary,
+                                fontWeight: FontWeight.w500)),
+                      ))
+                  .toList(),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -183,51 +329,60 @@ class _TotalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _TotalRow('Ara Toplam', _curr.format(quote.subTotal)),
-            if (quote.discountRate > 0)
-              _TotalRow(
-                'İndirim (${quote.discountRate.toStringAsFixed(0)}%)',
-                '-${_curr.format(quote.discountAmount)}',
-                color: Colors.green,
-              ),
-            _TotalRow('KDV (${quote.kdvRate.toStringAsFixed(0)}%)', _curr.format(quote.kdvAmount)),
-            const Divider(),
+    final primary = Theme.of(context).colorScheme.primary;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        children: [
+          _TotalRow('Ara Toplam', _curr.format(quote.subTotal)),
+          if (quote.discountRate > 0)
             _TotalRow(
-              'GENEL TOPLAM',
-              _curr.format(quote.grandTotal),
-              bold: true,
-              color: colors.primary,
+              'İndirim (%${quote.discountRate.toStringAsFixed(0)})',
+              '-${_curr.format(quote.discountAmount)}',
+              valueColor: AppColors.success,
             ),
-          ],
-        ),
+          _TotalRow('KDV (%${quote.kdvRate.toStringAsFixed(0)})',
+              _curr.format(quote.kdvAmount)),
+          Divider(height: 20, color: Colors.grey.shade200),
+          _TotalRow(
+            'GENEL TOPLAM',
+            _curr.format(quote.grandTotal),
+            bold: true,
+            valueColor: primary,
+          ),
+        ],
       ),
     );
   }
 }
 
 class _TotalRow extends StatelessWidget {
-  const _TotalRow(this.label, this.value, {this.bold = false, this.color});
+  const _TotalRow(this.label, this.value, {this.bold = false, this.valueColor});
   final String label, value;
   final bool   bold;
-  final Color? color;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 5),
         child: Row(
           children: [
             Text(label,
-                style: TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+                style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: bold ? FontWeight.w700 : FontWeight.normal,
+                    color: bold ? null : Colors.grey.shade500)),
             const Spacer(),
             Text(value,
                 style: TextStyle(
-                    fontWeight: bold ? FontWeight.bold : FontWeight.normal, color: color)),
+                    fontSize: bold ? 16 : 13,
+                    fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+                    color: valueColor)),
           ],
         ),
       );
