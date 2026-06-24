@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/cache/local_cache.dart';
 import '../../../core/models/paged_result.dart';
 import 'customer_model.dart';
 
@@ -20,15 +21,27 @@ class CustomerRepository {
     int page     = 1,
     int pageSize = 30,
   }) async {
-    final res = await _dio.get('/customers', queryParameters: {
-      if (search != null && search.isNotEmpty) 'search': search,
-      'page': page,
-      'pageSize': pageSize,
-    });
-    return PagedResult.fromJson(
-      res.data as Map<String, dynamic>,
-      Customer.fromJson,
-    );
+    final cacheKey = 'cache:customers:$search:$page:$pageSize';
+    try {
+      final res = await _dio.get('/customers', queryParameters: {
+        if (search != null && search.isNotEmpty) 'search': search,
+        'page': page,
+        'pageSize': pageSize,
+      });
+      final result = PagedResult.fromJson(
+        res.data as Map<String, dynamic>,
+        Customer.fromJson,
+      );
+      await LocalCache.set(cacheKey, res.data);
+      return result;
+    } on DioException {
+      final cached = await LocalCache.get<PagedResult<Customer>>(
+        cacheKey,
+        (j) => PagedResult.fromJson(j as Map<String, dynamic>, Customer.fromJson),
+      );
+      if (cached != null) return cached;
+      rethrow;
+    }
   }
 
   Future<String> create({
