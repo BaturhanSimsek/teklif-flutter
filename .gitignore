@@ -1,0 +1,13 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+*.log
+android/key.properties
+ios/Runner/GeneratedPluginRegistrant.*
+lib/**.g.dart
+lib/**.freezed.dart
