@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/theme/app_colors.dart';
+import '../data/pdf_service.dart';
 import '../data/quote_model.dart';
 import '../data/quote_repository.dart';
 import 'quote_providers.dart';
@@ -76,9 +77,27 @@ class _QuoteDetailView extends StatelessWidget {
                   if (v == 'revise') {
                     final newId = await ref.read(quoteRepositoryProvider).revise(quote.id);
                     if (context.mounted) context.pushReplacement('/quotes/$newId');
+                  } else if (v == 'pdf') {
+                    try {
+                      await ref.read(pdfServiceProvider)
+                          .downloadAndOpen(quote.id, quote.quoteNumberDisplay);
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('PDF hatası: $e')));
+                      }
+                    }
                   }
                 },
                 itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: 'pdf',
+                    child: Row(children: [
+                      Icon(Symbols.picture_as_pdf, size: 18),
+                      SizedBox(width: 10),
+                      Text('PDF İndir'),
+                    ]),
+                  ),
                   PopupMenuItem(value: 'revise', child: Text('Yeni Revizyon')),
                 ],
               ),
