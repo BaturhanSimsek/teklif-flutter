@@ -42,4 +42,7 @@ class AppColors {
   static Color get pendingBg     => warning.shade50;
   static Color get draft         => const Color(0xFF78909C);
   static Color get draftBg       => const Color(0xFFECEFF1);
+
+  // Hata arkaplanı
+  static Color get errorBg => error.shade50;
 }

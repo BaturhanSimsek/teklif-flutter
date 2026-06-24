@@ -24,10 +24,12 @@ class AuthRepository {
     });
     final response = LoginResponse.fromJson(res.data as Map<String, dynamic>);
 
-    await _storage.write(key: AppConstants.tokenKey,      value: response.accessToken);
+    await _storage.write(key: AppConstants.tokenKey,        value: response.accessToken);
     await _storage.write(key: AppConstants.refreshTokenKey, value: response.refreshToken);
-    await _storage.write(key: AppConstants.tenantIdKey,   value: response.tenantId);
-    await _storage.write(key: AppConstants.userEmailKey,  value: response.email);
+    await _storage.write(key: AppConstants.tenantIdKey,     value: response.tenantId);
+    await _storage.write(key: AppConstants.userEmailKey,    value: response.email);
+    await _storage.write(key: AppConstants.userRoleKey,     value: response.role);
+    await _storage.write(key: AppConstants.userIdKey,       value: response.userId);
 
     return response;
   }

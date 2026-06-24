@@ -8,6 +8,7 @@ import 'features/customers/presentation/customer_detail_screen.dart';
 import 'features/customers/presentation/customer_form_screen.dart';
 import 'features/quotes/presentation/quote_list_screen.dart';
 import 'features/quotes/presentation/quote_detail_screen.dart';
+import 'features/admin/presentation/admin_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
 import 'shared/widgets/main_scaffold.dart';
 
@@ -73,6 +74,12 @@ GoRouter router(RouterRef ref) {
                     CustomerDetailScreen(customerId: state.pathParameters['id']!),
               ),
             ],
+          ),
+
+          // ── Yönetim ───────────────────────────────────────────────
+          GoRoute(
+            path: '/admin',
+            builder: (_, __) => const AdminScreen(),
           ),
         ],
       ),
