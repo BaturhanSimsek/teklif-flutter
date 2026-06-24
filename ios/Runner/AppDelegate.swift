@@ -13,4 +13,15 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
   }
+
+  // G14: ekran görüntüsü ve ekran kaydı engeli
+  override func applicationWillResignActive(_ application: UIApplication) {
+    window?.isHidden = true
+    super.applicationWillResignActive(application)
+  }
+
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+    window?.isHidden = false
+    super.applicationDidBecomeActive(application)
+  }
 }

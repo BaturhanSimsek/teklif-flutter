@@ -223,6 +223,7 @@ class _UserCard extends StatelessWidget {
   }
 
   Future<void> _onAction(BuildContext context, String action) async {
+    HapticFeedback.mediumImpact();
     final repo = ref.read(userRepositoryProvider);
     try {
       if (action == 'toggle') {

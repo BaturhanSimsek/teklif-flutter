@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/models/paged_result.dart';
 import 'quote_model.dart';
 
 part 'quote_repository.g.dart';
@@ -14,15 +15,22 @@ class QuoteRepository {
 
   final Dio _dio;
 
-  Future<List<QuoteSummary>> getAll({String? customerId, String? search, int page = 1}) async {
+  Future<PagedResult<QuoteSummary>> getAll({
+    String? customerId,
+    String? search,
+    int page     = 1,
+    int pageSize = 20,
+  }) async {
     final res = await _dio.get('/quotes', queryParameters: {
       if (customerId != null) 'customerId': customerId,
       if (search != null && search.isNotEmpty) 'search': search,
       'page': page,
-      'pageSize': 20,
+      'pageSize': pageSize,
     });
-    final list = res.data as List<dynamic>;
-    return list.map((e) => QuoteSummary.fromJson(e as Map<String, dynamic>)).toList();
+    return PagedResult.fromJson(
+      res.data as Map<String, dynamic>,
+      QuoteSummary.fromJson,
+    );
   }
 
   Future<List<QuoteSummary>> getByCustomer(String customerId) async {
@@ -48,5 +56,21 @@ class QuoteRepository {
   Future<String> revise(String quoteId) async {
     final res = await _dio.post('/quotes/$quoteId/revise');
     return (res.data as Map<String, dynamic>)['id'] as String;
+  }
+
+  Future<void> cancel(String quoteId) async {
+    await _dio.delete('/quotes/$quoteId');
+  }
+
+  Future<List<QuoteSummary>> getRevisions(String quoteId) async {
+    final res = await _dio.get('/quotes/$quoteId/revisions');
+    return (res.data as List)
+        .map((j) => QuoteSummary.fromJson(j as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<String> generateShareLink(String quoteId) async {
+    final res = await _dio.post('/quotes/$quoteId/share-link');
+    return (res.data as Map<String, dynamic>)['url'] as String;
   }
 }

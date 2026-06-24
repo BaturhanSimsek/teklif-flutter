@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../core/models/paged_result.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
 import '../data/product_model.dart';
 import '../data/product_repository.dart';
 import 'product_form_screen.dart';
 
-final _productsProvider = FutureProvider.autoDispose<List<Product>>(
+final _productsProvider = FutureProvider.autoDispose<PagedResult<Product>>(
     (ref) => ref.watch(productRepositoryProvider).getAll());
 
 final _curr = NumberFormat.currency(locale: 'tr_TR', symbol: '₺');
@@ -36,9 +38,9 @@ class ProductListScreen extends ConsumerWidget {
         label: const Text('Yeni Ürün'),
       ),
       body: async.when(
-        data: (list) => RefreshIndicator(
+        data: (paged) => RefreshIndicator(
           onRefresh: () => ref.refresh(_productsProvider.future),
-          child: _ProductList(products: list, ref: ref),
+          child: _ProductList(products: paged.items, ref: ref),
         ),
         loading: () => const SkeletonList(),
         error:   (e, _) => Center(child: Text('Hata: $e')),
@@ -77,7 +79,64 @@ class _ProductList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       itemCount: active.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
-      itemBuilder: (_, i) => _ProductCard(product: active[i], ref: ref),
+      itemBuilder: (_, i) => _DismissibleProduct(product: active[i], ref: ref),
+    );
+  }
+}
+
+class _DismissibleProduct extends StatelessWidget {
+  const _DismissibleProduct({required this.product, required this.ref});
+  final Product   product;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: ValueKey(product.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async {
+        HapticFeedback.mediumImpact();
+        return await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Ürünü Sil'),
+            content: Text('"${product.name}" ürününü silmek istiyor musunuz?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('İptal'),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Sil'),
+              ),
+            ],
+          ),
+        );
+      },
+      onDismissed: (_) async {
+        try {
+          await ref.read(productRepositoryProvider).delete(product.id);
+          ref.invalidate(_productsProvider);
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Hata: $e')));
+          }
+        }
+      },
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: Colors.red.shade600,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Icon(Symbols.delete, color: Colors.white, fill: 1),
+      ),
+      child: _ProductCard(product: product, ref: ref),
     );
   }
 }

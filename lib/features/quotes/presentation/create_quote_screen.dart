@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../customers/presentation/customer_providers.dart';
+import '../../exchange_rate/data/exchange_rate_repository.dart';
 import '../../form_templates/data/form_template_model.dart';
 import '../../form_templates/data/form_template_repository.dart';
 import '../data/quote_repository.dart';
@@ -213,15 +214,25 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
               Expanded(child: _plainField(_discountRate, 'İndirim %', type: TextInputType.number)),
               const SizedBox(width: 12),
               Expanded(
-                child: DropdownButtonFormField<String>(
-                  value: _currency,
-                  decoration: const InputDecoration(labelText: 'Döviz', isDense: true),
-                  items: const [
-                    DropdownMenuItem(value: 'TRY', child: Text('₺ TRY')),
-                    DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
-                    DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: _currency,
+                      decoration: const InputDecoration(labelText: 'Döviz', isDense: true),
+                      items: const [
+                        DropdownMenuItem(value: 'TRY', child: Text('₺ TRY')),
+                        DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
+                        DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
+                        DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
+                      ],
+                      onChanged: (v) => setState(() => _currency = v ?? 'TRY'),
+                    ),
+                    if (_currency != 'TRY') ...[
+                      const SizedBox(height: 4),
+                      _ExchangeRateChip(currency: _currency),
+                    ],
                   ],
-                  onChanged: (v) => setState(() => _currency = v ?? 'TRY'),
                 ),
               ),
             ]),
@@ -264,6 +275,30 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
         keyboardType: type,
         decoration: InputDecoration(labelText: label, isDense: true),
       );
+}
+
+class _ExchangeRateChip extends ConsumerWidget {
+  const _ExchangeRateChip({required this.currency});
+  final String currency;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ratesAsync = ref.watch(exchangeRatesProvider);
+    return ratesAsync.when(
+      loading: () => const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 1.5)),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (rates) {
+        final rate = rates[currency];
+        if (rate == null) return const SizedBox.shrink();
+        return Text(
+          '1 $currency = ${rate.toStringAsFixed(4)} ₺',
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        );
+      },
+    );
+  }
 }
 
 // Dinamik alan widget

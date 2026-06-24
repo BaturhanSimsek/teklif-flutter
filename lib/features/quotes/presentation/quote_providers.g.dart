@@ -6,7 +6,7 @@ part of 'quote_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$allQuotesHash() => r'b5e9f9a6049fbcacea1ae47552d70f55644b7ab5';
+String _$allQuotesHash() => r'ec4547aa1fc2d9c12bd8c7fd16a3aabe5eb2a98b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const allQuotesProvider = AllQuotesFamily();
 
 /// See also [allQuotes].
-class AllQuotesFamily extends Family<AsyncValue<List<QuoteSummary>>> {
+class AllQuotesFamily extends Family<AsyncValue<PagedResult<QuoteSummary>>> {
   /// See also [allQuotes].
   const AllQuotesFamily();
 
@@ -78,7 +78,8 @@ class AllQuotesFamily extends Family<AsyncValue<List<QuoteSummary>>> {
 }
 
 /// See also [allQuotes].
-class AllQuotesProvider extends AutoDisposeFutureProvider<List<QuoteSummary>> {
+class AllQuotesProvider
+    extends AutoDisposeFutureProvider<PagedResult<QuoteSummary>> {
   /// See also [allQuotes].
   AllQuotesProvider({
     String? customerId,
@@ -122,7 +123,7 @@ class AllQuotesProvider extends AutoDisposeFutureProvider<List<QuoteSummary>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<QuoteSummary>> Function(AllQuotesRef provider) create,
+    FutureOr<PagedResult<QuoteSummary>> Function(AllQuotesRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -141,7 +142,7 @@ class AllQuotesProvider extends AutoDisposeFutureProvider<List<QuoteSummary>> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<QuoteSummary>> createElement() {
+  AutoDisposeFutureProviderElement<PagedResult<QuoteSummary>> createElement() {
     return _AllQuotesProviderElement(this);
   }
 
@@ -166,7 +167,7 @@ class AllQuotesProvider extends AutoDisposeFutureProvider<List<QuoteSummary>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin AllQuotesRef on AutoDisposeFutureProviderRef<List<QuoteSummary>> {
+mixin AllQuotesRef on AutoDisposeFutureProviderRef<PagedResult<QuoteSummary>> {
   /// The parameter `customerId` of this provider.
   String? get customerId;
 
@@ -178,7 +179,7 @@ mixin AllQuotesRef on AutoDisposeFutureProviderRef<List<QuoteSummary>> {
 }
 
 class _AllQuotesProviderElement
-    extends AutoDisposeFutureProviderElement<List<QuoteSummary>>
+    extends AutoDisposeFutureProviderElement<PagedResult<QuoteSummary>>
     with AllQuotesRef {
   _AllQuotesProviderElement(super.provider);
 

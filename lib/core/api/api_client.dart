@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../auth/auth_notifier.dart';
 import '../constants/app_constants.dart';
+import '../security/certificate_pin_interceptor.dart';
 
 part 'api_client.g.dart';
 
 @riverpod
 Dio dio(DioRef ref) {
-  final storage = const FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
+  final authN   = ref.read(authNotifierProvider);
 
   final d = Dio(BaseOptions(
     baseUrl: AppConstants.baseUrl,
@@ -15,6 +18,8 @@ Dio dio(DioRef ref) {
     receiveTimeout: const Duration(seconds: 30),
     headers: {'Content-Type': 'application/json'},
   ));
+
+  applyPinning(d);
 
   d.interceptors.add(InterceptorsWrapper(
     onRequest: (options, handler) async {
@@ -24,9 +29,52 @@ Dio dio(DioRef ref) {
       }
       handler.next(options);
     },
-    onError: (error, handler) {
-      // 401 → login ekranına yönlendir (go_router ile)
-      handler.next(error);
+    onError: (error, handler) async {
+      if (error.response?.statusCode != 401) {
+        return handler.next(error);
+      }
+
+      // Sonsuz döngü engeli: refresh endpoint 401 dönerse çıkış yap
+      if (error.requestOptions.path.contains('/auth/refresh')) {
+        await storage.deleteAll();
+        authN.invalidate();
+        return handler.next(error);
+      }
+
+      final refreshToken = await storage.read(key: AppConstants.refreshTokenKey);
+      if (refreshToken == null) {
+        await storage.deleteAll();
+        authN.invalidate();
+        return handler.next(error);
+      }
+
+      try {
+        final refreshDio = Dio(BaseOptions(
+          baseUrl: AppConstants.baseUrl,
+          connectTimeout: const Duration(seconds: 10),
+        ));
+        applyPinning(refreshDio);
+        final res = await refreshDio.post(
+          '/auth/refresh',
+          data: {'refreshToken': refreshToken},
+        );
+
+        final newAccess  = res.data['accessToken']  as String;
+        final newRefresh = res.data['refreshToken'] as String;
+
+        await storage.write(key: AppConstants.tokenKey,        value: newAccess);
+        await storage.write(key: AppConstants.refreshTokenKey, value: newRefresh);
+
+        // Orijinal isteği yeni token ile tekrar gönder
+        final opts = error.requestOptions;
+        opts.headers['Authorization'] = 'Bearer $newAccess';
+        final cloned = await d.fetch(opts);
+        return handler.resolve(cloned);
+      } catch (_) {
+        await storage.deleteAll();
+        authN.invalidate();
+        return handler.next(error);
+      }
     },
   ));
 

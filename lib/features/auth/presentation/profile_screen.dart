@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/auth/biometric_service.dart';
 import '../../../core/auth/current_user_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_provider.dart';
@@ -68,6 +70,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _logout() async {
+    HapticFeedback.mediumImpact();
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -89,6 +92,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (ok != true) return;
 
     await ref.read(authRepositoryProvider).logout();
+    Clipboard.setData(const ClipboardData(text: '')); // G15
     if (mounted) context.go('/login');
   }
 
@@ -224,6 +228,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 _ThemeSelector(primary: primary),
                 const SizedBox(height: 8),
 
+                // Biyometrik toggle
+                _BiometricTile(primary: primary),
+                const SizedBox(height: 8),
+
                 // Şifre değiştir
                 _ActionTile(
                   icon: Symbols.lock_reset,
@@ -299,6 +307,86 @@ class _ThemeSelector extends ConsumerWidget {
             style: ButtonStyle(
               visualDensity: VisualDensity.compact,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BiometricTile extends ConsumerStatefulWidget {
+  const _BiometricTile({required this.primary});
+  final Color primary;
+
+  @override
+  ConsumerState<_BiometricTile> createState() => _BiometricTileState();
+}
+
+class _BiometricTileState extends ConsumerState<_BiometricTile> {
+  bool? _available;
+  bool  _enabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final svc   = ref.read(biometricServiceProvider);
+    final avail = await svc.isAvailable();
+    if (!avail) {
+      if (mounted) setState(() => _available = false);
+      return;
+    }
+    final enabled = await svc.isEnabled();
+    if (mounted) setState(() { _available = true; _enabled = enabled; });
+  }
+
+  Future<void> _toggle(bool value) async {
+    if (value) {
+      final ok = await ref.read(biometricServiceProvider).authenticate();
+      if (!ok) return;
+    }
+    await ref.read(biometricServiceProvider).setEnabled(value);
+    setState(() => _enabled = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_available == false) return const SizedBox.shrink();
+    if (_available == null)  return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(Symbols.fingerprint, size: 20, color: widget.primary),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Biyometrik Giriş',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: widget.primary)),
+                Text('Face ID / Parmak izi ile giriş',
+                    style: TextStyle(
+                        fontSize: 11, color: Colors.grey.shade500)),
+              ],
+            ),
+          ),
+          Switch(
+            value: _enabled,
+            onChanged: _toggle,
+            activeColor: widget.primary,
           ),
         ],
       ),

@@ -17,8 +17,8 @@ class CustomerDetailScreen extends ConsumerWidget {
     final async = ref.watch(customersProvider());
 
     return async.when(
-      data: (list) {
-        final customer = list.where((c) => c.id == customerId).firstOrNull;
+      data: (paged) {
+        final customer = paged.items.where((c) => c.id == customerId).firstOrNull;
         if (customer == null) {
           return Scaffold(
             appBar: AppBar(),

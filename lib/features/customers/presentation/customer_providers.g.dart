@@ -6,7 +6,7 @@ part of 'customer_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$customersHash() => r'a0865486f8a47a2d33f9788d6be8b3c32b1d3841';
+String _$customersHash() => r'9b2411011e808d3b5d98530a5ff0fcf530e826fb';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,16 +34,18 @@ class _SystemHash {
 const customersProvider = CustomersFamily();
 
 /// See also [customers].
-class CustomersFamily extends Family<AsyncValue<List<Customer>>> {
+class CustomersFamily extends Family<AsyncValue<PagedResult<Customer>>> {
   /// See also [customers].
   const CustomersFamily();
 
   /// See also [customers].
   CustomersProvider call({
     String? search,
+    int page = 1,
   }) {
     return CustomersProvider(
       search: search,
+      page: page,
     );
   }
 
@@ -53,6 +55,7 @@ class CustomersFamily extends Family<AsyncValue<List<Customer>>> {
   ) {
     return call(
       search: provider.search,
+      page: provider.page,
     );
   }
 
@@ -72,14 +75,17 @@ class CustomersFamily extends Family<AsyncValue<List<Customer>>> {
 }
 
 /// See also [customers].
-class CustomersProvider extends AutoDisposeFutureProvider<List<Customer>> {
+class CustomersProvider
+    extends AutoDisposeFutureProvider<PagedResult<Customer>> {
   /// See also [customers].
   CustomersProvider({
     String? search,
+    int page = 1,
   }) : this._internal(
           (ref) => customers(
             ref as CustomersRef,
             search: search,
+            page: page,
           ),
           from: customersProvider,
           name: r'customersProvider',
@@ -90,6 +96,7 @@ class CustomersProvider extends AutoDisposeFutureProvider<List<Customer>> {
           dependencies: CustomersFamily._dependencies,
           allTransitiveDependencies: CustomersFamily._allTransitiveDependencies,
           search: search,
+          page: page,
         );
 
   CustomersProvider._internal(
@@ -100,13 +107,15 @@ class CustomersProvider extends AutoDisposeFutureProvider<List<Customer>> {
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.search,
+    required this.page,
   }) : super.internal();
 
   final String? search;
+  final int page;
 
   @override
   Override overrideWith(
-    FutureOr<List<Customer>> Function(CustomersRef provider) create,
+    FutureOr<PagedResult<Customer>> Function(CustomersRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -118,24 +127,28 @@ class CustomersProvider extends AutoDisposeFutureProvider<List<Customer>> {
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         search: search,
+        page: page,
       ),
     );
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<Customer>> createElement() {
+  AutoDisposeFutureProviderElement<PagedResult<Customer>> createElement() {
     return _CustomersProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CustomersProvider && other.search == search;
+    return other is CustomersProvider &&
+        other.search == search &&
+        other.page == page;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, search.hashCode);
+    hash = _SystemHash.combine(hash, page.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -143,17 +156,23 @@ class CustomersProvider extends AutoDisposeFutureProvider<List<Customer>> {
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CustomersRef on AutoDisposeFutureProviderRef<List<Customer>> {
+mixin CustomersRef on AutoDisposeFutureProviderRef<PagedResult<Customer>> {
   /// The parameter `search` of this provider.
   String? get search;
+
+  /// The parameter `page` of this provider.
+  int get page;
 }
 
 class _CustomersProviderElement
-    extends AutoDisposeFutureProviderElement<List<Customer>> with CustomersRef {
+    extends AutoDisposeFutureProviderElement<PagedResult<Customer>>
+    with CustomersRef {
   _CustomersProviderElement(super.provider);
 
   @override
   String? get search => (origin as CustomersProvider).search;
+  @override
+  int get page => (origin as CustomersProvider).page;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

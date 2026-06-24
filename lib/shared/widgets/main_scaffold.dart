@@ -14,6 +14,7 @@ class MainScaffold extends ConsumerWidget {
     (path: '/dashboard', icon: Symbols.dashboard,    label: 'Dashboard'),
     (path: '/quotes',    icon: Symbols.description,  label: 'Teklifler'),
     (path: '/customers', icon: Symbols.people,        label: 'Müşteriler'),
+    (path: '/search',    icon: Symbols.search,        label: 'Ara'),
   ];
 
   static const _adminTab =

@@ -41,6 +41,9 @@ dependencies:
   # Biyometrik
   local_auth: ^2.3.0
 
+  # Güvenlik
+  flutter_jailbreak_detection: ^1.9.0
+
   # Utils
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../shared/widgets/skeleton.dart';
 import '../data/customer_model.dart';
+import '../data/customer_repository.dart';
 import 'customer_providers.dart';
 
 class CustomerListScreen extends ConsumerStatefulWidget {
@@ -76,15 +78,18 @@ class _CustomerListScreenState extends ConsumerState<CustomerListScreen> {
         ],
       ),
       body: async.when(
-        data: (list) => list.isEmpty
+        data: (paged) => paged.items.isEmpty
             ? _EmptyState(hasSearch: _searchText.isNotEmpty)
             : RefreshIndicator(
                 onRefresh: () => ref.refresh(customersProvider(
                     search: _searchText.isEmpty ? null : _searchText).future),
                 child: ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-                  itemCount: list.length,
-                  itemBuilder: (ctx, i) => _CustomerCard(customer: list[i]),
+                  itemCount: paged.items.length,
+                  itemBuilder: (ctx, i) => _DismissibleCustomer(
+                    customer: paged.items[i],
+                    onDeleted: () => ref.invalidate(customersProvider),
+                  ),
                 ),
               ),
         loading: () => const SkeletonList(),
@@ -105,6 +110,66 @@ class _CustomerListScreenState extends ConsumerState<CustomerListScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DismissibleCustomer extends ConsumerWidget {
+  const _DismissibleCustomer({
+    required this.customer,
+    required this.onDeleted,
+  });
+  final Customer    customer;
+  final VoidCallback onDeleted;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Dismissible(
+      key: ValueKey(customer.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (_) async {
+        HapticFeedback.mediumImpact();
+        return await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Müşteriyi Sil'),
+            content: Text('"${customer.name}" müşterisini silmek istiyor musunuz?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('İptal'),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Sil'),
+              ),
+            ],
+          ),
+        );
+      },
+      onDismissed: (_) async {
+        try {
+          await ref.read(customerRepositoryProvider).delete(customer.id);
+          onDeleted();
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Hata: $e')));
+          }
+        }
+      },
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.red.shade600,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Icon(Symbols.delete, color: Colors.white, fill: 1),
+      ),
+      child: _CustomerCard(customer: customer),
     );
   }
 }

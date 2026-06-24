@@ -72,6 +72,11 @@ _$QuoteDetailImpl _$$QuoteDetailImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      shareToken: json['shareToken'] as String?,
+      viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
+      viewedAt: json['viewedAt'] == null
+          ? null
+          : DateTime.parse(json['viewedAt'] as String),
       items: (json['items'] as List<dynamic>)
           .map((e) => QuoteItemDetail.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -105,6 +110,9 @@ Map<String, dynamic> _$$QuoteDetailImplToJson(_$QuoteDetailImpl instance) =>
       'createdByEmail': instance.createdByEmail,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'shareToken': instance.shareToken,
+      'viewCount': instance.viewCount,
+      'viewedAt': instance.viewedAt?.toIso8601String(),
       'items': instance.items,
     };
 

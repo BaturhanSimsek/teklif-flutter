@@ -29,6 +29,8 @@ mixin _$LoginResponse {
   String get email => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
   bool get mustChangePassword => throw _privateConstructorUsedError;
+  bool get twoFactorRequired => throw _privateConstructorUsedError;
+  String? get twoFactorToken => throw _privateConstructorUsedError;
 
   /// Serializes this LoginResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +57,9 @@ abstract class $LoginResponseCopyWith<$Res> {
       String fullName,
       String email,
       String role,
-      bool mustChangePassword});
+      bool mustChangePassword,
+      bool twoFactorRequired,
+      String? twoFactorToken});
 }
 
 /// @nodoc
@@ -82,6 +86,8 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
     Object? email = null,
     Object? role = null,
     Object? mustChangePassword = null,
+    Object? twoFactorRequired = null,
+    Object? twoFactorToken = freezed,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -120,6 +126,14 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.mustChangePassword
           : mustChangePassword // ignore: cast_nullable_to_non_nullable
               as bool,
+      twoFactorRequired: null == twoFactorRequired
+          ? _value.twoFactorRequired
+          : twoFactorRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      twoFactorToken: freezed == twoFactorToken
+          ? _value.twoFactorToken
+          : twoFactorToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -141,7 +155,9 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
       String fullName,
       String email,
       String role,
-      bool mustChangePassword});
+      bool mustChangePassword,
+      bool twoFactorRequired,
+      String? twoFactorToken});
 }
 
 /// @nodoc
@@ -166,6 +182,8 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? email = null,
     Object? role = null,
     Object? mustChangePassword = null,
+    Object? twoFactorRequired = null,
+    Object? twoFactorToken = freezed,
   }) {
     return _then(_$LoginResponseImpl(
       accessToken: null == accessToken
@@ -204,6 +222,14 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.mustChangePassword
           : mustChangePassword // ignore: cast_nullable_to_non_nullable
               as bool,
+      twoFactorRequired: null == twoFactorRequired
+          ? _value.twoFactorRequired
+          : twoFactorRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      twoFactorToken: freezed == twoFactorToken
+          ? _value.twoFactorToken
+          : twoFactorToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -220,7 +246,9 @@ class _$LoginResponseImpl implements _LoginResponse {
       required this.fullName,
       required this.email,
       required this.role,
-      this.mustChangePassword = false});
+      this.mustChangePassword = false,
+      this.twoFactorRequired = false,
+      this.twoFactorToken});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -244,10 +272,15 @@ class _$LoginResponseImpl implements _LoginResponse {
   @override
   @JsonKey()
   final bool mustChangePassword;
+  @override
+  @JsonKey()
+  final bool twoFactorRequired;
+  @override
+  final String? twoFactorToken;
 
   @override
   String toString() {
-    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role, mustChangePassword: $mustChangePassword)';
+    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role, mustChangePassword: $mustChangePassword, twoFactorRequired: $twoFactorRequired, twoFactorToken: $twoFactorToken)';
   }
 
   @override
@@ -269,13 +302,28 @@ class _$LoginResponseImpl implements _LoginResponse {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.mustChangePassword, mustChangePassword) ||
-                other.mustChangePassword == mustChangePassword));
+                other.mustChangePassword == mustChangePassword) &&
+            (identical(other.twoFactorRequired, twoFactorRequired) ||
+                other.twoFactorRequired == twoFactorRequired) &&
+            (identical(other.twoFactorToken, twoFactorToken) ||
+                other.twoFactorToken == twoFactorToken));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
-      expiresAt, userId, tenantId, fullName, email, role, mustChangePassword);
+  int get hashCode => Object.hash(
+      runtimeType,
+      accessToken,
+      refreshToken,
+      expiresAt,
+      userId,
+      tenantId,
+      fullName,
+      email,
+      role,
+      mustChangePassword,
+      twoFactorRequired,
+      twoFactorToken);
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -303,7 +351,9 @@ abstract class _LoginResponse implements LoginResponse {
       required final String fullName,
       required final String email,
       required final String role,
-      final bool mustChangePassword}) = _$LoginResponseImpl;
+      final bool mustChangePassword,
+      final bool twoFactorRequired,
+      final String? twoFactorToken}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$LoginResponseImpl.fromJson;
@@ -326,6 +376,10 @@ abstract class _LoginResponse implements LoginResponse {
   String get role;
   @override
   bool get mustChangePassword;
+  @override
+  bool get twoFactorRequired;
+  @override
+  String? get twoFactorToken;
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.

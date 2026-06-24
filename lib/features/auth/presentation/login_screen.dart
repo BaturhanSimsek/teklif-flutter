@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../core/api/api_exception.dart';
+import '../../../core/auth/biometric_service.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../data/auth_repository.dart';
 
@@ -16,8 +19,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey  = GlobalKey<FormState>();
   final _email    = TextEditingController();
   final _password = TextEditingController();
-  bool _loading   = false;
-  bool _obscure   = true;
+  bool _loading        = false;
+  bool _obscure        = true;
+  bool _biometricAvail = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometric();
+  }
+
+  Future<void> _checkBiometric() async {
+    final svc      = ref.read(biometricServiceProvider);
+    final isLoggedIn = await ref.read(authRepositoryProvider).isLoggedIn();
+    if (!isLoggedIn) return;
+
+    final avail   = await svc.isAvailable();
+    final enabled = await svc.isEnabled();
+    if (avail) setState(() => _biometricAvail = true);
+
+    if (avail && enabled && mounted) {
+      final ok = await svc.authenticate();
+      if (ok && mounted) context.go('/dashboard');
+    }
+  }
 
   @override
   void dispose() {
@@ -26,16 +51,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _tryBiometric() async {
+    HapticFeedback.mediumImpact();
+    final ok = await ref.read(biometricServiceProvider).authenticate();
+    if (ok && mounted) context.go('/dashboard');
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      await ref.read(authRepositoryProvider).login(_email.text.trim(), _password.text);
-      if (mounted) context.go('/dashboard');
-    } catch (e) {
+      final response = await ref.read(authRepositoryProvider).login(_email.text.trim(), _password.text);
+      if (!mounted) return;
+
+      if (response.twoFactorRequired && response.twoFactorToken != null) {
+        context.push('/2fa-verify', extra: response.twoFactorToken);
+      } else {
+        context.go('/dashboard');
+      }
+    } on Exception catch (e) {
+      final msg = e is ApiException ? e.message : e.toString();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Giriş başarısız: ${e.toString().replaceFirst('Exception: ', '')}'),
+          content: Text(msg),
           backgroundColor: const Color(0xFFE0302A),
         ));
       }
@@ -182,6 +220,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onPressed: _submit,
                             labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                           ),
+                          if (_biometricAvail) ...[
+                            const SizedBox(height: 12),
+                            OutlinedButton.icon(
+                              onPressed: _tryBiometric,
+                              icon: const Icon(Symbols.fingerprint, size: 20),
+                              label: const Text('Biyometrik ile Giriş'),
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 48),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +30,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   @override
   void dispose() {
+    Clipboard.setData(const ClipboardData(text: '')); // G15
     _currentCtrl.dispose();
     _newCtrl.dispose();
     _confirmCtrl.dispose();
@@ -154,7 +156,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       onToggle: () => setState(() => _showNew = !_showNew),
                       validator: (v) {
                         if (v == null || v.isEmpty) return 'Zorunlu alan';
-                        if (v.length < 6) return 'En az 6 karakter olmalı';
+                        if (v.length < 8) return 'En az 8 karakter olmalı';
+                        if (!RegExp(r'[A-Z]').hasMatch(v)) return 'En az bir büyük harf gerekli';
+                        if (!RegExp(r'[0-9]').hasMatch(v)) return 'En az bir rakam gerekli';
+                        if (!RegExp(r'[^a-zA-Z0-9]').hasMatch(v)) return 'En az bir özel karakter gerekli';
                         return null;
                       },
                     ),

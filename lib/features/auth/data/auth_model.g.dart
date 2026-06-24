@@ -17,6 +17,8 @@ _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String,
       role: json['role'] as String,
       mustChangePassword: json['mustChangePassword'] as bool? ?? false,
+      twoFactorRequired: json['twoFactorRequired'] as bool? ?? false,
+      twoFactorToken: json['twoFactorToken'] as String?,
     );
 
 Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
@@ -30,4 +32,6 @@ Map<String, dynamic> _$$LoginResponseImplToJson(_$LoginResponseImpl instance) =>
       'email': instance.email,
       'role': instance.role,
       'mustChangePassword': instance.mustChangePassword,
+      'twoFactorRequired': instance.twoFactorRequired,
+      'twoFactorToken': instance.twoFactorToken,
     };

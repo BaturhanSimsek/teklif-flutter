@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/pdf_service.dart';
 import '../data/quote_model.dart';
@@ -35,6 +37,7 @@ class _QuoteDetailView extends StatelessWidget {
   final WidgetRef   ref;
 
   Future<void> _approve(BuildContext ctx, bool approve) async {
+    HapticFeedback.mediumImpact();
     try {
       await ref.read(quoteRepositoryProvider).approve(quote.id, approve: approve);
       ref.invalidate(quoteDetailProvider(quote.id));
@@ -53,6 +56,12 @@ class _QuoteDetailView extends StatelessWidget {
       } else if (action == 'revise') {
         final newId = await ref.read(quoteRepositoryProvider).revise(quote.id);
         if (ctx.mounted) ctx.pushReplacement('/quotes/$newId');
+      } else if (action == 'share_link') {
+        final url = await ref.read(quoteRepositoryProvider).generateShareLink(quote.id);
+        await Share.share(url, subject: 'Teklif: ${quote.quoteNumberDisplay}');
+      } else if (action == 'revisions') {
+        if (ctx.mounted) ctx.push('/quotes/${quote.id}/revisions');
+        return;
       }
     } catch (e) {
       if (ctx.mounted) {
@@ -122,6 +131,22 @@ class _QuoteDetailView extends StatelessWidget {
                       Icon(Symbols.edit_document, size: 18),
                       SizedBox(width: 10),
                       Text('Yeni Revizyon'),
+                    ]),
+                  ),
+                  PopupMenuItem(
+                    value: 'share_link',
+                    child: Row(children: [
+                      Icon(Symbols.link, size: 18),
+                      SizedBox(width: 10),
+                      Text('Onay Linki Oluştur'),
+                    ]),
+                  ),
+                  PopupMenuItem(
+                    value: 'revisions',
+                    child: Row(children: [
+                      Icon(Symbols.history, size: 18),
+                      SizedBox(width: 10),
+                      Text('Revizyon Geçmişi'),
                     ]),
                   ),
                 ],
@@ -218,6 +243,20 @@ class _QuoteDetailView extends StatelessWidget {
                     if (quote.notes != null) _Row('Notlar', quote.notes!),
                   ],
                 ),
+                const SizedBox(height: 12),
+
+                // Görüntülenme takibi
+                if (quote.viewCount > 0)
+                  _InfoCard(
+                    title: 'Link Takibi',
+                    icon: Symbols.visibility,
+                    rows: [
+                      _Row('Görüntülenme', '${quote.viewCount} kez'),
+                      if (quote.viewedAt != null)
+                        _Row('Son görüntülenme',
+                            DateFormat('dd.MM.yyyy HH:mm').format(quote.viewedAt!.toLocal())),
+                    ],
+                  ),
                 const SizedBox(height: 16),
 
                 // Kalemler başlık

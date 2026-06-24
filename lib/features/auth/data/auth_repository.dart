@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/constants/app_constants.dart';
 import 'auth_model.dart';
 
@@ -18,21 +19,25 @@ class AuthRepository {
   final _storage = const FlutterSecureStorage();
 
   Future<LoginResponse> login(String email, String password) async {
-    final res = await _dio.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
-    final response = LoginResponse.fromJson(res.data as Map<String, dynamic>);
+    try {
+      final res = await _dio.post('/auth/login', data: {
+        'email': email,
+        'password': password,
+      });
+      final response = LoginResponse.fromJson(res.data as Map<String, dynamic>);
 
-    await _storage.write(key: AppConstants.tokenKey,        value: response.accessToken);
-    await _storage.write(key: AppConstants.refreshTokenKey, value: response.refreshToken);
-    await _storage.write(key: AppConstants.tenantIdKey,     value: response.tenantId);
-    await _storage.write(key: AppConstants.userEmailKey,    value: response.email);
-    await _storage.write(key: AppConstants.userRoleKey,           value: response.role);
-    await _storage.write(key: AppConstants.userIdKey,             value: response.userId);
-    await _storage.write(key: AppConstants.mustChangePasswordKey, value: response.mustChangePassword.toString());
+      await _storage.write(key: AppConstants.tokenKey,              value: response.accessToken);
+      await _storage.write(key: AppConstants.refreshTokenKey,       value: response.refreshToken);
+      await _storage.write(key: AppConstants.tenantIdKey,           value: response.tenantId);
+      await _storage.write(key: AppConstants.userEmailKey,          value: response.email);
+      await _storage.write(key: AppConstants.userRoleKey,           value: response.role);
+      await _storage.write(key: AppConstants.userIdKey,             value: response.userId);
+      await _storage.write(key: AppConstants.mustChangePasswordKey, value: response.mustChangePassword.toString());
 
-    return response;
+      return response;
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> logout() async {

@@ -464,6 +464,9 @@ mixin _$QuoteDetail {
   String get createdByEmail => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
+  String? get shareToken => throw _privateConstructorUsedError;
+  int get viewCount => throw _privateConstructorUsedError;
+  DateTime? get viewedAt => throw _privateConstructorUsedError;
   List<QuoteItemDetail> get items => throw _privateConstructorUsedError;
 
   /// Serializes this QuoteDetail to a JSON map.
@@ -509,6 +512,9 @@ abstract class $QuoteDetailCopyWith<$Res> {
       String createdByEmail,
       DateTime createdAt,
       DateTime? updatedAt,
+      String? shareToken,
+      int viewCount,
+      DateTime? viewedAt,
       List<QuoteItemDetail> items});
 }
 
@@ -553,6 +559,9 @@ class _$QuoteDetailCopyWithImpl<$Res, $Val extends QuoteDetail>
     Object? createdByEmail = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? shareToken = freezed,
+    Object? viewCount = null,
+    Object? viewedAt = freezed,
     Object? items = null,
   }) {
     return _then(_value.copyWith(
@@ -660,6 +669,18 @@ class _$QuoteDetailCopyWithImpl<$Res, $Val extends QuoteDetail>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      shareToken: freezed == shareToken
+          ? _value.shareToken
+          : shareToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      viewedAt: freezed == viewedAt
+          ? _value.viewedAt
+          : viewedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       items: null == items
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
@@ -703,6 +724,9 @@ abstract class _$$QuoteDetailImplCopyWith<$Res>
       String createdByEmail,
       DateTime createdAt,
       DateTime? updatedAt,
+      String? shareToken,
+      int viewCount,
+      DateTime? viewedAt,
       List<QuoteItemDetail> items});
 }
 
@@ -745,6 +769,9 @@ class __$$QuoteDetailImplCopyWithImpl<$Res>
     Object? createdByEmail = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? shareToken = freezed,
+    Object? viewCount = null,
+    Object? viewedAt = freezed,
     Object? items = null,
   }) {
     return _then(_$QuoteDetailImpl(
@@ -852,6 +879,18 @@ class __$$QuoteDetailImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      shareToken: freezed == shareToken
+          ? _value.shareToken
+          : shareToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      viewedAt: freezed == viewedAt
+          ? _value.viewedAt
+          : viewedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       items: null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
@@ -890,6 +929,9 @@ class _$QuoteDetailImpl implements _QuoteDetail {
       required this.createdByEmail,
       required this.createdAt,
       this.updatedAt,
+      this.shareToken,
+      this.viewCount = 0,
+      this.viewedAt,
       required final List<QuoteItemDetail> items})
       : _items = items;
 
@@ -948,6 +990,13 @@ class _$QuoteDetailImpl implements _QuoteDetail {
   final DateTime createdAt;
   @override
   final DateTime? updatedAt;
+  @override
+  final String? shareToken;
+  @override
+  @JsonKey()
+  final int viewCount;
+  @override
+  final DateTime? viewedAt;
   final List<QuoteItemDetail> _items;
   @override
   List<QuoteItemDetail> get items {
@@ -958,7 +1007,7 @@ class _$QuoteDetailImpl implements _QuoteDetail {
 
   @override
   String toString() {
-    return 'QuoteDetail(id: $id, quoteNumber: $quoteNumber, quoteNumberDisplay: $quoteNumberDisplay, revisionNo: $revisionNo, status: $status, isApproved: $isApproved, customerId: $customerId, customerName: $customerName, customerPhone: $customerPhone, formTemplateId: $formTemplateId, formTemplateName: $formTemplateName, language: $language, currency: $currency, date: $date, paymentTerm: $paymentTerm, deliveryDays: $deliveryDays, kdvRate: $kdvRate, discountRate: $discountRate, notes: $notes, subTotal: $subTotal, discountAmount: $discountAmount, kdvAmount: $kdvAmount, grandTotal: $grandTotal, createdByEmail: $createdByEmail, createdAt: $createdAt, updatedAt: $updatedAt, items: $items)';
+    return 'QuoteDetail(id: $id, quoteNumber: $quoteNumber, quoteNumberDisplay: $quoteNumberDisplay, revisionNo: $revisionNo, status: $status, isApproved: $isApproved, customerId: $customerId, customerName: $customerName, customerPhone: $customerPhone, formTemplateId: $formTemplateId, formTemplateName: $formTemplateName, language: $language, currency: $currency, date: $date, paymentTerm: $paymentTerm, deliveryDays: $deliveryDays, kdvRate: $kdvRate, discountRate: $discountRate, notes: $notes, subTotal: $subTotal, discountAmount: $discountAmount, kdvAmount: $kdvAmount, grandTotal: $grandTotal, createdByEmail: $createdByEmail, createdAt: $createdAt, updatedAt: $updatedAt, shareToken: $shareToken, viewCount: $viewCount, viewedAt: $viewedAt, items: $items)';
   }
 
   @override
@@ -1013,6 +1062,12 @@ class _$QuoteDetailImpl implements _QuoteDetail {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.shareToken, shareToken) ||
+                other.shareToken == shareToken) &&
+            (identical(other.viewCount, viewCount) ||
+                other.viewCount == viewCount) &&
+            (identical(other.viewedAt, viewedAt) ||
+                other.viewedAt == viewedAt) &&
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
@@ -1046,6 +1101,9 @@ class _$QuoteDetailImpl implements _QuoteDetail {
         createdByEmail,
         createdAt,
         updatedAt,
+        shareToken,
+        viewCount,
+        viewedAt,
         const DeepCollectionEquality().hash(_items)
       ]);
 
@@ -1093,6 +1151,9 @@ abstract class _QuoteDetail implements QuoteDetail {
       required final String createdByEmail,
       required final DateTime createdAt,
       final DateTime? updatedAt,
+      final String? shareToken,
+      final int viewCount,
+      final DateTime? viewedAt,
       required final List<QuoteItemDetail> items}) = _$QuoteDetailImpl;
 
   factory _QuoteDetail.fromJson(Map<String, dynamic> json) =
@@ -1150,6 +1211,12 @@ abstract class _QuoteDetail implements QuoteDetail {
   DateTime get createdAt;
   @override
   DateTime? get updatedAt;
+  @override
+  String? get shareToken;
+  @override
+  int get viewCount;
+  @override
+  DateTime? get viewedAt;
   @override
   List<QuoteItemDetail> get items;
 

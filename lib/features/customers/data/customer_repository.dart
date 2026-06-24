@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/models/paged_result.dart';
 import 'customer_model.dart';
 
 part 'customer_repository.g.dart';
@@ -14,12 +15,20 @@ class CustomerRepository {
 
   final Dio _dio;
 
-  Future<List<Customer>> getAll({String? search}) async {
+  Future<PagedResult<Customer>> getAll({
+    String? search,
+    int page     = 1,
+    int pageSize = 30,
+  }) async {
     final res = await _dio.get('/customers', queryParameters: {
       if (search != null && search.isNotEmpty) 'search': search,
+      'page': page,
+      'pageSize': pageSize,
     });
-    final list = res.data as List<dynamic>;
-    return list.map((e) => Customer.fromJson(e as Map<String, dynamic>)).toList();
+    return PagedResult.fromJson(
+      res.data as Map<String, dynamic>,
+      Customer.fromJson,
+    );
   }
 
   Future<String> create({
@@ -41,6 +50,10 @@ class CustomerRepository {
       'notes':     notes,
     });
     return (res.data as Map<String, dynamic>)['id'] as String;
+  }
+
+  Future<void> delete(String id) async {
+    await _dio.delete('/customers/$id');
   }
 
   Future<void> update({

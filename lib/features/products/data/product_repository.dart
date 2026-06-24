@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/models/paged_result.dart';
 import 'product_model.dart';
 
 part 'product_repository.g.dart';
@@ -10,19 +11,27 @@ ProductRepository productRepository(ProductRepositoryRef ref) =>
     ProductRepository(ref.watch(dioProvider));
 
 @riverpod
-Future<List<Product>> products(ProductsRef ref) =>
+Future<PagedResult<Product>> products(ProductsRef ref) =>
     ref.watch(productRepositoryProvider).getAll();
 
 class ProductRepository {
   ProductRepository(this._dio);
   final Dio _dio;
 
-  Future<List<Product>> getAll({String? search}) async {
-    final res = await _dio.get('/products',
-        queryParameters: {if (search != null) 'search': search});
-    return (res.data as List)
-        .map((e) => Product.fromJson(e as Map<String, dynamic>))
-        .toList();
+  Future<PagedResult<Product>> getAll({
+    String? search,
+    int page     = 1,
+    int pageSize = 30,
+  }) async {
+    final res = await _dio.get('/products', queryParameters: {
+      if (search != null && search.isNotEmpty) 'search': search,
+      'page': page,
+      'pageSize': pageSize,
+    });
+    return PagedResult.fromJson(
+      res.data as Map<String, dynamic>,
+      Product.fromJson,
+    );
   }
 
   Future<String> create({

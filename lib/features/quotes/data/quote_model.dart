@@ -54,6 +54,9 @@ class QuoteDetail with _$QuoteDetail {
     required String createdByEmail,
     required DateTime createdAt,
     DateTime? updatedAt,
+    String? shareToken,
+    @Default(0) int viewCount,
+    DateTime? viewedAt,
     required List<QuoteItemDetail> items,
   }) = _QuoteDetail;
 
