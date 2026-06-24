@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'core/constants/app_constants.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/register_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'features/customers/presentation/customer_list_screen.dart';
 import 'features/customers/presentation/customer_detail_screen.dart';
@@ -48,6 +49,10 @@ GoRouter router(RouterRef ref) {
       GoRoute(
         path: '/login',
         builder: (_, __) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (_, __) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/change-password',

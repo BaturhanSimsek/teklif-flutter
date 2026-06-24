@@ -31,7 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _loading = true);
     try {
       await ref.read(authRepositoryProvider).login(_email.text.trim(), _password.text);
-      if (mounted) context.go('/quotes');
+      if (mounted) context.go('/dashboard');
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -181,6 +181,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             loading: _loading,
                             onPressed: _submit,
                             labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Firmanız kayıtlı değil mi?',
+                                  style: TextStyle(color: Colors.grey, fontSize: 13)),
+                              TextButton(
+                                onPressed: () => context.go('/register'),
+                                child: const Text('Ücretsiz Kaydol'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
