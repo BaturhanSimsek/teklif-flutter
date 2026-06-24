@@ -46,7 +46,10 @@ class AdminScreen extends ConsumerWidget {
         ],
       ),
       body: async.when(
-        data: (users) => _UserList(users: users, ref: ref),
+        data: (users) => RefreshIndicator(
+          onRefresh: () => ref.refresh(_usersProvider.future),
+          child: _UserList(users: users, ref: ref),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Hata: $e')),
       ),

@@ -35,7 +35,10 @@ class ProductListScreen extends ConsumerWidget {
         label: const Text('Yeni Ürün'),
       ),
       body: async.when(
-        data:    (list) => _ProductList(products: list, ref: ref),
+        data: (list) => RefreshIndicator(
+          onRefresh: () => ref.refresh(_productsProvider.future),
+          child: _ProductList(products: list, ref: ref),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error:   (e, _) => Center(child: Text('Hata: $e')),
       ),
@@ -53,15 +56,19 @@ class _ProductList extends StatelessWidget {
     final active = products.where((p) => p.isActive).toList();
 
     if (active.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Symbols.inventory_2, size: 64, color: Colors.grey),
-            SizedBox(height: 12),
-            Text('Henüz ürün yok', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: const [
+          SizedBox(height: 120),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Symbols.inventory_2, size: 64, color: Colors.grey),
+              SizedBox(height: 12),
+              Text('Henüz ürün yok', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ],
       );
     }
 
