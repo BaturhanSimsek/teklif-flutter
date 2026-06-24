@@ -6,6 +6,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/auth/current_user_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/theme_provider.dart';
 import '../data/auth_repository.dart';
 import 'change_password_screen.dart';
 
@@ -219,6 +220,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 const SizedBox(height: 14),
 
+                // Tema seçimi
+                _ThemeSelector(primary: primary),
+                const SizedBox(height: 8),
+
                 // Şifre değiştir
                 _ActionTile(
                   icon: Symbols.lock_reset,
@@ -241,6 +246,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ],
             ),
+    );
+  }
+}
+
+class _ThemeSelector extends ConsumerWidget {
+  const _ThemeSelector({required this.primary});
+  final Color primary;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(themeModeNotifierProvider);
+    final notifier = ref.read(themeModeNotifierProvider.notifier);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(Symbols.brightness_medium, size: 20, color: primary),
+          const SizedBox(width: 14),
+          Text('Tema',
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: primary)),
+          const Spacer(),
+          SegmentedButton<ThemeMode>(
+            segments: const [
+              ButtonSegment(
+                value: ThemeMode.light,
+                icon: Icon(Symbols.light_mode, size: 16),
+                label: Text('Açık', style: TextStyle(fontSize: 11)),
+              ),
+              ButtonSegment(
+                value: ThemeMode.system,
+                icon: Icon(Symbols.brightness_auto, size: 16),
+                label: Text('Sistem', style: TextStyle(fontSize: 11)),
+              ),
+              ButtonSegment(
+                value: ThemeMode.dark,
+                icon: Icon(Symbols.dark_mode, size: 16),
+                label: Text('Koyu', style: TextStyle(fontSize: 11)),
+              ),
+            ],
+            selected: {current},
+            onSelectionChanged: (s) => notifier.setMode(s.first),
+            style: ButtonStyle(
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
