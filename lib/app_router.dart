@@ -22,6 +22,8 @@ import 'features/auth/presentation/two_factor_verify_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/products/presentation/product_list_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/onboarding/splash_screen.dart';
 import 'features/search/presentation/search_screen.dart';
 import 'shared/widgets/main_scaffold.dart';
 
@@ -33,16 +35,19 @@ GoRouter router(RouterRef ref) {
 
   return GoRouter(
     refreshListenable: authN,
-    initialLocation: '/dashboard',
+    initialLocation: '/',
     redirect: (context, state) async {
       const storage   = FlutterSecureStorage();
       final repo      = ref.read(authRepositoryProvider);
       final loggedIn  = await repo.isLoggedIn();
-      final location  = state.matchedLocation;
+      final location   = state.matchedLocation;
+      final onSplash   = location == '/';
+      final onboarding = location == '/onboarding';
       final onLogin    = location == '/login';
       final onChangePw = location == '/change-password';
       final on2fa      = location == '/2fa-verify';
 
+      if (onSplash || onboarding) return null;
       if (!loggedIn && !onLogin && !on2fa) return '/login';
       if (loggedIn && onLogin)  {
         final mustChange = await storage.read(key: AppConstants.mustChangePasswordKey);
@@ -56,6 +61,14 @@ GoRouter router(RouterRef ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/',
+        builder: (_, __) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        builder: (_, __) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: '/login',
         builder: (_, __) => const LoginScreen(),
