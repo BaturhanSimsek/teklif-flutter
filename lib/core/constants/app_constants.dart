@@ -3,7 +3,11 @@ import 'package:flutter/foundation.dart';
 class AppConstants {
   AppConstants._();
 
+  // Production build: flutter build apk --dart-define=API_URL=https://api.firmam.com/api/v1
+  static const String _definedUrl = String.fromEnvironment('API_URL');
+
   static String get baseUrl {
+    if (_definedUrl.isNotEmpty) return _definedUrl;
     if (kIsWeb) return 'http://localhost:5074/api/v1';
     // Android emülatör → host makinesi
     return 'http://10.0.2.2:5074/api/v1';
