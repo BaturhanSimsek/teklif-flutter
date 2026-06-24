@@ -16,7 +16,6 @@ dependencies:
 
   # HTTP + API
   dio: ^5.4.3
-  retrofit: ^4.1.0
 
   # Navigation
   go_router: ^13.2.0
@@ -26,7 +25,7 @@ dependencies:
   shared_preferences: ^2.2.3
 
   # UI / Material 3
-  material_color_utilities: ^0.8.0
+  material_color_utilities: ^0.13.0
   cached_network_image: ^3.3.1
   flutter_svg: ^2.0.10+1
   shimmer: ^3.0.0
@@ -47,8 +46,6 @@ dev_dependencies:
   riverpod_generator: ^2.4.0
   freezed: ^2.5.2
   json_serializable: ^6.8.0
-  retrofit_generator: ^8.1.0
-
   flutter_lints: ^3.0.0
 
 flutter:

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../core/api/api_client.dart';
+import '../../../core/api/api_client.dart';
 import 'quote_model.dart';
 
 part 'quote_repository.g.dart';

@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import '../data/quote_repository.dart';
 import '../data/quote_model.dart';
+import '../data/quote_repository.dart';
+import 'quote_providers.dart';
 
 final _curr = NumberFormat.currency(locale: 'tr_TR', symbol: '₺');
-
-@riverpod
-Future<QuoteDetail> _quoteDetail(_QuoteDetailRef ref, String quoteId) =>
-    ref.watch(quoteRepositoryProvider).getById(quoteId);
 
 class QuoteDetailScreen extends ConsumerWidget {
   const QuoteDetailScreen({super.key, required this.quoteId});
@@ -18,8 +15,7 @@ class QuoteDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(_quoteDetailProvider(quoteId));
-    final colors = Theme.of(context).colorScheme;
+    final async = ref.watch(quoteDetailProvider(quoteId));
 
     return async.when(
       data: (q) => Scaffold(
@@ -57,16 +53,16 @@ class QuoteDetailScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _SectionCard(title: 'Müşteri', children: [
-                _InfoRow('Ad',    q.customerName),
+                _InfoRow('Ad',      q.customerName),
                 _InfoRow('Telefon', q.customerPhone),
               ]),
               const SizedBox(height: 12),
               _SectionCard(title: 'Teklif Bilgileri', children: [
-                _InfoRow('Tarih',       DateFormat('dd.MM.yyyy').format(q.date)),
-                _InfoRow('Ödeme',       q.paymentTerm),
-                _InfoRow('Teslimat',    '${q.deliveryDays} gün'),
-                _InfoRow('İndirim',     '%${q.discountRate.toStringAsFixed(0)}'),
-                _InfoRow('KDV',         '%${q.kdvRate.toStringAsFixed(0)}'),
+                _InfoRow('Tarih',     DateFormat('dd.MM.yyyy').format(q.date)),
+                _InfoRow('Ödeme',     q.paymentTerm),
+                _InfoRow('Teslimat',  '${q.deliveryDays} gün'),
+                _InfoRow('İndirim',   '%${q.discountRate.toStringAsFixed(0)}'),
+                _InfoRow('KDV',       '%${q.kdvRate.toStringAsFixed(0)}'),
                 if (q.notes != null) _InfoRow('Notlar', q.notes!),
               ]),
               const SizedBox(height: 12),
@@ -87,7 +83,7 @@ class QuoteDetailScreen extends ConsumerWidget {
   Future<void> _approve(BuildContext ctx, WidgetRef ref, String id, bool approve) async {
     try {
       await ref.read(quoteRepositoryProvider).approve(id, approve: approve);
-      ref.invalidate(_quoteDetailProvider(id));
+      ref.invalidate(quoteDetailProvider(id));
     } catch (e) {
       if (ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('$e')));
@@ -98,7 +94,7 @@ class QuoteDetailScreen extends ConsumerWidget {
 
 class _SectionCard extends StatelessWidget {
   const _SectionCard({required this.title, required this.children});
-  final String title;
+  final String       title;
   final List<Widget> children;
 
   @override
@@ -131,7 +127,9 @@ class _InfoRow extends StatelessWidget {
               width: 80,
               child: Text(label, style: const TextStyle(color: Colors.grey)),
             ),
-            Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500))),
+            Expanded(
+              child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ),
           ],
         ),
       );
@@ -160,7 +158,6 @@ class _ItemCard extends StatelessWidget {
               Text(_curr.format(item.total),
                   style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
             ]),
-            // Dinamik alanlar
             if (item.customFields.isNotEmpty) ...[
               const SizedBox(height: 8),
               Wrap(
@@ -192,13 +189,14 @@ class _TotalsCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _TotalRow('Ara Toplam',   _curr.format(quote.subTotal)),
+            _TotalRow('Ara Toplam', _curr.format(quote.subTotal)),
             if (quote.discountRate > 0)
-              _TotalRow('İndirim (${quote.discountRate.toStringAsFixed(0)}%)',
-                  '-${_curr.format(quote.discountAmount)}',
-                  color: Colors.green),
-            _TotalRow('KDV (${quote.kdvRate.toStringAsFixed(0)}%)',
-                _curr.format(quote.kdvAmount)),
+              _TotalRow(
+                'İndirim (${quote.discountRate.toStringAsFixed(0)}%)',
+                '-${_curr.format(quote.discountAmount)}',
+                color: Colors.green,
+              ),
+            _TotalRow('KDV (${quote.kdvRate.toStringAsFixed(0)}%)', _curr.format(quote.kdvAmount)),
             const Divider(),
             _TotalRow(
               'GENEL TOPLAM',
@@ -224,12 +222,12 @@ class _TotalRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           children: [
-            Text(label, style: TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+            Text(label,
+                style: TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
             const Spacer(),
             Text(value,
                 style: TextStyle(
-                    fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                    color: color)),
+                    fontWeight: bold ? FontWeight.bold : FontWeight.normal, color: color)),
           ],
         ),
       );

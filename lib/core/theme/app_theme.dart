@@ -9,7 +9,7 @@ class AppTheme {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: _seed),
         appBarTheme: const AppBarTheme(centerTitle: false),
-        cardTheme: const CardTheme(elevation: 1, margin: EdgeInsets.zero),
+        cardTheme: const CardThemeData(elevation: 1, margin: EdgeInsets.zero),
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
           filled: true,
@@ -23,7 +23,7 @@ class AppTheme {
           brightness: Brightness.dark,
         ),
         appBarTheme: const AppBarTheme(centerTitle: false),
-        cardTheme: const CardTheme(elevation: 1, margin: EdgeInsets.zero),
+        cardTheme: const CardThemeData(elevation: 1, margin: EdgeInsets.zero),
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
           filled: true,

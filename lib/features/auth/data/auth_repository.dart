@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../core/api/api_client.dart';
-import '../../core/constants/app_constants.dart';
+import '../../../core/api/api_client.dart';
+import '../../../core/constants/app_constants.dart';
 import 'auth_model.dart';
 
 part 'auth_repository.g.dart';

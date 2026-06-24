@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import '../data/quote_repository.dart';
 import '../data/quote_model.dart';
+import 'quote_providers.dart';
 
 final _fmt = NumberFormat.currency(locale: 'tr_TR', symbol: '₺');
 
@@ -14,10 +14,7 @@ class QuoteListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repo   = ref.watch(quoteRepositoryProvider);
-    final future = ref.watch(
-      _quotesProvider(customerId),
-    );
+    final async = ref.watch(quotesByCustomerProvider(customerId));
 
     return Scaffold(
       appBar: AppBar(
@@ -29,11 +26,11 @@ class QuoteListScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: future.when(
+      body: async.when(
         data: (quotes) => quotes.isEmpty
             ? const Center(child: Text('Henüz teklif yok.'))
             : RefreshIndicator(
-                onRefresh: () => ref.refresh(_quotesProvider(customerId).future),
+                onRefresh: () => ref.refresh(quotesByCustomerProvider(customerId).future),
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: quotes.length,
@@ -49,10 +46,6 @@ class QuoteListScreen extends ConsumerWidget {
     );
   }
 }
-
-@riverpod
-Future<List<QuoteSummary>> _quotes(_QuotesRef ref, String customerId) =>
-    ref.watch(quoteRepositoryProvider).getByCustomer(customerId);
 
 class _QuoteCard extends StatelessWidget {
   const _QuoteCard({required this.quote, required this.onTap});
@@ -106,8 +99,7 @@ class _QuoteCard extends StatelessWidget {
                 ),
                 child: Text(
                   'Onaylandı',
-                  style: TextStyle(
-                      fontSize: 11, color: colors.onPrimaryContainer),
+                  style: TextStyle(fontSize: 11, color: colors.onPrimaryContainer),
                 ),
               ),
           ],
