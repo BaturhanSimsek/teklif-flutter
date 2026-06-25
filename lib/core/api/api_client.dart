@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../auth/auth_notifier.dart';
@@ -20,6 +21,18 @@ Dio dio(DioRef ref) {
   ));
 
   applyPinning(d);
+
+  if (kDebugMode) {
+    d.interceptors.add(InterceptorsWrapper(
+      onError: (error, handler) {
+        debugPrint('[API ERROR] ${error.requestOptions.method} '
+            '${error.requestOptions.path} → '
+            'HTTP ${error.response?.statusCode} | '
+            'body: ${error.response?.data}');
+        handler.next(error);
+      },
+    ));
+  }
 
   d.interceptors.add(InterceptorsWrapper(
     onRequest: (options, handler) async {

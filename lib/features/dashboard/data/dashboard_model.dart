@@ -6,14 +6,11 @@ part 'dashboard_model.g.dart';
 @freezed
 class DashboardData with _$DashboardData {
   const factory DashboardData({
-    required int     totalQuotes,
-    required int     approvedQuotes,
-    required int     pendingQuotes,
-    required double  totalRevenue,
-    required double  monthlyRevenue,
-    required int     totalCustomers,
-    required int     newCustomersThisMonth,
-    required List<MonthlyStat> monthlySales,
+    required int totalQuotes,
+    required int pendingQuotes,
+    required int approvedQuotes,
+    required int todayVisits,
+    required List<RecentQuote> recentQuotes,
   }) = _DashboardData;
 
   factory DashboardData.fromJson(Map<String, dynamic> json) =>
@@ -21,13 +18,16 @@ class DashboardData with _$DashboardData {
 }
 
 @freezed
-class MonthlyStat with _$MonthlyStat {
-  const factory MonthlyStat({
-    required String month,
-    required int    count,
-    required double revenue,
-  }) = _MonthlyStat;
+class RecentQuote with _$RecentQuote {
+  const factory RecentQuote({
+    required String   id,
+    required String   quoteNumber,
+    required String   customerName,
+    required int      status,
+    required DateTime date,
+    required String   currency,
+  }) = _RecentQuote;
 
-  factory MonthlyStat.fromJson(Map<String, dynamic> json) =>
-      _$MonthlyStatFromJson(json);
+  factory RecentQuote.fromJson(Map<String, dynamic> json) =>
+      _$RecentQuoteFromJson(json);
 }

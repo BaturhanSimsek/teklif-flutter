@@ -18,6 +18,8 @@ class MainScaffold extends ConsumerWidget {
     (path: '/search',     icon: Symbols.search,           label: 'Ara'),
   ];
 
+  static const _reportsTab =
+      (path: '/reports', icon: Symbols.bar_chart,             label: 'Raporlar');
   static const _adminTab =
       (path: '/admin',   icon: Symbols.admin_panel_settings, label: 'Yönetim');
   static const _profileTab =
@@ -25,8 +27,14 @@ class MainScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isAdmin = ref.watch(isAdminProvider).valueOrNull ?? false;
-    final tabs    = [..._baseTabs, if (isAdmin) _adminTab, _profileTab];
+    final isAdmin     = ref.watch(isAdminProvider).valueOrNull ?? false;
+    final canReport   = ref.watch(canViewReportsProvider).valueOrNull ?? false;
+    final tabs        = [
+      ..._baseTabs,
+      if (canReport) _reportsTab,
+      if (isAdmin) _adminTab,
+      _profileTab,
+    ];
 
     int currentIndex = 0;
     for (var i = 0; i < tabs.length; i++) {

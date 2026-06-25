@@ -21,13 +21,10 @@ DashboardData _$DashboardDataFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DashboardData {
   int get totalQuotes => throw _privateConstructorUsedError;
-  int get approvedQuotes => throw _privateConstructorUsedError;
   int get pendingQuotes => throw _privateConstructorUsedError;
-  double get totalRevenue => throw _privateConstructorUsedError;
-  double get monthlyRevenue => throw _privateConstructorUsedError;
-  int get totalCustomers => throw _privateConstructorUsedError;
-  int get newCustomersThisMonth => throw _privateConstructorUsedError;
-  List<MonthlyStat> get monthlySales => throw _privateConstructorUsedError;
+  int get approvedQuotes => throw _privateConstructorUsedError;
+  int get todayVisits => throw _privateConstructorUsedError;
+  List<RecentQuote> get recentQuotes => throw _privateConstructorUsedError;
 
   /// Serializes this DashboardData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,13 +44,10 @@ abstract class $DashboardDataCopyWith<$Res> {
   @useResult
   $Res call(
       {int totalQuotes,
-      int approvedQuotes,
       int pendingQuotes,
-      double totalRevenue,
-      double monthlyRevenue,
-      int totalCustomers,
-      int newCustomersThisMonth,
-      List<MonthlyStat> monthlySales});
+      int approvedQuotes,
+      int todayVisits,
+      List<RecentQuote> recentQuotes});
 }
 
 /// @nodoc
@@ -72,47 +66,32 @@ class _$DashboardDataCopyWithImpl<$Res, $Val extends DashboardData>
   @override
   $Res call({
     Object? totalQuotes = null,
-    Object? approvedQuotes = null,
     Object? pendingQuotes = null,
-    Object? totalRevenue = null,
-    Object? monthlyRevenue = null,
-    Object? totalCustomers = null,
-    Object? newCustomersThisMonth = null,
-    Object? monthlySales = null,
+    Object? approvedQuotes = null,
+    Object? todayVisits = null,
+    Object? recentQuotes = null,
   }) {
     return _then(_value.copyWith(
       totalQuotes: null == totalQuotes
           ? _value.totalQuotes
           : totalQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      approvedQuotes: null == approvedQuotes
-          ? _value.approvedQuotes
-          : approvedQuotes // ignore: cast_nullable_to_non_nullable
-              as int,
       pendingQuotes: null == pendingQuotes
           ? _value.pendingQuotes
           : pendingQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      totalRevenue: null == totalRevenue
-          ? _value.totalRevenue
-          : totalRevenue // ignore: cast_nullable_to_non_nullable
-              as double,
-      monthlyRevenue: null == monthlyRevenue
-          ? _value.monthlyRevenue
-          : monthlyRevenue // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalCustomers: null == totalCustomers
-          ? _value.totalCustomers
-          : totalCustomers // ignore: cast_nullable_to_non_nullable
+      approvedQuotes: null == approvedQuotes
+          ? _value.approvedQuotes
+          : approvedQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      newCustomersThisMonth: null == newCustomersThisMonth
-          ? _value.newCustomersThisMonth
-          : newCustomersThisMonth // ignore: cast_nullable_to_non_nullable
+      todayVisits: null == todayVisits
+          ? _value.todayVisits
+          : todayVisits // ignore: cast_nullable_to_non_nullable
               as int,
-      monthlySales: null == monthlySales
-          ? _value.monthlySales
-          : monthlySales // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyStat>,
+      recentQuotes: null == recentQuotes
+          ? _value.recentQuotes
+          : recentQuotes // ignore: cast_nullable_to_non_nullable
+              as List<RecentQuote>,
     ) as $Val);
   }
 }
@@ -127,13 +106,10 @@ abstract class _$$DashboardDataImplCopyWith<$Res>
   @useResult
   $Res call(
       {int totalQuotes,
-      int approvedQuotes,
       int pendingQuotes,
-      double totalRevenue,
-      double monthlyRevenue,
-      int totalCustomers,
-      int newCustomersThisMonth,
-      List<MonthlyStat> monthlySales});
+      int approvedQuotes,
+      int todayVisits,
+      List<RecentQuote> recentQuotes});
 }
 
 /// @nodoc
@@ -150,47 +126,32 @@ class __$$DashboardDataImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? totalQuotes = null,
-    Object? approvedQuotes = null,
     Object? pendingQuotes = null,
-    Object? totalRevenue = null,
-    Object? monthlyRevenue = null,
-    Object? totalCustomers = null,
-    Object? newCustomersThisMonth = null,
-    Object? monthlySales = null,
+    Object? approvedQuotes = null,
+    Object? todayVisits = null,
+    Object? recentQuotes = null,
   }) {
     return _then(_$DashboardDataImpl(
       totalQuotes: null == totalQuotes
           ? _value.totalQuotes
           : totalQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      approvedQuotes: null == approvedQuotes
-          ? _value.approvedQuotes
-          : approvedQuotes // ignore: cast_nullable_to_non_nullable
-              as int,
       pendingQuotes: null == pendingQuotes
           ? _value.pendingQuotes
           : pendingQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      totalRevenue: null == totalRevenue
-          ? _value.totalRevenue
-          : totalRevenue // ignore: cast_nullable_to_non_nullable
-              as double,
-      monthlyRevenue: null == monthlyRevenue
-          ? _value.monthlyRevenue
-          : monthlyRevenue // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalCustomers: null == totalCustomers
-          ? _value.totalCustomers
-          : totalCustomers // ignore: cast_nullable_to_non_nullable
+      approvedQuotes: null == approvedQuotes
+          ? _value.approvedQuotes
+          : approvedQuotes // ignore: cast_nullable_to_non_nullable
               as int,
-      newCustomersThisMonth: null == newCustomersThisMonth
-          ? _value.newCustomersThisMonth
-          : newCustomersThisMonth // ignore: cast_nullable_to_non_nullable
+      todayVisits: null == todayVisits
+          ? _value.todayVisits
+          : todayVisits // ignore: cast_nullable_to_non_nullable
               as int,
-      monthlySales: null == monthlySales
-          ? _value._monthlySales
-          : monthlySales // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyStat>,
+      recentQuotes: null == recentQuotes
+          ? _value._recentQuotes
+          : recentQuotes // ignore: cast_nullable_to_non_nullable
+              as List<RecentQuote>,
     ));
   }
 }
@@ -200,14 +161,11 @@ class __$$DashboardDataImplCopyWithImpl<$Res>
 class _$DashboardDataImpl implements _DashboardData {
   const _$DashboardDataImpl(
       {required this.totalQuotes,
-      required this.approvedQuotes,
       required this.pendingQuotes,
-      required this.totalRevenue,
-      required this.monthlyRevenue,
-      required this.totalCustomers,
-      required this.newCustomersThisMonth,
-      required final List<MonthlyStat> monthlySales})
-      : _monthlySales = monthlySales;
+      required this.approvedQuotes,
+      required this.todayVisits,
+      required final List<RecentQuote> recentQuotes})
+      : _recentQuotes = recentQuotes;
 
   factory _$DashboardDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$DashboardDataImplFromJson(json);
@@ -215,28 +173,22 @@ class _$DashboardDataImpl implements _DashboardData {
   @override
   final int totalQuotes;
   @override
-  final int approvedQuotes;
-  @override
   final int pendingQuotes;
   @override
-  final double totalRevenue;
+  final int approvedQuotes;
   @override
-  final double monthlyRevenue;
+  final int todayVisits;
+  final List<RecentQuote> _recentQuotes;
   @override
-  final int totalCustomers;
-  @override
-  final int newCustomersThisMonth;
-  final List<MonthlyStat> _monthlySales;
-  @override
-  List<MonthlyStat> get monthlySales {
-    if (_monthlySales is EqualUnmodifiableListView) return _monthlySales;
+  List<RecentQuote> get recentQuotes {
+    if (_recentQuotes is EqualUnmodifiableListView) return _recentQuotes;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_monthlySales);
+    return EqualUnmodifiableListView(_recentQuotes);
   }
 
   @override
   String toString() {
-    return 'DashboardData(totalQuotes: $totalQuotes, approvedQuotes: $approvedQuotes, pendingQuotes: $pendingQuotes, totalRevenue: $totalRevenue, monthlyRevenue: $monthlyRevenue, totalCustomers: $totalCustomers, newCustomersThisMonth: $newCustomersThisMonth, monthlySales: $monthlySales)';
+    return 'DashboardData(totalQuotes: $totalQuotes, pendingQuotes: $pendingQuotes, approvedQuotes: $approvedQuotes, todayVisits: $todayVisits, recentQuotes: $recentQuotes)';
   }
 
   @override
@@ -246,20 +198,14 @@ class _$DashboardDataImpl implements _DashboardData {
             other is _$DashboardDataImpl &&
             (identical(other.totalQuotes, totalQuotes) ||
                 other.totalQuotes == totalQuotes) &&
-            (identical(other.approvedQuotes, approvedQuotes) ||
-                other.approvedQuotes == approvedQuotes) &&
             (identical(other.pendingQuotes, pendingQuotes) ||
                 other.pendingQuotes == pendingQuotes) &&
-            (identical(other.totalRevenue, totalRevenue) ||
-                other.totalRevenue == totalRevenue) &&
-            (identical(other.monthlyRevenue, monthlyRevenue) ||
-                other.monthlyRevenue == monthlyRevenue) &&
-            (identical(other.totalCustomers, totalCustomers) ||
-                other.totalCustomers == totalCustomers) &&
-            (identical(other.newCustomersThisMonth, newCustomersThisMonth) ||
-                other.newCustomersThisMonth == newCustomersThisMonth) &&
+            (identical(other.approvedQuotes, approvedQuotes) ||
+                other.approvedQuotes == approvedQuotes) &&
+            (identical(other.todayVisits, todayVisits) ||
+                other.todayVisits == todayVisits) &&
             const DeepCollectionEquality()
-                .equals(other._monthlySales, _monthlySales));
+                .equals(other._recentQuotes, _recentQuotes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -267,13 +213,10 @@ class _$DashboardDataImpl implements _DashboardData {
   int get hashCode => Object.hash(
       runtimeType,
       totalQuotes,
-      approvedQuotes,
       pendingQuotes,
-      totalRevenue,
-      monthlyRevenue,
-      totalCustomers,
-      newCustomersThisMonth,
-      const DeepCollectionEquality().hash(_monthlySales));
+      approvedQuotes,
+      todayVisits,
+      const DeepCollectionEquality().hash(_recentQuotes));
 
   /// Create a copy of DashboardData
   /// with the given fields replaced by the non-null parameter values.
@@ -294,13 +237,10 @@ class _$DashboardDataImpl implements _DashboardData {
 abstract class _DashboardData implements DashboardData {
   const factory _DashboardData(
       {required final int totalQuotes,
-      required final int approvedQuotes,
       required final int pendingQuotes,
-      required final double totalRevenue,
-      required final double monthlyRevenue,
-      required final int totalCustomers,
-      required final int newCustomersThisMonth,
-      required final List<MonthlyStat> monthlySales}) = _$DashboardDataImpl;
+      required final int approvedQuotes,
+      required final int todayVisits,
+      required final List<RecentQuote> recentQuotes}) = _$DashboardDataImpl;
 
   factory _DashboardData.fromJson(Map<String, dynamic> json) =
       _$DashboardDataImpl.fromJson;
@@ -308,19 +248,13 @@ abstract class _DashboardData implements DashboardData {
   @override
   int get totalQuotes;
   @override
-  int get approvedQuotes;
-  @override
   int get pendingQuotes;
   @override
-  double get totalRevenue;
+  int get approvedQuotes;
   @override
-  double get monthlyRevenue;
+  int get todayVisits;
   @override
-  int get totalCustomers;
-  @override
-  int get newCustomersThisMonth;
-  @override
-  List<MonthlyStat> get monthlySales;
+  List<RecentQuote> get recentQuotes;
 
   /// Create a copy of DashboardData
   /// with the given fields replaced by the non-null parameter values.
@@ -330,187 +264,259 @@ abstract class _DashboardData implements DashboardData {
       throw _privateConstructorUsedError;
 }
 
-MonthlyStat _$MonthlyStatFromJson(Map<String, dynamic> json) {
-  return _MonthlyStat.fromJson(json);
+RecentQuote _$RecentQuoteFromJson(Map<String, dynamic> json) {
+  return _RecentQuote.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MonthlyStat {
-  String get month => throw _privateConstructorUsedError;
-  int get count => throw _privateConstructorUsedError;
-  double get revenue => throw _privateConstructorUsedError;
+mixin _$RecentQuote {
+  String get id => throw _privateConstructorUsedError;
+  String get quoteNumber => throw _privateConstructorUsedError;
+  String get customerName => throw _privateConstructorUsedError;
+  int get status => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
+  String get currency => throw _privateConstructorUsedError;
 
-  /// Serializes this MonthlyStat to a JSON map.
+  /// Serializes this RecentQuote to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of MonthlyStat
+  /// Create a copy of RecentQuote
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MonthlyStatCopyWith<MonthlyStat> get copyWith =>
+  $RecentQuoteCopyWith<RecentQuote> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MonthlyStatCopyWith<$Res> {
-  factory $MonthlyStatCopyWith(
-          MonthlyStat value, $Res Function(MonthlyStat) then) =
-      _$MonthlyStatCopyWithImpl<$Res, MonthlyStat>;
+abstract class $RecentQuoteCopyWith<$Res> {
+  factory $RecentQuoteCopyWith(
+          RecentQuote value, $Res Function(RecentQuote) then) =
+      _$RecentQuoteCopyWithImpl<$Res, RecentQuote>;
   @useResult
-  $Res call({String month, int count, double revenue});
+  $Res call(
+      {String id,
+      String quoteNumber,
+      String customerName,
+      int status,
+      DateTime date,
+      String currency});
 }
 
 /// @nodoc
-class _$MonthlyStatCopyWithImpl<$Res, $Val extends MonthlyStat>
-    implements $MonthlyStatCopyWith<$Res> {
-  _$MonthlyStatCopyWithImpl(this._value, this._then);
+class _$RecentQuoteCopyWithImpl<$Res, $Val extends RecentQuote>
+    implements $RecentQuoteCopyWith<$Res> {
+  _$RecentQuoteCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of MonthlyStat
+  /// Create a copy of RecentQuote
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? month = null,
-    Object? count = null,
-    Object? revenue = null,
+    Object? id = null,
+    Object? quoteNumber = null,
+    Object? customerName = null,
+    Object? status = null,
+    Object? date = null,
+    Object? currency = null,
   }) {
     return _then(_value.copyWith(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
-      count: null == count
-          ? _value.count
-          : count // ignore: cast_nullable_to_non_nullable
+      quoteNumber: null == quoteNumber
+          ? _value.quoteNumber
+          : quoteNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as int,
-      revenue: null == revenue
-          ? _value.revenue
-          : revenue // ignore: cast_nullable_to_non_nullable
-              as double,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      currency: null == currency
+          ? _value.currency
+          : currency // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$MonthlyStatImplCopyWith<$Res>
-    implements $MonthlyStatCopyWith<$Res> {
-  factory _$$MonthlyStatImplCopyWith(
-          _$MonthlyStatImpl value, $Res Function(_$MonthlyStatImpl) then) =
-      __$$MonthlyStatImplCopyWithImpl<$Res>;
+abstract class _$$RecentQuoteImplCopyWith<$Res>
+    implements $RecentQuoteCopyWith<$Res> {
+  factory _$$RecentQuoteImplCopyWith(
+          _$RecentQuoteImpl value, $Res Function(_$RecentQuoteImpl) then) =
+      __$$RecentQuoteImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String month, int count, double revenue});
+  $Res call(
+      {String id,
+      String quoteNumber,
+      String customerName,
+      int status,
+      DateTime date,
+      String currency});
 }
 
 /// @nodoc
-class __$$MonthlyStatImplCopyWithImpl<$Res>
-    extends _$MonthlyStatCopyWithImpl<$Res, _$MonthlyStatImpl>
-    implements _$$MonthlyStatImplCopyWith<$Res> {
-  __$$MonthlyStatImplCopyWithImpl(
-      _$MonthlyStatImpl _value, $Res Function(_$MonthlyStatImpl) _then)
+class __$$RecentQuoteImplCopyWithImpl<$Res>
+    extends _$RecentQuoteCopyWithImpl<$Res, _$RecentQuoteImpl>
+    implements _$$RecentQuoteImplCopyWith<$Res> {
+  __$$RecentQuoteImplCopyWithImpl(
+      _$RecentQuoteImpl _value, $Res Function(_$RecentQuoteImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of MonthlyStat
+  /// Create a copy of RecentQuote
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? month = null,
-    Object? count = null,
-    Object? revenue = null,
+    Object? id = null,
+    Object? quoteNumber = null,
+    Object? customerName = null,
+    Object? status = null,
+    Object? date = null,
+    Object? currency = null,
   }) {
-    return _then(_$MonthlyStatImpl(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
+    return _then(_$RecentQuoteImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
-      count: null == count
-          ? _value.count
-          : count // ignore: cast_nullable_to_non_nullable
+      quoteNumber: null == quoteNumber
+          ? _value.quoteNumber
+          : quoteNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as int,
-      revenue: null == revenue
-          ? _value.revenue
-          : revenue // ignore: cast_nullable_to_non_nullable
-              as double,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      currency: null == currency
+          ? _value.currency
+          : currency // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$MonthlyStatImpl implements _MonthlyStat {
-  const _$MonthlyStatImpl(
-      {required this.month, required this.count, required this.revenue});
+class _$RecentQuoteImpl implements _RecentQuote {
+  const _$RecentQuoteImpl(
+      {required this.id,
+      required this.quoteNumber,
+      required this.customerName,
+      required this.status,
+      required this.date,
+      required this.currency});
 
-  factory _$MonthlyStatImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MonthlyStatImplFromJson(json);
+  factory _$RecentQuoteImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecentQuoteImplFromJson(json);
 
   @override
-  final String month;
+  final String id;
   @override
-  final int count;
+  final String quoteNumber;
   @override
-  final double revenue;
+  final String customerName;
+  @override
+  final int status;
+  @override
+  final DateTime date;
+  @override
+  final String currency;
 
   @override
   String toString() {
-    return 'MonthlyStat(month: $month, count: $count, revenue: $revenue)';
+    return 'RecentQuote(id: $id, quoteNumber: $quoteNumber, customerName: $customerName, status: $status, date: $date, currency: $currency)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MonthlyStatImpl &&
-            (identical(other.month, month) || other.month == month) &&
-            (identical(other.count, count) || other.count == count) &&
-            (identical(other.revenue, revenue) || other.revenue == revenue));
+            other is _$RecentQuoteImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.quoteNumber, quoteNumber) ||
+                other.quoteNumber == quoteNumber) &&
+            (identical(other.customerName, customerName) ||
+                other.customerName == customerName) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.currency, currency) ||
+                other.currency == currency));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, month, count, revenue);
+  int get hashCode => Object.hash(
+      runtimeType, id, quoteNumber, customerName, status, date, currency);
 
-  /// Create a copy of MonthlyStat
+  /// Create a copy of RecentQuote
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MonthlyStatImplCopyWith<_$MonthlyStatImpl> get copyWith =>
-      __$$MonthlyStatImplCopyWithImpl<_$MonthlyStatImpl>(this, _$identity);
+  _$$RecentQuoteImplCopyWith<_$RecentQuoteImpl> get copyWith =>
+      __$$RecentQuoteImplCopyWithImpl<_$RecentQuoteImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonthlyStatImplToJson(
+    return _$$RecentQuoteImplToJson(
       this,
     );
   }
 }
 
-abstract class _MonthlyStat implements MonthlyStat {
-  const factory _MonthlyStat(
-      {required final String month,
-      required final int count,
-      required final double revenue}) = _$MonthlyStatImpl;
+abstract class _RecentQuote implements RecentQuote {
+  const factory _RecentQuote(
+      {required final String id,
+      required final String quoteNumber,
+      required final String customerName,
+      required final int status,
+      required final DateTime date,
+      required final String currency}) = _$RecentQuoteImpl;
 
-  factory _MonthlyStat.fromJson(Map<String, dynamic> json) =
-      _$MonthlyStatImpl.fromJson;
+  factory _RecentQuote.fromJson(Map<String, dynamic> json) =
+      _$RecentQuoteImpl.fromJson;
 
   @override
-  String get month;
+  String get id;
   @override
-  int get count;
+  String get quoteNumber;
   @override
-  double get revenue;
+  String get customerName;
+  @override
+  int get status;
+  @override
+  DateTime get date;
+  @override
+  String get currency;
 
-  /// Create a copy of MonthlyStat
+  /// Create a copy of RecentQuote
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MonthlyStatImplCopyWith<_$MonthlyStatImpl> get copyWith =>
+  _$$RecentQuoteImplCopyWith<_$RecentQuoteImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

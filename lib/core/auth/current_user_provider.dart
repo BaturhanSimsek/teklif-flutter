@@ -11,3 +11,8 @@ final isAdminProvider = FutureProvider<bool>((ref) async {
   final role = await ref.watch(currentUserRoleProvider.future);
   return role == 'Admin';
 });
+
+final canViewReportsProvider = FutureProvider<bool>((ref) async {
+  final role = await ref.watch(currentUserRoleProvider.future);
+  return role == 'Admin' || role == 'Manager';
+});
