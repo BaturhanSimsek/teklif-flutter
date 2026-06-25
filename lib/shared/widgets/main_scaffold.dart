@@ -11,10 +11,11 @@ class MainScaffold extends ConsumerWidget {
   final String location;
 
   static const _baseTabs = [
-    (path: '/dashboard', icon: Symbols.dashboard,    label: 'Dashboard'),
-    (path: '/quotes',    icon: Symbols.description,  label: 'Teklifler'),
-    (path: '/customers', icon: Symbols.people,        label: 'Müşteriler'),
-    (path: '/search',    icon: Symbols.search,        label: 'Ara'),
+    (path: '/dashboard',  icon: Symbols.dashboard,       label: 'Dashboard'),
+    (path: '/quotes',     icon: Symbols.description,     label: 'Teklifler'),
+    (path: '/customers',  icon: Symbols.people,           label: 'Müşteriler'),
+    (path: '/visit-plan', icon: Symbols.calendar_month,   label: 'Ziyaret'),
+    (path: '/search',     icon: Symbols.search,           label: 'Ara'),
   ];
 
   static const _adminTab =
@@ -39,7 +40,7 @@ class MainScaffold extends ConsumerWidget {
       body: child,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.grey.shade200)),
+          border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
         ),
         child: NavigationBar(
           selectedIndex: currentIndex,

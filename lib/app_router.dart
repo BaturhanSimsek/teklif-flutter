@@ -25,6 +25,7 @@ import 'features/categories/presentation/category_management_screen.dart';
 import 'features/units/presentation/unit_management_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
 import 'features/quotes/presentation/kanban_screen.dart';
+import 'features/visit_plan/presentation/visit_plan_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/onboarding/splash_screen.dart';
 import 'features/search/presentation/search_screen.dart';
@@ -180,6 +181,12 @@ GoRouter router(RouterRef ref) {
           GoRoute(
             path: '/kanban',
             builder: (_, __) => const KanbanScreen(),
+          ),
+
+          // ── Ziyaret Planı ─────────────────────────────────────────
+          GoRoute(
+            path: '/visit-plan',
+            builder: (_, __) => const VisitPlanScreen(),
           ),
 
           // ── Arama ─────────────────────────────────────────────────
