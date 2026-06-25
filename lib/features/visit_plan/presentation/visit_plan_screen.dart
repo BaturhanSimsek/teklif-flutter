@@ -31,13 +31,24 @@ class _VisitPlanScreenState extends ConsumerState<VisitPlanScreen> {
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
-    final async = ref.watch(_plansProvider(_dateParam));
+    final async   = ref.watch(_plansProvider(_dateParam));
+    final plans   = async.valueOrNull ?? [];
+    final addresses = plans
+        .where((p) => p.customerAddress.isNotEmpty)
+        .map((p) => p.customerAddress)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ziyaret Planı'),
         centerTitle: false,
         actions: [
+          if (addresses.length >= 2)
+            IconButton(
+              icon: const Icon(Symbols.route),
+              tooltip: 'Rotayı Google Maps\'te Aç',
+              onPressed: () => _openRoute(addresses),
+            ),
           IconButton(
             icon: const Icon(Symbols.calendar_today),
             tooltip: 'Tarih Seç',
@@ -80,6 +91,22 @@ class _VisitPlanScreenState extends ConsumerState<VisitPlanScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _openRoute(List<String> addresses) async {
+    // Son adres destination, aradakiler waypoints
+    final last     = Uri.encodeComponent(addresses.last);
+    final midStops = addresses.take(addresses.length - 1).map(Uri.encodeComponent).join('|');
+
+    final uri = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1'
+      '&destination=$last'
+      '${midStops.isNotEmpty ? "&waypoints=$midStops" : ""}'
+      '&travelmode=driving',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _pickDate(BuildContext context) async {

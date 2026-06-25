@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
+import '../data/rep_location_model.dart';
+import '../data/rep_location_repository.dart';
 import '../data/user_model.dart';
 import '../data/user_repository.dart';
 
 final _usersProvider = FutureProvider.autoDispose<List<AppUser>>((ref) =>
     ref.watch(userRepositoryProvider).getAll());
+
+final _locationsProvider = FutureProvider.autoDispose<List<RepLocation>>((ref) =>
+    ref.watch(repLocationRepositoryProvider).getAll());
 
 class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
@@ -57,20 +64,25 @@ class AdminScreen extends ConsumerWidget {
       ),
       body: async.when(
         data: (users) => RefreshIndicator(
-          onRefresh: () => ref.refresh(_usersProvider.future),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          onRefresh: () async {
+            ref.invalidate(_usersProvider);
+            ref.invalidate(_locationsProvider);
+          },
+          child: ListView(
             children: [
               _AdminQuickLinks(),
               const Padding(
-                padding: EdgeInsets.fromLTRB(16, 12, 16, 6),
-                child: Text('Kullanıcılar',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.grey)),
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 6),
+                child: Text('Temsilci Konumları',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.grey)),
               ),
-              Expanded(child: _UserList(users: users, ref: ref)),
+              _RepLocationsSection(),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 6),
+                child: Text('Kullanıcılar',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.grey)),
+              ),
+              _UserList(users: users, ref: ref),
             ],
           ),
         ),
@@ -92,6 +104,117 @@ class AdminScreen extends ConsumerWidget {
         ref.invalidate(_usersProvider);
       }),
     );
+  }
+}
+
+// ── Temsilci Konumları ───────────────────────────────────────────────────────
+
+class _RepLocationsSection extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(_locationsProvider);
+
+    return async.when(
+      data: (locs) {
+        if (locs.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text('Henüz konum verisi yok.',
+                style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
+          );
+        }
+        return Column(
+          children: locs.map((l) => _RepLocationTile(loc: l)).toList(),
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.all(16),
+        child: LinearProgressIndicator(),
+      ),
+      error: (e, _) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text('Hata: $e', style: const TextStyle(color: Colors.red, fontSize: 12)),
+      ),
+    );
+  }
+}
+
+class _RepLocationTile extends StatelessWidget {
+  const _RepLocationTile({required this.loc});
+  final RepLocation loc;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasLocation = loc.lat != null && loc.lng != null;
+    final lastSeen = loc.lastSeenAt;
+    final String timeStr;
+    if (lastSeen == null) {
+      timeStr = 'Konum yok';
+    } else {
+      final diff = DateTime.now().difference(lastSeen.toLocal());
+      if (diff.inMinutes < 1)        timeStr = 'Az önce';
+      else if (diff.inHours < 1)     timeStr = '${diff.inMinutes} dk önce';
+      else if (diff.inDays < 1)      timeStr = '${diff.inHours} saat önce';
+      else                           timeStr = DateFormat('d MMM HH:mm', 'tr_TR').format(lastSeen.toLocal());
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).dividerColor),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: (hasLocation ? AppColors.success : Colors.grey).withOpacity(0.1),
+              child: Icon(
+                hasLocation ? Symbols.location_on : Symbols.location_off,
+                size: 18,
+                color: hasLocation ? AppColors.success : Colors.grey,
+                fill: 1,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(loc.fullName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  Text(timeStr, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
+                ],
+              ),
+            ),
+            if (hasLocation)
+              TextButton.icon(
+                onPressed: () => _openOnMaps(loc.lat!, loc.lng!, loc.fullName),
+                icon: const Icon(Symbols.map, size: 14),
+                label: const Text('Haritada Gör', style: TextStyle(fontSize: 11)),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  foregroundColor: AppColors.info,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openOnMaps(double lat, double lng, String name) async {
+    final label  = Uri.encodeComponent(name);
+    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng($label)');
+    final httpUri = Uri.parse('https://maps.google.com/?q=$lat,$lng');
+
+    if (await canLaunchUrl(geoUri)) {
+      await launchUrl(geoUri);
+    } else {
+      await launchUrl(httpUri, mode: LaunchMode.externalApplication);
+    }
   }
 }
 
@@ -168,7 +291,9 @@ class _UserList extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: users.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (_, i) => _UserCard(user: users[i], ref: ref),
