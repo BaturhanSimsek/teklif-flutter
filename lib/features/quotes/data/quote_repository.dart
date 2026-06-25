@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/models/paged_result.dart';
+import 'ai_quote_suggestion.dart';
 import 'quote_model.dart';
 
 part 'quote_repository.g.dart';
@@ -114,5 +115,12 @@ class QuoteRepository {
   Future<String> generateShareLink(String quoteId) async {
     final res = await _dio.post('/quotes/$quoteId/share-link');
     return (res.data as Map<String, dynamic>)['url'] as String;
+  }
+
+  Future<List<AiQuoteItemSuggestion>> aiGenerate(String prompt) async {
+    final res = await _dio.post('/quotes/ai-generate', data: {'prompt': prompt});
+    return (res.data as List)
+        .map((j) => AiQuoteItemSuggestion.fromJson(j as Map<String, dynamic>))
+        .toList();
   }
 }

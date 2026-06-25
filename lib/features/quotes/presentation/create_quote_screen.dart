@@ -5,6 +5,7 @@ import '../../customers/presentation/customer_providers.dart';
 import '../../exchange_rate/data/exchange_rate_repository.dart';
 import '../../form_templates/data/form_template_model.dart';
 import '../../form_templates/data/form_template_repository.dart';
+import '../data/ai_quote_suggestion.dart';
 import '../data/quote_repository.dart';
 
 class CreateQuoteScreen extends ConsumerStatefulWidget {
@@ -25,7 +26,6 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? _customerId;
-  String _customerName = '';
   FormTemplate? _template;
   final _paymentTerm  = TextEditingController(text: 'Peşin');
   final _deliveryDays = TextEditingController(text: '7');
@@ -41,8 +41,7 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
   @override
   void initState() {
     super.initState();
-    _customerId   = widget.preCustomerId;
-    _customerName = widget.preCustomerName ?? '';
+    _customerId = widget.preCustomerId;
     _addItem();
   }
 
@@ -58,6 +57,40 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
   }
 
   void _addItem() => setState(() => _items.add(_ItemRow()));
+
+  void _applyAiSuggestions(List<AiQuoteItemSuggestion> suggestions) {
+    // Varsa boş tek kalem temizle
+    if (_items.length == 1 &&
+        _items[0].desc.text.isEmpty &&
+        _items[0].price.text.isEmpty) {
+      _items[0].dispose();
+      _items.clear();
+    }
+    for (final s in suggestions) {
+      final row = _ItemRow();
+      row.desc.text  = s.productName;
+      row.qty.text   = s.quantity.toString();
+      row.price.text = s.unitPrice.toStringAsFixed(2);
+      row.unit.text  = s.unit;
+      _items.add(row);
+    }
+    setState(() {});
+  }
+
+  Future<void> _showAiDialog() async {
+    final promptCtrl = TextEditingController();
+    final suggestions = await showModalBottomSheet<List<AiQuoteItemSuggestion>>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => _AiPromptSheet(promptCtrl: promptCtrl, ref: ref),
+    );
+    if (suggestions != null && suggestions.isNotEmpty) {
+      _applyAiSuggestions(suggestions);
+    }
+  }
 
   void _removeItem(int i) {
     if (_items.length == 1) return;
@@ -134,11 +167,8 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
                   labelText: 'Müşteri *',
                   prefixIcon: Icon(Icons.person_outline),
                 ),
-                items: list.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
-                onChanged: (v) => setState(() {
-                  _customerId   = v;
-                  _customerName = list.firstWhere((c) => c.id == v).name;
-                }),
+                items: list.items.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
+                onChanged: (v) => setState(() => _customerId = v),
                 validator: (v) => v == null ? 'Müşteri seçin' : null,
               ),
               loading: () => const LinearProgressIndicator(),
@@ -186,6 +216,11 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
             const SizedBox(height: 20),
             Row(children: [
               Expanded(child: _sectionTitle('Kalemler')),
+              TextButton.icon(
+                onPressed: _showAiDialog,
+                icon: const Icon(Icons.auto_awesome, size: 18),
+                label: const Text('AI ile Oluştur'),
+              ),
               TextButton.icon(
                 onPressed: _addItem,
                 icon: const Icon(Icons.add, size: 18),
@@ -434,6 +469,99 @@ class _ItemRowWidget extends StatelessWidget {
             ]),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// AI Prompt Bottom Sheet
+
+class _AiPromptSheet extends StatefulWidget {
+  const _AiPromptSheet({required this.promptCtrl, required this.ref});
+
+  final TextEditingController promptCtrl;
+  final WidgetRef ref;
+
+  @override
+  State<_AiPromptSheet> createState() => _AiPromptSheetState();
+}
+
+class _AiPromptSheetState extends State<_AiPromptSheet> {
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _generate() async {
+    final prompt = widget.promptCtrl.text.trim();
+    if (prompt.isEmpty) return;
+    setState(() { _loading = true; _error = null; });
+    try {
+      final suggestions = await widget.ref
+          .read(quoteRepositoryProvider)
+          .aiGenerate(prompt);
+      if (mounted) Navigator.of(context).pop(suggestions);
+    } catch (e) {
+      if (mounted) setState(() { _error = '$e'; _loading = false; });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors  = Theme.of(context).colorScheme;
+    final padding = MediaQuery.of(context).viewInsets.bottom;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + padding),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(children: [
+            Icon(Icons.auto_awesome, color: colors.primary),
+            const SizedBox(width: 10),
+            Text('AI ile Kalem Oluştur',
+                style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+              visualDensity: VisualDensity.compact,
+            ),
+          ]),
+          const SizedBox(height: 4),
+          Text(
+            'Ne yapılacağını yazın, AI ürün kataloğundan uygun kalemleri seçsin.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: colors.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: widget.promptCtrl,
+            maxLines: 3,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Örn: 50m² mutfak tezgah üstü seramik kaplama',
+              border: const OutlineInputBorder(),
+              filled: true,
+            ),
+            onSubmitted: (_) => _generate(),
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: 8),
+            Text(_error!,
+                style: TextStyle(color: colors.error, fontSize: 12)),
+          ],
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: _loading ? null : _generate,
+            icon: _loading
+                ? const SizedBox(
+                    width: 18, height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                : const Icon(Icons.auto_awesome),
+            label: Text(_loading ? 'Oluşturuluyor...' : 'Oluştur'),
+          ),
+        ],
       ),
     );
   }
