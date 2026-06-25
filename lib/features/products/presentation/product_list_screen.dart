@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/models/paged_result.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
 import '../data/product_model.dart';
 import '../data/product_repository.dart';

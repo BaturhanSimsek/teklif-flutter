@@ -251,27 +251,6 @@ class _CreateTemplateSheetState extends State<_CreateTemplateSheet> {
 
   void _removeField(int i) => setState(() => _fields.removeAt(i));
 
-  Future<void> _submit(BuildContext context) async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_fields.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('En az bir alan ekleyin.')));
-      return;
-    }
-
-    setState(() => _loading = true);
-    try {
-      final repo = context.findAncestorWidgetOfExactType<Consumer>();
-      // Use ProviderScope to access riverpod
-      await Future.delayed(Duration.zero); // allow setState to flush
-      if (!mounted) return;
-
-      // We need WidgetRef here — wrap submit in a Consumer
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _) {

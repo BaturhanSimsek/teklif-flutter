@@ -17,7 +17,11 @@ void main() async {
     return;
   }
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } catch (_) {
+    // Firebase yapılandırılmamış — FCM devre dışı, uygulama çalışmaya devam eder
+  }
 
   runApp(const ProviderScope(child: TeklifApp()));
 }
