@@ -45,7 +45,19 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
   late final _taxNoCtrl   = TextEditingController(text: widget.settings.taxNumber);
   late final _taxOffCtrl  = TextEditingController(text: widget.settings.taxOffice);
   late final _addressCtrl = TextEditingController(text: widget.settings.address);
+  late String? _primaryColor = widget.settings.primaryColor;
   bool _loading = false;
+
+  static const _presetColors = [
+    '#FF6452', // Inventix Coral
+    '#1565C0', // Klasik Mavi
+    '#263238', // Koyu Slate
+    '#2E7D32', // Yeşil
+    '#6A1B9A', // Mor
+    '#E65100', // Turuncu
+    '#00838F', // Teal
+    '#C62828', // Kırmızı
+  ];
 
   @override
   void dispose() {
@@ -57,6 +69,11 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
     _taxOffCtrl.dispose();
     _addressCtrl.dispose();
     super.dispose();
+  }
+
+  Color _parseHex(String hex) {
+    final clean = hex.replaceAll('#', '');
+    return Color(int.parse('FF$clean', radix: 16));
   }
 
   Future<void> _save() async {
@@ -71,6 +88,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
         taxNumber:        _taxNoCtrl.text.trim().isEmpty ? null : _taxNoCtrl.text.trim(),
         taxOffice:        _taxOffCtrl.text.trim().isEmpty ? null : _taxOffCtrl.text.trim(),
         address:          _addressCtrl.text.trim().isEmpty ? null : _addressCtrl.text.trim(),
+        primaryColor:     _primaryColor,
       );
       ref.invalidate(_settingsProvider);
       if (mounted) {
@@ -140,6 +158,42 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           _Field(_taxNoCtrl, 'Vergi Kimlik No', Symbols.tag,
               keyboardType: TextInputType.number),
           _Field(_taxOffCtrl, 'Vergi Dairesi', Symbols.account_balance),
+          const SizedBox(height: 16),
+
+          _Section(title: 'PDF Marka Rengi', icon: Symbols.palette),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: _presetColors.map((hex) {
+              final selected = _primaryColor == hex;
+              final color    = _parseHex(hex);
+              return GestureDetector(
+                onTap: () => setState(() => _primaryColor = hex),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: selected
+                        ? Border.all(color: Colors.white, width: 3)
+                        : null,
+                    boxShadow: selected
+                        ? [BoxShadow(color: color.withOpacity(0.6), blurRadius: 8, spreadRadius: 2)]
+                        : null,
+                  ),
+                  child: selected
+                      ? const Icon(Symbols.check, color: Colors.white, size: 20)
+                      : null,
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Seçilen renk PDF tekliflerin başlığında ve tablo renklerinde kullanılır.',
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+          ),
           const SizedBox(height: 32),
 
           FilledButton.icon(

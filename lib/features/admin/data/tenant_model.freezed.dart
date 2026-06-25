@@ -32,6 +32,7 @@ mixin _$TenantSettings {
   String? get taxNumber => throw _privateConstructorUsedError;
   String? get taxOffice => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
+  String? get primaryColor => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this TenantSettings to a JSON map.
@@ -63,6 +64,7 @@ abstract class $TenantSettingsCopyWith<$Res> {
       String? taxNumber,
       String? taxOffice,
       String? address,
+      String? primaryColor,
       DateTime createdAt});
 }
 
@@ -93,6 +95,7 @@ class _$TenantSettingsCopyWithImpl<$Res, $Val extends TenantSettings>
     Object? taxNumber = freezed,
     Object? taxOffice = freezed,
     Object? address = freezed,
+    Object? primaryColor = freezed,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
@@ -144,6 +147,10 @@ class _$TenantSettingsCopyWithImpl<$Res, $Val extends TenantSettings>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryColor: freezed == primaryColor
+          ? _value.primaryColor
+          : primaryColor // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -173,6 +180,7 @@ abstract class _$$TenantSettingsImplCopyWith<$Res>
       String? taxNumber,
       String? taxOffice,
       String? address,
+      String? primaryColor,
       DateTime createdAt});
 }
 
@@ -201,6 +209,7 @@ class __$$TenantSettingsImplCopyWithImpl<$Res>
     Object? taxNumber = freezed,
     Object? taxOffice = freezed,
     Object? address = freezed,
+    Object? primaryColor = freezed,
     Object? createdAt = null,
   }) {
     return _then(_$TenantSettingsImpl(
@@ -252,6 +261,10 @@ class __$$TenantSettingsImplCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
+      primaryColor: freezed == primaryColor
+          ? _value.primaryColor
+          : primaryColor // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -276,6 +289,7 @@ class _$TenantSettingsImpl implements _TenantSettings {
       this.taxNumber,
       this.taxOffice,
       this.address,
+      this.primaryColor,
       required this.createdAt});
 
   factory _$TenantSettingsImpl.fromJson(Map<String, dynamic> json) =>
@@ -306,11 +320,13 @@ class _$TenantSettingsImpl implements _TenantSettings {
   @override
   final String? address;
   @override
+  final String? primaryColor;
+  @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'TenantSettings(id: $id, companyName: $companyName, slug: $slug, isActive: $isActive, companyLegalName: $companyLegalName, city: $city, phone: $phone, email: $email, logoUrl: $logoUrl, taxNumber: $taxNumber, taxOffice: $taxOffice, address: $address, createdAt: $createdAt)';
+    return 'TenantSettings(id: $id, companyName: $companyName, slug: $slug, isActive: $isActive, companyLegalName: $companyLegalName, city: $city, phone: $phone, email: $email, logoUrl: $logoUrl, taxNumber: $taxNumber, taxOffice: $taxOffice, address: $address, primaryColor: $primaryColor, createdAt: $createdAt)';
   }
 
   @override
@@ -335,6 +351,8 @@ class _$TenantSettingsImpl implements _TenantSettings {
             (identical(other.taxOffice, taxOffice) ||
                 other.taxOffice == taxOffice) &&
             (identical(other.address, address) || other.address == address) &&
+            (identical(other.primaryColor, primaryColor) ||
+                other.primaryColor == primaryColor) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -355,6 +373,7 @@ class _$TenantSettingsImpl implements _TenantSettings {
       taxNumber,
       taxOffice,
       address,
+      primaryColor,
       createdAt);
 
   /// Create a copy of TenantSettings
@@ -388,6 +407,7 @@ abstract class _TenantSettings implements TenantSettings {
       final String? taxNumber,
       final String? taxOffice,
       final String? address,
+      final String? primaryColor,
       required final DateTime createdAt}) = _$TenantSettingsImpl;
 
   factory _TenantSettings.fromJson(Map<String, dynamic> json) =
@@ -417,6 +437,8 @@ abstract class _TenantSettings implements TenantSettings {
   String? get taxOffice;
   @override
   String? get address;
+  @override
+  String? get primaryColor;
   @override
   DateTime get createdAt;
 

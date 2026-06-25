@@ -21,7 +21,10 @@ import 'features/auth/presentation/profile_screen.dart';
 import 'features/auth/presentation/two_factor_verify_screen.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
 import 'features/products/presentation/product_list_screen.dart';
+import 'features/categories/presentation/category_management_screen.dart';
+import 'features/units/presentation/unit_management_screen.dart';
 import 'features/quotes/presentation/create_quote_screen.dart';
+import 'features/quotes/presentation/kanban_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/onboarding/splash_screen.dart';
 import 'features/search/presentation/search_screen.dart';
@@ -162,7 +165,21 @@ GoRouter router(RouterRef ref) {
                 path: 'products',
                 builder: (_, __) => const ProductListScreen(),
               ),
+              GoRoute(
+                path: 'categories',
+                builder: (_, __) => const CategoryManagementScreen(),
+              ),
+              GoRoute(
+                path: 'units',
+                builder: (_, __) => const UnitManagementScreen(),
+              ),
             ],
+          ),
+
+          // ── Kanban ────────────────────────────────────────────────
+          GoRoute(
+            path: '/kanban',
+            builder: (_, __) => const KanbanScreen(),
           ),
 
           // ── Arama ─────────────────────────────────────────────────

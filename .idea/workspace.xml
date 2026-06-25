@@ -4,7 +4,39 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f13c4e4f-01e8-4332-bb2d-04b75978d94c" name="Changes" comment="" />
+    <list default="true" id="f13c4e4f-01e8-4332-bb2d-04b75978d94c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app_router.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/notifications/notification_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/notifications/notification_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/theme/app_colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/theme/app_colors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/theme/app_theme.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/theme/app_theme.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/admin/presentation/admin_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/admin/presentation/admin_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/admin/presentation/form_templates_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/admin/presentation/form_templates_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/change_password_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/change_password_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/two_factor_verify_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/two_factor_verify_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/customers/presentation/customer_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/customers/presentation/customer_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/customers/presentation/customer_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/customers/presentation/customer_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/dashboard/presentation/dashboard_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/dashboard/presentation/dashboard_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/data/product_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/data/product_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/data/product_model.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/data/product_model.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/data/product_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/data/product_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/data/product_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/data/product_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/presentation/product_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/presentation/product_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/products/presentation/product_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/products/presentation/product_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/quotes/presentation/create_quote_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/quotes/presentation/create_quote_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/quotes/presentation/quote_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/quotes/presentation/quote_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/quotes/presentation/quote_revisions_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/quotes/presentation/quote_revisions_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/search/presentation/search_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/search/presentation/search_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,25 +78,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flutter.main.dart.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "io.flutter.project.isFirstOpen": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/DonCaarlo/Documents/GitHub/teklif-flutter",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;io.flutter.project.isFirstOpen&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/DonCaarlo/Documents/GitHub/teklif-flutter&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f13c4e4f-01e8-4332-bb2d-04b75978d94c" name="Changes" comment="" />

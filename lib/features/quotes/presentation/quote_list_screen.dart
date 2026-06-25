@@ -161,6 +161,11 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
         centerTitle: false,
         actions: [
           IconButton(
+            icon: const Icon(Symbols.view_kanban),
+            tooltip: 'Kanban Görünümü',
+            onPressed: () => context.push('/kanban'),
+          ),
+          IconButton(
             icon: const Icon(Symbols.table_view),
             tooltip: 'Excel İndir',
             onPressed: _exportExcel,
@@ -320,7 +325,7 @@ class _DismissibleQuote extends ConsumerWidget {
                 child: const Text('Vazgeç'),
               ),
               FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                style: FilledButton.styleFrom(backgroundColor: AppColors.error),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('İptal Et'),
               ),
@@ -345,7 +350,7 @@ class _DismissibleQuote extends ConsumerWidget {
       background: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: Colors.red.shade600,
+          color: AppColors.error.shade600,
           borderRadius: BorderRadius.circular(18),
         ),
         alignment: Alignment.centerRight,
@@ -377,7 +382,7 @@ class _QuoteCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: InkWell(
         onTap: onTap,

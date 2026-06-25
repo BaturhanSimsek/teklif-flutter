@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -15,7 +16,6 @@ class FormTemplatesScreen extends ConsumerWidget {
     final async = ref.watch(_templatesProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Form Şablonları'),
         centerTitle: false,
@@ -103,9 +103,9 @@ class _TemplateCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +142,7 @@ class _TemplateCard extends StatelessWidget {
                 if (!template.isDefault)
                   IconButton(
                     icon: const Icon(Symbols.delete_outline, size: 20,
-                        color: Colors.red),
+                        color: AppColors.error),
                     onPressed: () => _delete(context),
                   ),
               ],
@@ -163,9 +163,9 @@ class _TemplateCard extends StatelessWidget {
               children: template.fields.map((f) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: Theme.of(context).dividerColor),
                 ),
                 child: Text(
                   '${f.label} (${fieldTypeLabels[f.type] ?? '?'})',
@@ -191,7 +191,7 @@ class _TemplateCard extends StatelessWidget {
             child: const Text('İptal'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Sil'),
           ),
@@ -384,9 +384,9 @@ class _FieldRowState extends State<_FieldRow> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: [
@@ -404,7 +404,7 @@ class _FieldRowState extends State<_FieldRow> {
                 ),
               ),
               IconButton(
-                icon: const Icon(Symbols.close, size: 18, color: Colors.red),
+                icon: const Icon(Symbols.close, size: 18, color: AppColors.error),
                 onPressed: widget.onRemove,
               ),
             ],

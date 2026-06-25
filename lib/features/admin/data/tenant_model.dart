@@ -18,6 +18,7 @@ class TenantSettings with _$TenantSettings {
     String? taxNumber,
     String? taxOffice,
     String? address,
+    String? primaryColor,
     required DateTime createdAt,
   }) = _TenantSettings;
 

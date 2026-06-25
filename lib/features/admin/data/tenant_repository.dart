@@ -27,6 +27,7 @@ class TenantRepository {
     String? taxNumber,
     String? taxOffice,
     String? address,
+    String? primaryColor,
   }) async {
     await _dio.put('/tenants/settings', data: {
       'companyLegalName': companyLegalName,
@@ -37,6 +38,7 @@ class TenantRepository {
       'taxNumber':        taxNumber,
       'taxOffice':        taxOffice,
       'address':          address,
+      'primaryColor':     primaryColor,
     });
   }
 }

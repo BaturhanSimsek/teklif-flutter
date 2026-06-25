@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -40,11 +41,7 @@ class _CustomerDetailView extends StatelessWidget {
   final WidgetRef ref;
 
   Color _avatarColor(String name) {
-    final colors = [
-      const Color(0xFF5C6BC0), const Color(0xFF26A69A), const Color(0xFFEF5350),
-      const Color(0xFFAB47BC), const Color(0xFF42A5F5), const Color(0xFFFF7043),
-      const Color(0xFF66BB6A), const Color(0xFFEC407A),
-    ];
+    final colors = AppColors.avatarPalette;
     return colors[name.codeUnitAt(0) % colors.length];
   }
 
@@ -152,7 +149,7 @@ class _CustomerDetailView extends StatelessWidget {
           // İletişim bilgileri chips
           if (customer.phone.isNotEmpty || customer.address.isNotEmpty || customer.taxNumber != null)
             Container(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Wrap(
                 spacing: 8,
@@ -175,7 +172,7 @@ class _CustomerDetailView extends StatelessWidget {
 
           // Teklifler başlık + buton
           Container(
-            color: Colors.grey.shade50,
+            color: Theme.of(context).scaffoldBackgroundColor,
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
             child: Row(
               children: [
@@ -227,7 +224,7 @@ class _InfoChip extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(

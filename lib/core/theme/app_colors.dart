@@ -45,4 +45,15 @@ class AppColors {
 
   // Hata arkaplanı
   static Color get errorBg => error.shade50;
+
+  // Rol renkleri
+  static const Color roleAdmin   = Color(0xFF7B1FA2);
+  static const Color roleSales   = Color(0xFF2E7D32);
+
+  // Dekoratif avatar paleti (isim baş harfine göre seçilir)
+  static const List<Color> avatarPalette = [
+    Color(0xFF5C6BC0), Color(0xFF26A69A), Color(0xFFEF5350),
+    Color(0xFFAB47BC), Color(0xFF42A5F5), Color(0xFFFF7043),
+    Color(0xFF66BB6A), Color(0xFFEC407A),
+  ];
 }

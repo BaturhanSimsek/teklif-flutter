@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,8 +39,8 @@ class QuoteRevisionsScreen extends ConsumerWidget {
                     leading: CircleAvatar(
                       backgroundColor: isActive
                           ? Theme.of(ctx).colorScheme.primary
-                          : Colors.grey.shade200,
-                      foregroundColor: isActive ? Colors.white : Colors.black87,
+                          : Theme.of(ctx).colorScheme.surfaceContainerHighest,
+                      foregroundColor: isActive ? Colors.white : Theme.of(ctx).colorScheme.onSurface,
                       child: Text('R${r.revisionNo}',
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                     ),
@@ -83,11 +84,11 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
-      0 => ('Taslak', Colors.grey),
-      1 => ('Gönderildi', Colors.blue),
-      2 => ('Onaylandı', Colors.green),
-      3 => ('Reddedildi', Colors.red),
-      _ => ('Bilinmiyor', Colors.grey),
+      0 => ('Taslak', AppColors.draft),
+      1 => ('Gönderildi', AppColors.info),
+      2 => ('Onaylandı', AppColors.success),
+      3 => ('Reddedildi', AppColors.error),
+      _ => ('Bilinmiyor', AppColors.draft),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +23,6 @@ class ProductListScreen extends ConsumerWidget {
     final async = ref.watch(_productsProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Ürün Kataloğu'),
         centerTitle: false,
@@ -106,7 +106,7 @@ class _DismissibleProduct extends StatelessWidget {
                 child: const Text('İptal'),
               ),
               FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                style: FilledButton.styleFrom(backgroundColor: AppColors.error),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Sil'),
               ),
@@ -128,7 +128,7 @@ class _DismissibleProduct extends StatelessWidget {
       background: Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: Colors.red.shade600,
+          color: AppColors.error.shade600,
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.centerRight,
@@ -151,9 +151,9 @@ class _ProductCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -172,8 +172,9 @@ class _ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 3),
-            Text('Birim: ${product.unit}',
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            if (product.unitName != null)
+              Text('Birim: ${product.unitName}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
             if (product.categoryName != null)
               Text(product.categoryName!,
                   style: TextStyle(fontSize: 11, color: Colors.grey.shade400)),
@@ -218,7 +219,7 @@ class _ProductCard extends StatelessWidget {
             child: const Text('İptal'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Sil'),
           ),

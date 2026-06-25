@@ -1,0 +1,53 @@
+import 'package:dio/dio.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../../core/api/api_client.dart';
+import 'unit_model.dart';
+
+part 'unit_repository.g.dart';
+
+@riverpod
+UnitRepository unitRepository(UnitRepositoryRef ref) =>
+    UnitRepository(ref.watch(dioProvider));
+
+@riverpod
+Future<List<UnitModel>> units(UnitsRef ref) =>
+    ref.watch(unitRepositoryProvider).getAll();
+
+class UnitRepository {
+  UnitRepository(this._dio);
+  final Dio _dio;
+
+  Future<List<UnitModel>> getAll() async {
+    final res = await _dio.get('/units');
+    final list = res.data as List;
+    return list.map((e) => UnitModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<String> create({
+    required String name,
+    String symbol = '',
+    int sortOrder = 0,
+  }) async {
+    final res = await _dio.post('/units', data: {
+      'name':      name,
+      'symbol':    symbol,
+      'sortOrder': sortOrder,
+    });
+    return res.data['id'] as String;
+  }
+
+  Future<void> update({
+    required String id,
+    required String name,
+    String symbol = '',
+    int sortOrder = 0,
+  }) async {
+    await _dio.put('/units/$id', data: {
+      'name':      name,
+      'symbol':    symbol,
+      'sortOrder': sortOrder,
+    });
+  }
+
+  Future<void> delete(String id) => _dio.delete('/units/$id');
+}

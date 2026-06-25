@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,7 +80,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             child: const Text('İptal'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Çıkış Yap'),
           ),
@@ -101,9 +102,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Color get _roleColor {
     switch (_role) {
-      case 'Admin':   return const Color(0xFF7B1FA2);
-      case 'Manager': return const Color(0xFF1565C0);
-      default:        return const Color(0xFF2E7D32);
+      case 'Admin':   return AppColors.roleAdmin;
+      case 'Manager': return AppColors.warning.shade700;
+      default:        return AppColors.roleSales;
     }
   }
 
@@ -118,7 +119,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final primary = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Profilim'),
         centerTitle: false,
@@ -174,9 +174,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: Theme.of(context).dividerColor),
                   ),
                   child: Form(
                     key: _formKey,
@@ -246,7 +246,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 _ActionTile(
                   icon: Symbols.logout,
                   label: 'Çıkış Yap',
-                  color: Colors.red,
+                  color: AppColors.error,
                   onTap: _logout,
                 ),
               ],
@@ -267,9 +267,9 @@ class _ThemeSelector extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(
         children: [
@@ -359,7 +359,7 @@ class _BiometricTileState extends ConsumerState<_BiometricTile> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(
         children: [
@@ -410,9 +410,9 @@ class _ActionTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: Theme.of(context).dividerColor),
         ),
         child: Row(
           children: [

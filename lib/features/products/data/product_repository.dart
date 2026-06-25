@@ -49,15 +49,15 @@ class ProductRepository {
 
   Future<String> create({
     required String  name,
-    required String  unit,
     required double  salePrice,
     required double  purchasePrice,
+    String?          unitId,
     String?          categoryId,
     String?          notes,
   }) async {
     final res = await _dio.post('/products', data: {
       'name':          name,
-      'unit':          unit,
+      'unitId':        unitId,
       'salePrice':     salePrice,
       'purchasePrice': purchasePrice,
       'categoryId':    categoryId,
@@ -70,15 +70,15 @@ class ProductRepository {
   Future<void> update({
     required String  id,
     required String  name,
-    required String  unit,
     required double  salePrice,
     required double  purchasePrice,
+    String?          unitId,
     String?          categoryId,
     String?          notes,
   }) async {
     await _dio.put('/products/$id', data: {
       'name':          name,
-      'unit':          unit,
+      'unitId':        unitId,
       'salePrice':     salePrice,
       'purchasePrice': purchasePrice,
       'categoryId':    categoryId,

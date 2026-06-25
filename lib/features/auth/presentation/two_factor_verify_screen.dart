@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +56,7 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(msg),
-          backgroundColor: const Color(0xFFE0302A),
+          backgroundColor: AppColors.error,
         ));
       }
     } finally {
@@ -73,7 +74,7 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.security, size: 64, color: Colors.blue),
+            Icon(Icons.security, size: 64, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 24),
             Text(
               'Kimlik Doğrulama Uygulamasındaki 6 Haneli Kodu Girin',

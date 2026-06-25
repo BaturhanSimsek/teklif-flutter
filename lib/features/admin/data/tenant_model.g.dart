@@ -20,6 +20,7 @@ _$TenantSettingsImpl _$$TenantSettingsImplFromJson(Map<String, dynamic> json) =>
       taxNumber: json['taxNumber'] as String?,
       taxOffice: json['taxOffice'] as String?,
       address: json['address'] as String?,
+      primaryColor: json['primaryColor'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
@@ -38,5 +39,6 @@ Map<String, dynamic> _$$TenantSettingsImplToJson(
       'taxNumber': instance.taxNumber,
       'taxOffice': instance.taxOffice,
       'address': instance.address,
+      'primaryColor': instance.primaryColor,
       'createdAt': instance.createdAt.toIso8601String(),
     };

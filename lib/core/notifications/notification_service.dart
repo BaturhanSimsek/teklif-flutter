@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../app_router.dart';
 import 'device_token_repository.dart';
 
 part 'notification_service.g.dart';
@@ -15,12 +16,13 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
 
 @riverpod
 NotificationService notificationService(NotificationServiceRef ref) =>
-    NotificationService(ref.watch(deviceTokenRepositoryProvider));
+    NotificationService(ref.watch(deviceTokenRepositoryProvider), ref);
 
 class NotificationService {
-  NotificationService(this._tokenRepo);
+  NotificationService(this._tokenRepo, this._ref);
 
   final DeviceTokenRepository _tokenRepo;
+  final Ref _ref;
 
   static final _localNotifications = FlutterLocalNotificationsPlugin();
 
@@ -114,14 +116,16 @@ class NotificationService {
   }
 
   void _handleNotificationTap(RemoteMessage message) {
-    // TODO: go_router ile teklif detayına yönlendir
-    // final quoteId = message.data['quoteId'];
-    // if (quoteId != null) router.push('/quotes/$quoteId');
+    final quoteId = message.data['quoteId'];
+    if (quoteId != null && quoteId.isNotEmpty) {
+      _ref.read(routerProvider).push('/quotes/$quoteId');
+    }
   }
 
   void _onNotificationTap(NotificationResponse response) {
-    // Local notification'a tıklandı
-    // final quoteId = response.payload;
-    // if (quoteId != null) router.push('/quotes/$quoteId');
+    final quoteId = response.payload;
+    if (quoteId != null && quoteId.isNotEmpty) {
+      _ref.read(routerProvider).push('/quotes/$quoteId');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -120,17 +121,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFF3E0),
+                          color: AppColors.warning.shade50,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Icon(Symbols.info, size: 18, color: Color(0xFFE65100)),
-                            SizedBox(width: 10),
+                            Icon(Symbols.info, size: 18, color: AppColors.warning.shade800),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Text(
                                 'Hesabınız yönetici tarafından oluşturuldu. Devam etmek için yeni şifre belirleyin.',
-                                style: TextStyle(fontSize: 13, color: Color(0xFFE65100)),
+                                style: TextStyle(fontSize: 13, color: AppColors.warning.shade800),
                               ),
                             ),
                           ],

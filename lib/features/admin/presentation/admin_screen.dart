@@ -19,7 +19,6 @@ class AdminScreen extends ConsumerWidget {
     final async = ref.watch(_usersProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Yönetim Paneli'),
         centerTitle: false,
@@ -28,6 +27,16 @@ class AdminScreen extends ConsumerWidget {
             icon: const Icon(Symbols.inventory_2),
             tooltip: 'Ürünler',
             onPressed: () => context.push('/admin/products'),
+          ),
+          IconButton(
+            icon: const Icon(Symbols.category),
+            tooltip: 'Kategoriler',
+            onPressed: () => context.push('/admin/categories'),
+          ),
+          IconButton(
+            icon: const Icon(Symbols.straighten),
+            tooltip: 'Birimler',
+            onPressed: () => context.push('/admin/units'),
           ),
           IconButton(
             icon: const Icon(Symbols.article),
@@ -110,17 +119,14 @@ class _UserCard extends StatelessWidget {
   final AppUser user;
   final WidgetRef ref;
 
-  static const _roleLabels = {
-    'Admin':   ('Yönetici',     Color(0xFF7B1FA2)),
-    'Manager': ('Müdür',        Color(0xFF1565C0)),
-    'Sales':   ('Satış Temsilcisi', Color(0xFF2E7D32)),
+  static final _roleLabels = {
+    'Admin':   ('Yönetici',          AppColors.roleAdmin),
+    'Manager': ('Müdür',             AppColors.warning.shade700),
+    'Sales':   ('Satış Temsilcisi',  AppColors.roleSales),
   };
 
   Color get _avatarColor {
-    final colors = [
-      const Color(0xFF1565C0), const Color(0xFF2E7D32),
-      const Color(0xFF7B1FA2), const Color(0xFFE65100),
-    ];
+    final colors = AppColors.avatarPalette;
     return colors[user.fullName.codeUnitAt(0) % colors.length];
   }
 
@@ -130,9 +136,9 @@ class _UserCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -445,7 +451,7 @@ class _SuccessView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Icon(Symbols.check_circle, size: 56, color: Color(0xFF2E7D32), fill: 1),
+        Icon(Symbols.check_circle, size: 56, color: AppColors.roleSales, fill: 1),
         const SizedBox(height: 16),
         const Text(
           'Kullanıcı Oluşturuldu!',
@@ -466,12 +472,12 @@ class _SuccessView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFF3E0),
+            color: AppColors.warning.shade50,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Text(
+          child: Text(
             'Personel ilk girişte şifresini değiştirmesi gerekecek.',
-            style: TextStyle(fontSize: 12, color: Color(0xFFE65100)),
+            style: TextStyle(fontSize: 12, color: AppColors.warning.shade800),
             textAlign: TextAlign.center,
           ),
         ),
@@ -495,9 +501,9 @@ class _InfoBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Row(
         children: [

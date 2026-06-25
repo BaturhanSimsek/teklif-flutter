@@ -1,3 +1,4 @@
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,7 +98,7 @@ class _CustomerListScreenState extends ConsumerState<CustomerListScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Symbols.error, size: 48, color: Color(0xFFE0302A), fill: 1),
+              Icon(Symbols.error, size: 48, color: AppColors.error, fill: 1),
               const SizedBox(height: 12),
               Text('$e', textAlign: TextAlign.center),
               const SizedBox(height: 16),
@@ -140,7 +141,7 @@ class _DismissibleCustomer extends ConsumerWidget {
                 child: const Text('İptal'),
               ),
               FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                style: FilledButton.styleFrom(backgroundColor: AppColors.error),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Sil'),
               ),
@@ -162,7 +163,7 @@ class _DismissibleCustomer extends ConsumerWidget {
       background: Container(
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: Colors.red.shade600,
+          color: AppColors.error.shade600,
           borderRadius: BorderRadius.circular(18),
         ),
         alignment: Alignment.centerRight,
@@ -179,11 +180,7 @@ class _CustomerCard extends StatelessWidget {
   final Customer customer;
 
   Color _avatarColor(String name) {
-    final colors = [
-      const Color(0xFF5C6BC0), const Color(0xFF26A69A), const Color(0xFFEF5350),
-      const Color(0xFFAB47BC), const Color(0xFF42A5F5), const Color(0xFFFF7043),
-      const Color(0xFF66BB6A), const Color(0xFFEC407A),
-    ];
+    final colors = AppColors.avatarPalette;
     return colors[name.codeUnitAt(0) % colors.length];
   }
 
@@ -194,9 +191,9 @@ class _CustomerCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: InkWell(
         onTap: () => context.push('/customers/${customer.id}'),
@@ -278,7 +275,7 @@ class _EmptyState extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Icon(Symbols.people, size: 36, color: Colors.grey.shade400, fill: 1),

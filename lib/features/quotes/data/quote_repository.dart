@@ -4,6 +4,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/models/paged_result.dart';
 import 'ai_quote_suggestion.dart';
+import 'kanban_model.dart';
 import 'quote_model.dart';
 
 part 'quote_repository.g.dart';
@@ -122,5 +123,14 @@ class QuoteRepository {
     return (res.data as List)
         .map((j) => AiQuoteItemSuggestion.fromJson(j as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<KanbanBoard> getKanban() async {
+    final res = await _dio.get('/quotes/kanban');
+    return KanbanBoard.fromJson(res.data as Map<String, dynamic>);
+  }
+
+  Future<void> moveStage(String quoteId, String stage) async {
+    await _dio.patch('/quotes/$quoteId/stage', data: {'stage': stage});
   }
 }

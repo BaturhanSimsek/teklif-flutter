@@ -19,7 +19,6 @@ class DashboardScreen extends ConsumerWidget {
     final async = ref.watch(_dashboardProvider);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Dashboard'),
         centerTitle: false,
@@ -58,7 +57,7 @@ class _DashboardBody extends StatelessWidget {
               icon:  Symbols.description,
               label: 'Toplam Teklif',
               value: '${data.totalQuotes}',
-              color: const Color(0xFF1565C0),
+              color: Theme.of(context).colorScheme.primary,
             )),
             const SizedBox(width: 12),
             Expanded(child: _StatCard(
@@ -81,7 +80,7 @@ class _DashboardBody extends StatelessWidget {
               icon:  Symbols.people,
               label: 'Müşteri',
               value: '${data.totalCustomers}',
-              color: const Color(0xFF7B1FA2),
+              color: AppColors.roleAdmin,
             )),
           ]),
           const SizedBox(height: 20),
@@ -152,9 +151,9 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,15 +193,15 @@ class _RevenueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = primary
         ? Theme.of(context).colorScheme.primary
-        : const Color(0xFF2E7D32);
+        : AppColors.success;
 
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: primary ? color : Colors.white,
+        color: primary ? color : Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: primary ? Colors.transparent : Colors.grey.shade200),
+            color: primary ? Colors.transparent : Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,9 +243,9 @@ class _BarChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: SizedBox(
         height: 140,
@@ -302,9 +301,9 @@ class _RevenueList extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: stats.map((s) {
@@ -325,7 +324,7 @@ class _RevenueList extends StatelessWidget {
                       Container(
                         height: 8,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Theme.of(context).dividerColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),

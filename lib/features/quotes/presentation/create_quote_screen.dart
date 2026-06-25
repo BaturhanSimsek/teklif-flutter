@@ -52,7 +52,7 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
     _kdvRate.dispose();
     _discountRate.dispose();
     _notes.dispose();
-    for (final r in _items) r.dispose();
+    for (final r in _items) { r.dispose(); }
     super.dispose();
   }
 
@@ -121,6 +121,7 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
           'unitPrice':    double.tryParse(r.price.text) ?? 0,
           'unit':         r.unit.text.trim().isEmpty ? 'Adet' : r.unit.text.trim(),
           'customFields': Map<String, dynamic>.from(_customFields),
+          'currency':     r.currency,
         }).toList(),
       });
       if (mounted) context.pushReplacement('/quotes/$id');
@@ -162,7 +163,7 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
             _sectionTitle('Müşteri'),
             customersAsync.when(
               data: (list) => DropdownButtonFormField<String>(
-                value: _customerId,
+                initialValue: _customerId,
                 decoration: const InputDecoration(
                   labelText: 'Müşteri *',
                   prefixIcon: Icon(Icons.person_outline),
@@ -180,7 +181,7 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
             _sectionTitle('Form Şablonu'),
             templatesAsync.when(
               data: (list) => DropdownButtonFormField<FormTemplate>(
-                value: _template,
+                initialValue: _template,
                 decoration: const InputDecoration(
                   labelText: 'Şablon *',
                   prefixIcon: Icon(Icons.article_outlined),
@@ -238,23 +239,27 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
             const SizedBox(height: 20),
             _sectionTitle('Teklif Koşulları'),
             Row(children: [
-              Expanded(child: _plainField(_paymentTerm, 'Ödeme Koşulu')),
+              Expanded(child: _labelField(_paymentTerm, 'Ödeme Koşulu')),
               const SizedBox(width: 12),
-              Expanded(child: _plainField(_deliveryDays, 'Teslimat (gün)', type: TextInputType.number)),
+              Expanded(child: _labelField(_deliveryDays, 'Teslimat (gün)', type: TextInputType.number)),
             ]),
             const SizedBox(height: 12),
             Row(children: [
-              Expanded(child: _plainField(_kdvRate, 'KDV %', type: TextInputType.number)),
+              Expanded(child: _labelField(_kdvRate, 'KDV %', type: TextInputType.number)),
               const SizedBox(width: 12),
-              Expanded(child: _plainField(_discountRate, 'İndirim %', type: TextInputType.number)),
+              Expanded(child: _labelField(_discountRate, 'İndirim %', type: TextInputType.number)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text('Döviz', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.grey.shade600)),
+                    const SizedBox(height: 5),
                     DropdownButtonFormField<String>(
-                      value: _currency,
-                      decoration: const InputDecoration(labelText: 'Döviz', isDense: true),
+                      initialValue: _currency,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+                      ),
                       items: const [
                         DropdownMenuItem(value: 'TRY', child: Text('₺ TRY')),
                         DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
@@ -303,35 +308,80 @@ class _CreateQuoteScreenState extends ConsumerState<CreateQuoteScreen> {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary)),
       );
 
-  Widget _plainField(TextEditingController ctrl, String label,
+  Widget _labelField(TextEditingController ctrl, String label,
           {TextInputType type = TextInputType.text}) =>
-      TextFormField(
-        controller: ctrl,
-        keyboardType: type,
-        decoration: InputDecoration(labelText: label, isDense: true),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.grey.shade600)),
+          const SizedBox(height: 5),
+          TextFormField(
+            controller: ctrl,
+            keyboardType: type,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+            ),
+          ),
+        ],
       );
 }
 
-class _ExchangeRateChip extends ConsumerWidget {
+class _ExchangeRateChip extends ConsumerStatefulWidget {
   const _ExchangeRateChip({required this.currency});
   final String currency;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ExchangeRateChip> createState() => _ExchangeRateChipState();
+}
+
+class _ExchangeRateChipState extends ConsumerState<_ExchangeRateChip> {
+  bool _refreshing = false;
+
+  Future<void> _forceRefresh() async {
+    setState(() => _refreshing = true);
+    try {
+      await ref.read(exchangeRateRepositoryProvider).getRates(force: true);
+      ref.invalidate(exchangeRatesProvider);
+    } finally {
+      if (mounted) setState(() => _refreshing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final ratesAsync = ref.watch(exchangeRatesProvider);
-    return ratesAsync.when(
-      loading: () => const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 1.5)),
-      error: (_, __) => const SizedBox.shrink(),
-      data: (rates) {
-        final rate = rates[currency];
-        if (rate == null) return const SizedBox.shrink();
-        return Text(
-          '1 $currency = ${rate.toStringAsFixed(4)} ₺',
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        );
-      },
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ratesAsync.when(
+          loading: () => const SizedBox(height: 14, width: 14, child: CircularProgressIndicator(strokeWidth: 1.5)),
+          error: (_, __) => Text('Kur alınamadı',
+              style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.error)),
+          data: (rates) {
+            final rate = rates[widget.currency];
+            if (rate == null) return const SizedBox.shrink();
+            return Text(
+              '1 ${widget.currency} = ${rate.toStringAsFixed(2)} ₺',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 4),
+        SizedBox(
+          width: 22, height: 22,
+          child: _refreshing
+              ? const CircularProgressIndicator(strokeWidth: 1.5)
+              : IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.refresh, size: 16),
+                  tooltip: 'Kurları yenile (TCMB)',
+                  onPressed: _forceRefresh,
+                ),
+        ),
+      ],
     );
   }
 }
@@ -351,7 +401,7 @@ class _DynamicField extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: switch (field.type) {
         4 => DropdownButtonFormField<String>(
-          value: (value?.toString().isEmpty ?? true) ? null : value?.toString(),
+          initialValue: (value?.toString().isEmpty ?? true) ? null : value?.toString(),
           decoration: InputDecoration(labelText: field.label),
           items: field.options.map((o) => DropdownMenuItem(value: o, child: Text(o))).toList(),
           onChanged: (v) => onChanged(v),
@@ -395,13 +445,14 @@ class _ItemRow {
   final qty   = TextEditingController(text: '1');
   final price = TextEditingController();
   final unit  = TextEditingController(text: 'Adet');
+  String currency = 'TRY';
 
   void dispose() {
     desc.dispose(); qty.dispose(); price.dispose(); unit.dispose();
   }
 }
 
-class _ItemRowWidget extends StatelessWidget {
+class _ItemRowWidget extends ConsumerStatefulWidget {
   const _ItemRowWidget({
     required this.row,
     required this.index,
@@ -415,60 +466,155 @@ class _ItemRowWidget extends StatelessWidget {
   final bool showRemove;
 
   @override
+  ConsumerState<_ItemRowWidget> createState() => _ItemRowWidgetState();
+}
+
+class _ItemRowWidgetState extends ConsumerState<_ItemRowWidget> {
+  late String _currency = widget.row.currency;
+
+  static const _currencies = [
+    ('TRY', '₺ TRY'),
+    ('USD', '\$ USD'),
+    ('EUR', '€ EUR'),
+    ('GBP', '£ GBP'),
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Card(
+    final labelStyle = TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Colors.grey.shade600);
+    const cp = EdgeInsets.symmetric(vertical: 12, horizontal: 14);
+    final ratesAsync = ref.watch(exchangeRatesProvider);
+
+    return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      color: colors.surfaceVariant,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Row(children: [
-              Text('Kalem ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w600)),
-              const Spacer(),
-              if (showRemove)
-                IconButton(
-                  icon: const Icon(Icons.delete_outline, size: 18),
-                  onPressed: onRemove,
-                  visualDensity: VisualDensity.compact,
-                ),
-            ]),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: row.desc,
-              decoration: const InputDecoration(labelText: 'Açıklama *', isDense: true),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Açıklama gerekli' : null,
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Text('Kalem ${widget.index + 1}',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade500)),
+            const Spacer(),
+            if (widget.showRemove)
+              GestureDetector(
+                onTap: widget.onRemove,
+                child: Icon(Icons.close, size: 18, color: Colors.grey.shade400),
+              ),
+          ]),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: widget.row.desc,
+            decoration: const InputDecoration(hintText: 'Açıklama *', contentPadding: cp),
+            validator: (v) => (v == null || v.trim().isEmpty) ? 'Açıklama gerekli' : null,
+          ),
+          const SizedBox(height: 10),
+          Row(children: [
+            // Birim Fiyat
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Birim Fiyat', style: labelStyle),
+                  const SizedBox(height: 5),
+                  TextFormField(
+                    controller: widget.row.price,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(hintText: '0.00', contentPadding: cp),
+                    validator: (v) => (v == null || v.isEmpty) ? 'Gerekli' : null,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            Row(children: [
-              Expanded(
-                flex: 2,
-                child: TextFormField(
-                  controller: row.price,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Birim Fiyat *', isDense: true),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Fiyat girin' : null,
-                ),
+            const SizedBox(width: 8),
+            // Miktar
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Miktar', style: labelStyle),
+                  const SizedBox(height: 5),
+                  TextFormField(
+                    controller: widget.row.qty,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(hintText: '1', contentPadding: cp),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: row.qty,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Miktar', isDense: true),
-                ),
+            ),
+            const SizedBox(width: 8),
+            // Birim
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Birim', style: labelStyle),
+                  const SizedBox(height: 5),
+                  TextFormField(
+                    controller: widget.row.unit,
+                    decoration: const InputDecoration(hintText: 'Adet', contentPadding: cp),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFormField(
-                  controller: row.unit,
-                  decoration: const InputDecoration(labelText: 'Birim', isDense: true),
-                ),
+            ),
+          ]),
+          const SizedBox(height: 10),
+          // Para birimi seçimi + kur chip
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Para Birimi', style: labelStyle),
+              const SizedBox(width: 12),
+              DropdownButton<String>(
+                value: _currency,
+                isDense: true,
+                underline: const SizedBox.shrink(),
+                items: _currencies
+                    .map((c) => DropdownMenuItem(value: c.$1, child: Text(c.$2)))
+                    .toList(),
+                onChanged: (v) {
+                  if (v == null) return;
+                  setState(() => _currency = v);
+                  widget.row.currency = v;
+                },
               ),
-            ]),
-          ],
-        ),
+              if (_currency != 'TRY') ...[
+                const SizedBox(width: 10),
+                ratesAsync.when(
+                  loading: () => const SizedBox(width: 14, height: 14,
+                      child: CircularProgressIndicator(strokeWidth: 1.5)),
+                  error: (_, __) => const SizedBox.shrink(),
+                  data: (rates) {
+                    final rate = rates[_currency];
+                    if (rate == null) return const SizedBox.shrink();
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '1 $_currency = ${rate.toStringAsFixed(2)} ₺',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -539,9 +685,9 @@ class _AiPromptSheetState extends State<_AiPromptSheet> {
             controller: widget.promptCtrl,
             maxLines: 3,
             autofocus: true,
-            decoration: InputDecoration(
-              hintText: 'Örn: 50m² mutfak tezgah üstü seramik kaplama',
-              border: const OutlineInputBorder(),
+            decoration: const InputDecoration(
+              hintText: 'Örn: 5 adet yazılım lisansı, kurulum hizmeti ve 1 yıl teknik destek',
+              border: OutlineInputBorder(),
               filled: true,
             ),
             onSubmitted: (_) => _generate(),

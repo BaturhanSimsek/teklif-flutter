@@ -304,9 +304,9 @@ class _InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -324,7 +324,7 @@ class _InfoCard extends StatelessWidget {
                   )),
             ]),
             const SizedBox(height: 12),
-            Divider(height: 1, color: Colors.grey.shade100),
+            Divider(height: 1, color: Theme.of(context).dividerColor),
             const SizedBox(height: 12),
             ...rows.map((r) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -361,9 +361,9 @@ class _ItemCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,9 +416,9 @@ class _TotalsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: [
@@ -431,7 +431,7 @@ class _TotalsCard extends StatelessWidget {
             ),
           _TotalRow('KDV (%${quote.kdvRate.toStringAsFixed(0)})',
               _curr.format(quote.kdvAmount)),
-          Divider(height: 20, color: Colors.grey.shade200),
+          Divider(height: 20, color: Theme.of(context).dividerColor),
           _TotalRow(
             'GENEL TOPLAM',
             _curr.format(quote.grandTotal),

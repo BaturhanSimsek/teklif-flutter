@@ -227,10 +227,7 @@ class _CustomerResult extends StatelessWidget {
   const _CustomerResult({required this.customer});
   final Customer customer;
 
-  static const _colors = [
-    Color(0xFF5C6BC0), Color(0xFF26A69A), Color(0xFFEF5350),
-    Color(0xFFAB47BC), Color(0xFF42A5F5),
-  ];
+  static List<Color> get _colors => AppColors.avatarPalette;
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +276,8 @@ class _ProductResult extends StatelessWidget {
       ),
       title: Text(product.name,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-      subtitle: Text('${product.unit}  ·  ${_curr.format(product.salePrice)}',
+      subtitle: Text(
+          '${product.unitName ?? ''}${product.unitName != null ? '  ·  ' : ''}${_curr.format(product.salePrice)}',
           style: const TextStyle(fontSize: 12, color: Colors.grey)),
       onTap: () => context.push('/admin/products'),
     );

@@ -23,8 +23,9 @@ mixin _$Product {
   String get id => throw _privateConstructorUsedError;
   String? get categoryId => throw _privateConstructorUsedError;
   String? get categoryName => throw _privateConstructorUsedError;
+  String? get unitId => throw _privateConstructorUsedError;
+  String? get unitName => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get unit => throw _privateConstructorUsedError;
   double get purchasePrice => throw _privateConstructorUsedError;
   double get salePrice => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
@@ -49,8 +50,9 @@ abstract class $ProductCopyWith<$Res> {
       {String id,
       String? categoryId,
       String? categoryName,
+      String? unitId,
+      String? unitName,
       String name,
-      String unit,
       double purchasePrice,
       double salePrice,
       String? notes,
@@ -76,8 +78,9 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? id = null,
     Object? categoryId = freezed,
     Object? categoryName = freezed,
+    Object? unitId = freezed,
+    Object? unitName = freezed,
     Object? name = null,
-    Object? unit = null,
     Object? purchasePrice = null,
     Object? salePrice = null,
     Object? notes = freezed,
@@ -97,13 +100,17 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String?,
+      unitId: freezed == unitId
+          ? _value.unitId
+          : unitId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unitName: freezed == unitName
+          ? _value.unitName
+          : unitName // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
               as String,
       purchasePrice: null == purchasePrice
           ? _value.purchasePrice
@@ -140,8 +147,9 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
       {String id,
       String? categoryId,
       String? categoryName,
+      String? unitId,
+      String? unitName,
       String name,
-      String unit,
       double purchasePrice,
       double salePrice,
       String? notes,
@@ -165,8 +173,9 @@ class __$$ProductImplCopyWithImpl<$Res>
     Object? id = null,
     Object? categoryId = freezed,
     Object? categoryName = freezed,
+    Object? unitId = freezed,
+    Object? unitName = freezed,
     Object? name = null,
-    Object? unit = null,
     Object? purchasePrice = null,
     Object? salePrice = null,
     Object? notes = freezed,
@@ -186,13 +195,17 @@ class __$$ProductImplCopyWithImpl<$Res>
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String?,
+      unitId: freezed == unitId
+          ? _value.unitId
+          : unitId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unitName: freezed == unitName
+          ? _value.unitName
+          : unitName // ignore: cast_nullable_to_non_nullable
+              as String?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
               as String,
       purchasePrice: null == purchasePrice
           ? _value.purchasePrice
@@ -225,8 +238,9 @@ class _$ProductImpl implements _Product {
       {required this.id,
       this.categoryId,
       this.categoryName,
+      this.unitId,
+      this.unitName,
       required this.name,
-      required this.unit,
       required this.purchasePrice,
       required this.salePrice,
       this.notes,
@@ -243,9 +257,11 @@ class _$ProductImpl implements _Product {
   @override
   final String? categoryName;
   @override
-  final String name;
+  final String? unitId;
   @override
-  final String unit;
+  final String? unitName;
+  @override
+  final String name;
   @override
   final double purchasePrice;
   @override
@@ -259,7 +275,7 @@ class _$ProductImpl implements _Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, categoryId: $categoryId, categoryName: $categoryName, name: $name, unit: $unit, purchasePrice: $purchasePrice, salePrice: $salePrice, notes: $notes, photoUrl: $photoUrl, isActive: $isActive)';
+    return 'Product(id: $id, categoryId: $categoryId, categoryName: $categoryName, unitId: $unitId, unitName: $unitName, name: $name, purchasePrice: $purchasePrice, salePrice: $salePrice, notes: $notes, photoUrl: $photoUrl, isActive: $isActive)';
   }
 
   @override
@@ -272,8 +288,10 @@ class _$ProductImpl implements _Product {
                 other.categoryId == categoryId) &&
             (identical(other.categoryName, categoryName) ||
                 other.categoryName == categoryName) &&
+            (identical(other.unitId, unitId) || other.unitId == unitId) &&
+            (identical(other.unitName, unitName) ||
+                other.unitName == unitName) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.unit, unit) || other.unit == unit) &&
             (identical(other.purchasePrice, purchasePrice) ||
                 other.purchasePrice == purchasePrice) &&
             (identical(other.salePrice, salePrice) ||
@@ -287,8 +305,19 @@ class _$ProductImpl implements _Product {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, categoryId, categoryName,
-      name, unit, purchasePrice, salePrice, notes, photoUrl, isActive);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      categoryId,
+      categoryName,
+      unitId,
+      unitName,
+      name,
+      purchasePrice,
+      salePrice,
+      notes,
+      photoUrl,
+      isActive);
 
   /// Create a copy of Product
   /// with the given fields replaced by the non-null parameter values.
@@ -311,8 +340,9 @@ abstract class _Product implements Product {
       {required final String id,
       final String? categoryId,
       final String? categoryName,
+      final String? unitId,
+      final String? unitName,
       required final String name,
-      required final String unit,
       required final double purchasePrice,
       required final double salePrice,
       final String? notes,
@@ -328,9 +358,11 @@ abstract class _Product implements Product {
   @override
   String? get categoryName;
   @override
-  String get name;
+  String? get unitId;
   @override
-  String get unit;
+  String? get unitName;
+  @override
+  String get name;
   @override
   double get purchasePrice;
   @override

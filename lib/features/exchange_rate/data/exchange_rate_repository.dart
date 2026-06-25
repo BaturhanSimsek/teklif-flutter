@@ -13,9 +13,12 @@ class ExchangeRateRepository {
   ExchangeRateRepository(this._dio);
   final Dio _dio;
 
-  Future<Map<String, double>> getRates() async {
+  Future<Map<String, double>> getRates({bool force = false}) async {
     try {
-      final res = await _dio.get('/exchange-rate');
+      final res = await _dio.get(
+        '/exchange-rate',
+        queryParameters: force ? {'force': true} : null,
+      );
       final data = res.data as Map<String, dynamic>;
       return data.map((k, v) => MapEntry(k, (v as num).toDouble()));
     } on DioException catch (e) {
