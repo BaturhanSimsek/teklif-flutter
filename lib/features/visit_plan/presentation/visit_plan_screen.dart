@@ -349,8 +349,16 @@ class _VisitCard extends ConsumerWidget {
 
   Future<void> _openMaps(String address) async {
     final encoded = Uri.encodeComponent(address);
-    final uri = Uri.parse('https://maps.google.com/?q=$encoded');
-    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+    // geo: scheme — Android Maps uygulaması doğrudan açar
+    final geoUri  = Uri.parse('geo:0,0?q=$encoded');
+    // Fallback: tarayıcıda Google Maps
+    final httpUri = Uri.parse('https://maps.google.com/?q=$encoded');
+
+    if (await canLaunchUrl(geoUri)) {
+      await launchUrl(geoUri);
+    } else if (await canLaunchUrl(httpUri)) {
+      await launchUrl(httpUri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _complete(BuildContext context, WidgetRef ref) async {
