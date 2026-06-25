@@ -5,8 +5,10 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
-import '../../customers/data/customer_repository.dart';
+import '../../admin/data/user_model.dart';
+import '../../admin/data/user_repository.dart';
 import '../../customers/presentation/customer_providers.dart';
+import '../../../core/auth/current_user_provider.dart';
 import '../data/visit_plan_model.dart';
 import '../data/visit_plan_repository.dart';
 
@@ -94,16 +96,9 @@ class _VisitPlanScreenState extends ConsumerState<VisitPlanScreen> {
   }
 
   Future<void> _openRoute(List<String> addresses) async {
-    // Son adres destination, aradakiler waypoints
-    final last     = Uri.encodeComponent(addresses.last);
-    final midStops = addresses.take(addresses.length - 1).map(Uri.encodeComponent).join('|');
-
-    final uri = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1'
-      '&destination=$last'
-      '${midStops.isNotEmpty ? "&waypoints=$midStops" : ""}'
-      '&travelmode=driving',
-    );
+    // /dir//ADDR1/ADDR2/ — çift slash başlangıç = mevcut konum, sıralı duraksama
+    final stops = addresses.map(Uri.encodeComponent).join('/');
+    final uri   = Uri.parse('https://www.google.com/maps/dir//$stops/');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
@@ -429,6 +424,50 @@ class _InfoRow extends StatelessWidget {
       );
 }
 
+// ── Temsilci Dropdown ─────────────────────────────────────────────────────────
+
+class _UserDropdown extends ConsumerStatefulWidget {
+  const _UserDropdown({required this.selectedId, required this.onChanged});
+  final String? selectedId;
+  final ValueChanged<String?> onChanged;
+
+  @override
+  ConsumerState<_UserDropdown> createState() => _UserDropdownState();
+}
+
+class _UserDropdownState extends ConsumerState<_UserDropdown> {
+  late Future<List<AppUser>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = ref.read(userRepositoryProvider).getAll();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<AppUser>>(
+      future: _future,
+      builder: (context, snap) {
+        if (!snap.hasData) return const LinearProgressIndicator();
+        final reps = snap.data!.where((u) => u.isActive).toList();
+        return DropdownButtonFormField<String>(
+          value: widget.selectedId,
+          decoration: const InputDecoration(
+            labelText: 'Temsilci',
+            prefixIcon: Icon(Symbols.person_pin),
+          ),
+          items: [
+            const DropdownMenuItem(value: null, child: Text('Kendim için')),
+            ...reps.map((u) => DropdownMenuItem(value: u.id, child: Text(u.fullName))),
+          ],
+          onChanged: widget.onChanged,
+        );
+      },
+    );
+  }
+}
+
 class _OutcomeDialog extends StatelessWidget {
   _OutcomeDialog();
   final _ctrl = TextEditingController();
@@ -463,7 +502,7 @@ class _CreateVisitSheet extends ConsumerStatefulWidget {
 
 class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
   String? _customerId;
-  String  _customerName = '';
+  String? _assignedUserId; // null = kendisi
   late DateTime _plannedAt;
   final _notesCtrl = TextEditingController();
   bool _loading = false;
@@ -488,6 +527,7 @@ class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
   @override
   Widget build(BuildContext context) {
     final customersAsync = ref.watch(customersProvider());
+    final isAdmin        = ref.watch(isAdminProvider).valueOrNull ?? false;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
@@ -500,6 +540,15 @@ class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
             style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 20),
+
+          // Admin ise temsilci seç
+          if (isAdmin) ...[
+            _UserDropdown(
+              selectedId: _assignedUserId,
+              onChanged: (v) => setState(() => _assignedUserId = v),
+            ),
+            const SizedBox(height: 16),
+          ],
 
           // Müşteri seç
           customersAsync.when(
@@ -514,10 +563,7 @@ class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
                   .toList(),
               onChanged: (v) {
                 if (v == null) return;
-                setState(() {
-                  _customerId   = v;
-                  _customerName = paged.items.firstWhere((c) => c.id == v).name;
-                });
+                setState(() => _customerId = v);
               },
             ),
             loading: () => const LinearProgressIndicator(),
@@ -585,9 +631,10 @@ class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
     setState(() => _loading = true);
     try {
       await ref.read(visitPlanRepositoryProvider).create(
-        customerId: _customerId!,
-        plannedAt: _plannedAt.toUtc(),
-        notes: _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+        customerId:     _customerId!,
+        plannedAt:      _plannedAt.toUtc(),
+        notes:          _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+        assignedUserId: _assignedUserId,
       );
       widget.onCreated();
       if (mounted) Navigator.pop(context);

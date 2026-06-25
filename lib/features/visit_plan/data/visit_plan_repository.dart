@@ -30,12 +30,14 @@ class VisitPlanRepository {
     required String customerId,
     required DateTime plannedAt,
     String? notes,
+    String? assignedUserId,
   }) async {
     try {
       await _dio.post('/visit-plans', data: {
         'customerId': customerId,
-        'plannedAt': plannedAt.toIso8601String(),
-        if (notes != null) 'notes': notes,
+        'plannedAt':  plannedAt.toIso8601String(),
+        if (notes != null)          'notes':          notes,
+        if (assignedUserId != null) 'assignedUserId': assignedUserId,
       });
     } on DioException catch (e) {
       throw ApiException.fromDio(e);
