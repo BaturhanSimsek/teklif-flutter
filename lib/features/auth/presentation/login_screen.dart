@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/auth/biometric_service.dart';
+import '../../../core/notifications/notification_service.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../data/auth_repository.dart';
 
@@ -67,6 +68,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (response.twoFactorRequired && response.twoFactorToken != null) {
         context.push('/2fa-verify', extra: response.twoFactorToken);
       } else {
+        // Başarılı login → FCM token'ı kaydet
+        ref.read(notificationServiceProvider)
+            .requestPermissionAndRegisterToken()
+            .ignore();
         context.go('/dashboard');
       }
     } on Exception catch (e) {

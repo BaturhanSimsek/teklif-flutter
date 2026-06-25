@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app_router.dart';
+import 'core/notifications/notification_service.dart';
 import 'core/security/jailbreak_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +16,8 @@ void main() async {
     runApp(const _BlockedApp());
     return;
   }
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const ProviderScope(child: TeklifApp()));
 }
@@ -40,21 +45,32 @@ class _BlockedApp extends StatelessWidget {
   }
 }
 
-class TeklifApp extends ConsumerWidget {
+class TeklifApp extends ConsumerStatefulWidget {
   const TeklifApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TeklifApp> createState() => _TeklifAppState();
+}
+
+class _TeklifAppState extends ConsumerState<TeklifApp> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(notificationServiceProvider).initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router    = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
 
     ref.read(themeModeNotifierProvider.notifier).init();
 
     return MaterialApp.router(
-      title:       'TeklifApp',
-      theme:       AppTheme.light,
-      darkTheme:   AppTheme.dark,
-      themeMode:   themeMode,
+      title:        'TeklifApp',
+      theme:        AppTheme.light,
+      darkTheme:    AppTheme.dark,
+      themeMode:    themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
