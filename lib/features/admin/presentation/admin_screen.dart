@@ -58,7 +58,21 @@ class AdminScreen extends ConsumerWidget {
       body: async.when(
         data: (users) => RefreshIndicator(
           onRefresh: () => ref.refresh(_usersProvider.future),
-          child: _UserList(users: users, ref: ref),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _AdminQuickLinks(),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 12, 16, 6),
+                child: Text('Kullanıcılar',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey)),
+              ),
+              Expanded(child: _UserList(users: users, ref: ref)),
+            ],
+          ),
         ),
         loading: () => const SkeletonList(),
         error: (e, _) => Center(child: Text('Hata: $e')),
@@ -77,6 +91,56 @@ class AdminScreen extends ConsumerWidget {
       builder: (_) => _AddUserSheet(onCreated: () {
         ref.invalidate(_usersProvider);
       }),
+    );
+  }
+}
+
+// ── Hızlı Bağlantılar ───────────────────────────────────────────────────────
+
+class _AdminQuickLinks extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      (icon: Symbols.bar_chart,      label: 'Raporlar',  color: Colors.orange,     route: '/reports'),
+      (icon: Symbols.view_kanban,    label: 'Kanban',    color: Colors.purple,     route: '/kanban'),
+      (icon: Symbols.person,         label: 'Profil',    color: Colors.teal,       route: '/profile'),
+      (icon: Symbols.search,         label: 'Ara',       color: Colors.indigo,     route: '/search'),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Row(
+        children: items.map((item) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: InkWell(
+                onTap: () => context.go(item.route),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: item.color.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: item.color.withOpacity(0.2)),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(item.icon, size: 20, color: item.color, fill: 1),
+                      const SizedBox(height: 4),
+                      Text(item.label,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: item.color)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

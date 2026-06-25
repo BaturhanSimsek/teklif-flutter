@@ -10,31 +10,27 @@ class MainScaffold extends ConsumerWidget {
   final Widget child;
   final String location;
 
+  // Sabit 4 sekme — herkes görür
   static const _baseTabs = [
-    (path: '/dashboard',  icon: Symbols.dashboard,       label: 'Dashboard'),
-    (path: '/quotes',     icon: Symbols.description,     label: 'Teklifler'),
-    (path: '/customers',  icon: Symbols.people,           label: 'Müşteriler'),
-    (path: '/visit-plan', icon: Symbols.calendar_month,   label: 'Ziyaret'),
-    (path: '/search',     icon: Symbols.search,           label: 'Ara'),
+    (path: '/dashboard',  icon: Symbols.dashboard,      label: 'Dashboard'),
+    (path: '/quotes',     icon: Symbols.description,    label: 'Teklifler'),
+    (path: '/customers',  icon: Symbols.people,          label: 'Müşteriler'),
+    (path: '/visit-plan', icon: Symbols.calendar_month,  label: 'Ziyaret'),
   ];
 
-  static const _reportsTab =
-      (path: '/reports', icon: Symbols.bar_chart,             label: 'Raporlar');
+  // 5. sekme: Admin/Manager → Yönetim, Sales → Profil
   static const _adminTab =
       (path: '/admin',   icon: Symbols.admin_panel_settings, label: 'Yönetim');
   static const _profileTab =
-      (path: '/profile', icon: Symbols.person,                label: 'Profil');
+      (path: '/profile', icon: Symbols.person,               label: 'Profil');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isAdmin     = ref.watch(isAdminProvider).valueOrNull ?? false;
-    final canReport   = ref.watch(canViewReportsProvider).valueOrNull ?? false;
-    final tabs        = [
-      ..._baseTabs,
-      if (canReport) _reportsTab,
-      if (isAdmin) _adminTab,
-      _profileTab,
-    ];
+    final isAdmin = ref.watch(isAdminProvider).valueOrNull ?? false;
+    final canViewReports = ref.watch(canViewReportsProvider).valueOrNull ?? false;
+
+    // Max 5 sekme: 4 sabit + 1 rol bazlı
+    final tabs = [..._baseTabs, if (isAdmin || canViewReports) _adminTab else _profileTab];
 
     int currentIndex = 0;
     for (var i = 0; i < tabs.length; i++) {
