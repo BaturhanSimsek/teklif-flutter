@@ -34,6 +34,17 @@ subprojects {
                 targetCompatibility = JavaVersion.VERSION_17
             }
         }
+        // AGP 8+/9+, namespace'in sadece build.gradle DSL'inden gelmesini zorunlu kilar;
+        // eski pluginlerin manifest'indeki package="..." attribute'u artik desteklenmiyor
+        // (Gradle'in kendi hata mesaji da bu attribute'un kaldirilmasini oneriyor).
+        val manifestFile = file("$projectDir/src/main/AndroidManifest.xml")
+        if (manifestFile.exists()) {
+            val content = manifestFile.readText()
+            val cleaned = content.replace(Regex("""\s+package="[^"]*""""), "")
+            if (cleaned != content) {
+                manifestFile.writeText(cleaned)
+            }
+        }
     }
     plugins.withId("org.jetbrains.kotlin.android") {
         extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension> {
