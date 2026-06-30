@@ -7,7 +7,7 @@ part 'dashboard_repository.g.dart';
 
 @riverpod
 DashboardRepository dashboardRepository(DashboardRepositoryRef ref) =>
-    DashboardRepository(ref.watch(dioProvider));
+    DashboardRepository(ref.watch(reportingDioProvider));
 
 class DashboardRepository {
   DashboardRepository(this._dio);

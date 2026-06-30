@@ -8,7 +8,7 @@ part 'reports_repository.g.dart';
 
 @riverpod
 ReportsRepository reportsRepository(ReportsRepositoryRef ref) =>
-    ReportsRepository(ref.watch(dioProvider));
+    ReportsRepository(ref.watch(reportingDioProvider));
 
 class ReportsRepository {
   ReportsRepository(this._dio);
@@ -16,7 +16,7 @@ class ReportsRepository {
 
   Future<ReportsData> get() async {
     try {
-      final res = await _dio.get('/reports');
+      final res = await _dio.get('/summary');
       return ReportsData.fromJson(res.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);

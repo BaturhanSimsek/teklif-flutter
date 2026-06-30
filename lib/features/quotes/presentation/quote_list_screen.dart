@@ -128,8 +128,8 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
 
   Future<void> _exportExcel() async {
     try {
-      final dio  = ref.read(dioProvider);
-      final res  = await dio.get('/quotes/export/excel',
+      final dio  = ref.read(reportingDioProvider);
+      final res  = await dio.get('/export/excel',
           options: Options(responseType: ResponseType.bytes));
 
       final dir  = await getTemporaryDirectory();
