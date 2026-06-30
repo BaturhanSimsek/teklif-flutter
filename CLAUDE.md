@@ -12,6 +12,10 @@ Proje board: https://github.com/orgs/teklif-platform/projects/1
 
 **Hicbir commit mesajina "Co-Authored-By: Claude" veya benzeri bir AI attribution satiri EKLEME.** Bu kalici ve istisnasiz bir kuraldir.
 
+## CI — Build Kontrolu (DIKKAT: Merge'i Bloklamiyor)
+
+Her push/PR'da `.github/workflows/ci.yml` calisir (flutter analyze + test + debug APK build). **Repo private oldugu icin GitHub'in branch protection/ruleset ozelligi kapali** (Pro/Team plan gerektiriyor) — CI kirmizi olsa bile merge/push main'e gidebilir. PR merge etmeden once Actions sekmesinden CI'nin yesil oldugunu MANUEL kontrol et.
+
 ## Branch Stratejisi
 
 - Varsayilan branch: `master` (bu repoda `main` degil — dikkat). `teklif-app` reposunda varsayilan `main`'dir, karistirma.
