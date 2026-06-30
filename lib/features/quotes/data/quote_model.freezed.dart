@@ -467,6 +467,8 @@ mixin _$QuoteDetail {
   String? get shareToken => throw _privateConstructorUsedError;
   int get viewCount => throw _privateConstructorUsedError;
   DateTime? get viewedAt => throw _privateConstructorUsedError;
+  String? get signatureBase64 => throw _privateConstructorUsedError;
+  bool get hasSignedDocument => throw _privateConstructorUsedError;
   List<QuoteItemDetail> get items => throw _privateConstructorUsedError;
 
   /// Serializes this QuoteDetail to a JSON map.
@@ -515,6 +517,8 @@ abstract class $QuoteDetailCopyWith<$Res> {
       String? shareToken,
       int viewCount,
       DateTime? viewedAt,
+      String? signatureBase64,
+      bool hasSignedDocument,
       List<QuoteItemDetail> items});
 }
 
@@ -562,6 +566,8 @@ class _$QuoteDetailCopyWithImpl<$Res, $Val extends QuoteDetail>
     Object? shareToken = freezed,
     Object? viewCount = null,
     Object? viewedAt = freezed,
+    Object? signatureBase64 = freezed,
+    Object? hasSignedDocument = null,
     Object? items = null,
   }) {
     return _then(_value.copyWith(
@@ -681,6 +687,14 @@ class _$QuoteDetailCopyWithImpl<$Res, $Val extends QuoteDetail>
           ? _value.viewedAt
           : viewedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      signatureBase64: freezed == signatureBase64
+          ? _value.signatureBase64
+          : signatureBase64 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hasSignedDocument: null == hasSignedDocument
+          ? _value.hasSignedDocument
+          : hasSignedDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       items: null == items
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
@@ -727,6 +741,8 @@ abstract class _$$QuoteDetailImplCopyWith<$Res>
       String? shareToken,
       int viewCount,
       DateTime? viewedAt,
+      String? signatureBase64,
+      bool hasSignedDocument,
       List<QuoteItemDetail> items});
 }
 
@@ -772,6 +788,8 @@ class __$$QuoteDetailImplCopyWithImpl<$Res>
     Object? shareToken = freezed,
     Object? viewCount = null,
     Object? viewedAt = freezed,
+    Object? signatureBase64 = freezed,
+    Object? hasSignedDocument = null,
     Object? items = null,
   }) {
     return _then(_$QuoteDetailImpl(
@@ -891,6 +909,14 @@ class __$$QuoteDetailImplCopyWithImpl<$Res>
           ? _value.viewedAt
           : viewedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      signatureBase64: freezed == signatureBase64
+          ? _value.signatureBase64
+          : signatureBase64 // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hasSignedDocument: null == hasSignedDocument
+          ? _value.hasSignedDocument
+          : hasSignedDocument // ignore: cast_nullable_to_non_nullable
+              as bool,
       items: null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
@@ -932,6 +958,8 @@ class _$QuoteDetailImpl implements _QuoteDetail {
       this.shareToken,
       this.viewCount = 0,
       this.viewedAt,
+      this.signatureBase64,
+      this.hasSignedDocument = false,
       required final List<QuoteItemDetail> items})
       : _items = items;
 
@@ -997,6 +1025,11 @@ class _$QuoteDetailImpl implements _QuoteDetail {
   final int viewCount;
   @override
   final DateTime? viewedAt;
+  @override
+  final String? signatureBase64;
+  @override
+  @JsonKey()
+  final bool hasSignedDocument;
   final List<QuoteItemDetail> _items;
   @override
   List<QuoteItemDetail> get items {
@@ -1007,7 +1040,7 @@ class _$QuoteDetailImpl implements _QuoteDetail {
 
   @override
   String toString() {
-    return 'QuoteDetail(id: $id, quoteNumber: $quoteNumber, quoteNumberDisplay: $quoteNumberDisplay, revisionNo: $revisionNo, status: $status, isApproved: $isApproved, customerId: $customerId, customerName: $customerName, customerPhone: $customerPhone, formTemplateId: $formTemplateId, formTemplateName: $formTemplateName, language: $language, currency: $currency, date: $date, paymentTerm: $paymentTerm, deliveryDays: $deliveryDays, kdvRate: $kdvRate, discountRate: $discountRate, notes: $notes, subTotal: $subTotal, discountAmount: $discountAmount, kdvAmount: $kdvAmount, grandTotal: $grandTotal, createdByEmail: $createdByEmail, createdAt: $createdAt, updatedAt: $updatedAt, shareToken: $shareToken, viewCount: $viewCount, viewedAt: $viewedAt, items: $items)';
+    return 'QuoteDetail(id: $id, quoteNumber: $quoteNumber, quoteNumberDisplay: $quoteNumberDisplay, revisionNo: $revisionNo, status: $status, isApproved: $isApproved, customerId: $customerId, customerName: $customerName, customerPhone: $customerPhone, formTemplateId: $formTemplateId, formTemplateName: $formTemplateName, language: $language, currency: $currency, date: $date, paymentTerm: $paymentTerm, deliveryDays: $deliveryDays, kdvRate: $kdvRate, discountRate: $discountRate, notes: $notes, subTotal: $subTotal, discountAmount: $discountAmount, kdvAmount: $kdvAmount, grandTotal: $grandTotal, createdByEmail: $createdByEmail, createdAt: $createdAt, updatedAt: $updatedAt, shareToken: $shareToken, viewCount: $viewCount, viewedAt: $viewedAt, signatureBase64: $signatureBase64, hasSignedDocument: $hasSignedDocument, items: $items)';
   }
 
   @override
@@ -1068,6 +1101,10 @@ class _$QuoteDetailImpl implements _QuoteDetail {
                 other.viewCount == viewCount) &&
             (identical(other.viewedAt, viewedAt) ||
                 other.viewedAt == viewedAt) &&
+            (identical(other.signatureBase64, signatureBase64) ||
+                other.signatureBase64 == signatureBase64) &&
+            (identical(other.hasSignedDocument, hasSignedDocument) ||
+                other.hasSignedDocument == hasSignedDocument) &&
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
@@ -1104,6 +1141,8 @@ class _$QuoteDetailImpl implements _QuoteDetail {
         shareToken,
         viewCount,
         viewedAt,
+        signatureBase64,
+        hasSignedDocument,
         const DeepCollectionEquality().hash(_items)
       ]);
 
@@ -1154,6 +1193,8 @@ abstract class _QuoteDetail implements QuoteDetail {
       final String? shareToken,
       final int viewCount,
       final DateTime? viewedAt,
+      final String? signatureBase64,
+      final bool hasSignedDocument,
       required final List<QuoteItemDetail> items}) = _$QuoteDetailImpl;
 
   factory _QuoteDetail.fromJson(Map<String, dynamic> json) =
@@ -1217,6 +1258,10 @@ abstract class _QuoteDetail implements QuoteDetail {
   int get viewCount;
   @override
   DateTime? get viewedAt;
+  @override
+  String? get signatureBase64;
+  @override
+  bool get hasSignedDocument;
   @override
   List<QuoteItemDetail> get items;
 

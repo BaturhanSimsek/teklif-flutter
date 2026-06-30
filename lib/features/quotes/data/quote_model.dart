@@ -57,6 +57,8 @@ class QuoteDetail with _$QuoteDetail {
     String? shareToken,
     @Default(0) int viewCount,
     DateTime? viewedAt,
+    String? signatureBase64,
+    @Default(false) bool hasSignedDocument,
     required List<QuoteItemDetail> items,
   }) = _QuoteDetail;
 
