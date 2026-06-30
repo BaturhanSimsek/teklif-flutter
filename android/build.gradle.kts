@@ -21,11 +21,14 @@ subprojects {
 
 // flutter_jailbreak_detection gibi eski pluginler AGP 8+/9+'da zorunlu olan
 // namespace'i kendi build.gradle'inda tanimlamiyor, build'i kiriyor.
+// plugins.withId kullaniliyor: afterEvaluate, evaluationDependsOn(":app") nedeniyle
+// proje zaten evaluate olmus oluyor ve "already evaluated" hatasi veriyor.
 subprojects {
-    afterEvaluate {
-        val androidExtension = extensions.findByName("android")
-        if (androidExtension is com.android.build.gradle.BaseExtension && androidExtension.namespace == null) {
-            androidExtension.namespace = "io.flutter.plugins.${project.name.replace("-", "_")}"
+    plugins.withId("com.android.library") {
+        extensions.configure<com.android.build.gradle.LibraryExtension> {
+            if (namespace == null) {
+                namespace = "io.flutter.plugins.${project.name.replace("-", "_")}"
+            }
         }
     }
 }
