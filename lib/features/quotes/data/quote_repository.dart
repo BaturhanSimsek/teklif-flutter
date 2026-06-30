@@ -1,17 +1,30 @@
+import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/models/paged_result.dart';
+import '../../../core/offline/outbox_entry.dart';
+import '../../../core/offline/outbox_repository.dart';
 import 'ai_quote_suggestion.dart';
 import 'kanban_model.dart';
 import 'quote_model.dart';
 
 part 'quote_repository.g.dart';
 
+const _uuid = Uuid();
+
 @riverpod
 QuoteRepository quoteRepository(QuoteRepositoryRef ref) =>
     QuoteRepository(ref.watch(dioProvider));
+
+// Internet baglantisi var mi?
+Future<bool> _isOnline() async {
+  final results = await Connectivity().checkConnectivity();
+  return results.any((r) => r != ConnectivityResult.none);
+}
 
 class QuoteRepository {
   QuoteRepository(this._dio);
@@ -87,8 +100,25 @@ class QuoteRepository {
   }
 
   Future<String> create(Map<String, dynamic> payload) async {
-    final res = await _dio.post('/quotes', data: payload);
-    return (res.data as Map<String, dynamic>)['id'] as String;
+    if (await _isOnline()) {
+      // Online: direkt sunucuya gonder
+      final idempotencyKey = _uuid.v4();
+      final res = await _dio.post('/quotes', data: payload,
+          options: Options(headers: {'X-Idempotency-Key': idempotencyKey}));
+      return (res.data as Map<String, dynamic>)['id'] as String;
+    }
+
+    // Offline: gecici bir ID ile outbox'a ekle, sync edilince sunucunun ID'si kullanilir
+    final tempId = 'temp_${_uuid.v4()}';
+    await OutboxRepository().add(OutboxEntry(
+      id             : _uuid.v4(),
+      entityType     : OutboxEntityType.quote,
+      operation      : OutboxOperation.create,
+      payload        : jsonEncode({...payload, '_tempId': tempId}),
+      idempotencyKey : _uuid.v4(),
+      createdAt      : DateTime.now(),
+    ));
+    return tempId; // uygulama gecici ID ile calisir, sync sonrasi guncellenir
   }
 
   Future<void> approve(String quoteId, {bool approve = true}) async {
@@ -97,8 +127,23 @@ class QuoteRepository {
   }
 
   Future<void> send(String quoteId) async {
-    await _dio.post('/quotes/$quoteId/send');
-    await LocalCache.clear('$_cacheKeyDetail$quoteId');
+    if (await _isOnline()) {
+      final idempotencyKey = _uuid.v4();
+      await _dio.post('/quotes/$quoteId/send',
+          options: Options(headers: {'X-Idempotency-Key': idempotencyKey}));
+      await LocalCache.clear('$_cacheKeyDetail$quoteId');
+      return;
+    }
+
+    // Offline: outbox'a ekle — internet gelince WhatsApp gonderimi tetiklenecek
+    await OutboxRepository().add(OutboxEntry(
+      id             : _uuid.v4(),
+      entityType     : OutboxEntityType.quote,
+      operation      : OutboxOperation.send,
+      payload        : jsonEncode({'id': quoteId}),
+      idempotencyKey : _uuid.v4(),
+      createdAt      : DateTime.now(),
+    ));
   }
 
   Future<String> revise(String quoteId) async {
