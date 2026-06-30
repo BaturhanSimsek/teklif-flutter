@@ -31,6 +31,7 @@ mixin _$LoginResponse {
   bool get mustChangePassword => throw _privateConstructorUsedError;
   bool get twoFactorRequired => throw _privateConstructorUsedError;
   String? get twoFactorToken => throw _privateConstructorUsedError;
+  bool get deletionCancelled => throw _privateConstructorUsedError;
 
   /// Serializes this LoginResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -59,7 +60,8 @@ abstract class $LoginResponseCopyWith<$Res> {
       String role,
       bool mustChangePassword,
       bool twoFactorRequired,
-      String? twoFactorToken});
+      String? twoFactorToken,
+      bool deletionCancelled});
 }
 
 /// @nodoc
@@ -88,6 +90,7 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
     Object? mustChangePassword = null,
     Object? twoFactorRequired = null,
     Object? twoFactorToken = freezed,
+    Object? deletionCancelled = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -134,6 +137,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.twoFactorToken
           : twoFactorToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      deletionCancelled: null == deletionCancelled
+          ? _value.deletionCancelled
+          : deletionCancelled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -157,7 +164,8 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
       String role,
       bool mustChangePassword,
       bool twoFactorRequired,
-      String? twoFactorToken});
+      String? twoFactorToken,
+      bool deletionCancelled});
 }
 
 /// @nodoc
@@ -184,6 +192,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? mustChangePassword = null,
     Object? twoFactorRequired = null,
     Object? twoFactorToken = freezed,
+    Object? deletionCancelled = null,
   }) {
     return _then(_$LoginResponseImpl(
       accessToken: null == accessToken
@@ -230,6 +239,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.twoFactorToken
           : twoFactorToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      deletionCancelled: null == deletionCancelled
+          ? _value.deletionCancelled
+          : deletionCancelled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -248,7 +261,8 @@ class _$LoginResponseImpl implements _LoginResponse {
       required this.role,
       this.mustChangePassword = false,
       this.twoFactorRequired = false,
-      this.twoFactorToken});
+      this.twoFactorToken,
+      this.deletionCancelled = false});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -277,10 +291,13 @@ class _$LoginResponseImpl implements _LoginResponse {
   final bool twoFactorRequired;
   @override
   final String? twoFactorToken;
+  @override
+  @JsonKey()
+  final bool deletionCancelled;
 
   @override
   String toString() {
-    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role, mustChangePassword: $mustChangePassword, twoFactorRequired: $twoFactorRequired, twoFactorToken: $twoFactorToken)';
+    return 'LoginResponse(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, userId: $userId, tenantId: $tenantId, fullName: $fullName, email: $email, role: $role, mustChangePassword: $mustChangePassword, twoFactorRequired: $twoFactorRequired, twoFactorToken: $twoFactorToken, deletionCancelled: $deletionCancelled)';
   }
 
   @override
@@ -306,7 +323,9 @@ class _$LoginResponseImpl implements _LoginResponse {
             (identical(other.twoFactorRequired, twoFactorRequired) ||
                 other.twoFactorRequired == twoFactorRequired) &&
             (identical(other.twoFactorToken, twoFactorToken) ||
-                other.twoFactorToken == twoFactorToken));
+                other.twoFactorToken == twoFactorToken) &&
+            (identical(other.deletionCancelled, deletionCancelled) ||
+                other.deletionCancelled == deletionCancelled));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,7 +342,8 @@ class _$LoginResponseImpl implements _LoginResponse {
       role,
       mustChangePassword,
       twoFactorRequired,
-      twoFactorToken);
+      twoFactorToken,
+      deletionCancelled);
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -353,7 +373,8 @@ abstract class _LoginResponse implements LoginResponse {
       required final String role,
       final bool mustChangePassword,
       final bool twoFactorRequired,
-      final String? twoFactorToken}) = _$LoginResponseImpl;
+      final String? twoFactorToken,
+      final bool deletionCancelled}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$LoginResponseImpl.fromJson;
@@ -380,6 +401,8 @@ abstract class _LoginResponse implements LoginResponse {
   bool get twoFactorRequired;
   @override
   String? get twoFactorToken;
+  @override
+  bool get deletionCancelled;
 
   /// Create a copy of LoginResponse
   /// with the given fields replaced by the non-null parameter values.

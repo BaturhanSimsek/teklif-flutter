@@ -17,6 +17,7 @@ class LoginResponse with _$LoginResponse {
     @Default(false) bool    mustChangePassword,
     @Default(false) bool    twoFactorRequired,
     String?                 twoFactorToken,
+    @Default(false) bool    deletionCancelled,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

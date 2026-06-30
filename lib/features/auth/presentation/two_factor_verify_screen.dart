@@ -56,6 +56,13 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
           .requestPermissionAndRegisterToken()
           .ignore();
 
+      if (mounted && response.deletionCancelled) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Hesap silme talebiniz iptal edildi, tekrar hoş geldiniz!'),
+          backgroundColor: AppColors.success,
+        ));
+      }
+
       if (mounted) context.go('/dashboard');
     } on DioException catch (e) {
       final msg = ApiException.fromDio(e).message;

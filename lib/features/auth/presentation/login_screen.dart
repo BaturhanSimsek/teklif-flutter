@@ -73,6 +73,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ref.read(notificationServiceProvider)
             .requestPermissionAndRegisterToken()
             .ignore();
+        if (response.deletionCancelled) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Hesap silme talebiniz iptal edildi, tekrar hoş geldiniz!'),
+            backgroundColor: AppColors.success,
+          ));
+        }
         context.go('/dashboard');
       }
     } on Exception catch (e) {
