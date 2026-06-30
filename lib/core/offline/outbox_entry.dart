@@ -11,6 +11,7 @@ class OutboxEntry {
     required this.idempotencyKey,
     this.status = OutboxStatus.pending,
     this.retryCount = 0,
+    this.nextRetryAt,
     this.errorMessage,
     required this.createdAt,
     this.syncedAt,
@@ -23,9 +24,16 @@ class OutboxEntry {
   final String           idempotencyKey;
   OutboxStatus           status;
   int                    retryCount;
+  DateTime?              nextRetryAt;
   String?                errorMessage;
   final DateTime         createdAt;
   DateTime?              syncedAt;
+
+  // Exponential backoff: 1dk → 2dk → 4dk → 8dk → 16dk → max 30dk
+  static Duration backoffFor(int retryCount) {
+    final minutes = (1 << retryCount).clamp(1, 30);
+    return Duration(minutes: minutes);
+  }
 
   static const maxRetries = 5;
 
@@ -37,6 +45,7 @@ class OutboxEntry {
     'idempotency_key' : idempotencyKey,
     'status'          : status.name,
     'retry_count'     : retryCount,
+    'next_retry_at'   : nextRetryAt?.millisecondsSinceEpoch,
     'error_message'   : errorMessage,
     'created_at'      : createdAt.millisecondsSinceEpoch,
     'synced_at'       : syncedAt?.millisecondsSinceEpoch,
@@ -50,6 +59,9 @@ class OutboxEntry {
     idempotencyKey : m['idempotency_key'] as String,
     status         : OutboxStatus.values.byName(m['status'] as String),
     retryCount     : m['retry_count'] as int,
+    nextRetryAt    : m['next_retry_at'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(m['next_retry_at'] as int)
+        : null,
     errorMessage   : m['error_message'] as String?,
     createdAt      : DateTime.fromMillisecondsSinceEpoch(m['created_at'] as int),
     syncedAt       : m['synced_at'] != null

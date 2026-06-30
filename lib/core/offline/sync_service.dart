@@ -16,12 +16,14 @@ SyncService syncService(SyncServiceRef ref) =>
 // Outbox'taki bekleyen islemleri internet gelince sunucuya gonderir.
 // Idempotency-Key header'i ile double-send korunmasi saglanir.
 class SyncService {
-  SyncService(this._dio, this._outbox) {
+  SyncService(this._dio, this._outbox, {this.onConflict}) {
     _watchConnectivity();
   }
 
   final Dio              _dio;
   final OutboxRepository _outbox;
+  // 409 Conflict callback'i — UI dilerse kullaniciya bildirim gosterebilir
+  final void Function(OutboxEntry entry, dynamic serverData)? onConflict;
   bool _syncing = false;
 
   // Connectivity degisikliklerini dinle; internet gelince tetikle
@@ -52,6 +54,18 @@ class SyncService {
           await _outbox.markDone(entry.id);
           synced++;
           debugPrint('[Sync] ✓ ${entry.entityType.name} ${entry.operation.name}');
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 409) {
+            // Server Wins: cakisma — yerel islemi iptal et (sunucu versiyonu kazanir)
+            await _outbox.markDone(entry.id); // kuyruktan kaldir
+            onConflict?.call(entry, e.response?.data);
+            debugPrint('[Sync] ⚡ Conflict (Server Wins): ${entry.entityType.name}');
+          } else {
+            final next = entry.retryCount + 1;
+            await _outbox.markFailed(entry.id, e.toString(), next);
+            failed++;
+            debugPrint('[Sync] ✗ ${entry.entityType.name}: $e (deneme $next)');
+          }
         } catch (e) {
           final next = entry.retryCount + 1;
           await _outbox.markFailed(entry.id, e.toString(), next);

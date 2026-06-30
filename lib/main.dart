@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'app_router.dart';
 import 'core/location/location_service.dart';
 import 'core/notifications/notification_service.dart';
+import 'core/offline/background_sync.dart';
 import 'core/security/jailbreak_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
@@ -26,6 +27,9 @@ void main() async {
   } catch (_) {
     // Firebase yapılandırılmamış — FCM devre dışı, uygulama çalışmaya devam eder
   }
+
+  // Arka plan sync: her 15dk'da bir (internet varsa) outbox'i sunucuya gonderir
+  try { await initBackgroundSync(); } catch (_) {}
 
   runApp(const ProviderScope(child: TeklifApp()));
 }
