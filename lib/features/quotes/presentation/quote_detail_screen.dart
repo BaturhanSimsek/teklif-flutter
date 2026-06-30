@@ -48,6 +48,27 @@ class _QuoteDetailView extends StatelessWidget {
     }
   }
 
+  Future<void> _send(BuildContext ctx) async {
+    HapticFeedback.mediumImpact();
+    try {
+      await ref.read(quoteRepositoryProvider).send(quote.id);
+      ref.invalidate(quoteDetailProvider(quote.id));
+      if (ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+          content: Text('Teklif WhatsApp ile gönderildi'),
+          backgroundColor: AppColors.success,
+        ));
+      }
+    } catch (e) {
+      if (ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+          content: Text('$e'),
+          backgroundColor: AppColors.error,
+        ));
+      }
+    }
+  }
+
   Future<void> _handlePdf(BuildContext ctx, String action) async {
     final svc = ref.read(pdfServiceProvider);
     try {
@@ -89,6 +110,12 @@ class _QuoteDetailView extends StatelessWidget {
             backgroundColor: primary,
             foregroundColor: Colors.white,
             actions: [
+              if (quote.status == 1)
+                IconButton(
+                  icon: const Icon(Symbols.send),
+                  tooltip: 'WhatsApp ile Gönder',
+                  onPressed: () => _send(context),
+                ),
               if (!quote.isApproved)
                 IconButton(
                   icon: const Icon(Symbols.check_circle, fill: 1),

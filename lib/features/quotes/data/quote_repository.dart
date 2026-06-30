@@ -96,6 +96,11 @@ class QuoteRepository {
     await LocalCache.clear('$_cacheKeyDetail$quoteId');
   }
 
+  Future<void> send(String quoteId) async {
+    await _dio.post('/quotes/$quoteId/send');
+    await LocalCache.clear('$_cacheKeyDetail$quoteId');
+  }
+
   Future<String> revise(String quoteId) async {
     final res = await _dio.post('/quotes/$quoteId/revise');
     return (res.data as Map<String, dynamic>)['id'] as String;
