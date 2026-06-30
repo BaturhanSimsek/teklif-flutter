@@ -10,7 +10,7 @@ part 'auth_repository.g.dart';
 
 @riverpod
 AuthRepository authRepository(AuthRepositoryRef ref) =>
-    AuthRepository(ref.watch(dioProvider));
+    AuthRepository(ref.watch(authDioProvider));
 
 class AuthRepository {
   AuthRepository(this._dio);
@@ -20,7 +20,7 @@ class AuthRepository {
 
   Future<LoginResponse> login(String email, String password) async {
     try {
-      final res = await _dio.post('/auth/login', data: {
+      final res = await _dio.post('/login', data: {
         'email': email,
         'password': password,
       });

@@ -42,8 +42,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
-      final dio = ref.read(dioProvider);
-      await dio.post('/auth/change-password', data: {
+      final dio = ref.read(authDioProvider);
+      await dio.post('/change-password', data: {
         'currentPassword': _currentCtrl.text,
         'newPassword':     _newCtrl.text,
       });

@@ -13,6 +13,14 @@ class AppConstants {
     return 'http://10.0.2.2:5074/api/v1';
   }
 
+  // AuthService: ayri port, ayri path prefix (/api/auth)
+  static const String _definedAuthUrl = String.fromEnvironment('AUTH_SERVICE_URL');
+  static String get authServiceUrl {
+    if (_definedAuthUrl.isNotEmpty) return _definedAuthUrl;
+    if (kIsWeb) return 'http://localhost:5076/api/auth';
+    return 'http://10.0.2.2:5076/api/auth';
+  }
+
   // Üretimde sertifika parmak izi: openssl x509 -fingerprint -sha256 -in cert.pem
   // dart-define: flutter build apk --dart-define=CERT_PIN=AA:BB:CC:...
   static const String certPin = String.fromEnvironment('CERT_PIN');

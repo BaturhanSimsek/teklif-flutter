@@ -34,8 +34,8 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
 
     setState(() => _loading = true);
     try {
-      final dio = ref.read(dioProvider);
-      final res = await dio.post('/auth/2fa/verify', data: {
+      final dio = ref.read(authDioProvider);
+      final res = await dio.post('/2fa/verify', data: {
         'twoFactorToken': widget.twoFactorToken,
         'code':           code,
       });

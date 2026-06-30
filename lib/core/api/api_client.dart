@@ -8,6 +8,20 @@ import '../security/certificate_pin_interceptor.dart';
 
 part 'api_client.g.dart';
 
+// AuthService icin ayri, basit bir Dio instance — kimlik dogrulama islemlerini
+// yapar, token refresh interceptor'u gereksiz (zaten token uretici bu servis).
+@riverpod
+Dio authDio(AuthDioRef ref) {
+  final d = Dio(BaseOptions(
+    baseUrl: AppConstants.authServiceUrl,
+    connectTimeout: const Duration(seconds: 15),
+    receiveTimeout: const Duration(seconds: 30),
+    headers: {'Content-Type': 'application/json'},
+  ));
+  applyPinning(d);
+  return d;
+}
+
 @riverpod
 Dio dio(DioRef ref) {
   const storage = FlutterSecureStorage();
@@ -48,7 +62,8 @@ Dio dio(DioRef ref) {
       }
 
       // Sonsuz döngü engeli: refresh endpoint 401 dönerse çıkış yap
-      if (error.requestOptions.path.contains('/auth/refresh')) {
+      if (error.requestOptions.baseUrl.contains('5076') ||
+          error.requestOptions.path.contains('/auth/refresh')) {
         await storage.deleteAll();
         authN.invalidate();
         return handler.next(error);
@@ -63,12 +78,12 @@ Dio dio(DioRef ref) {
 
       try {
         final refreshDio = Dio(BaseOptions(
-          baseUrl: AppConstants.baseUrl,
+          baseUrl: AppConstants.authServiceUrl,
           connectTimeout: const Duration(seconds: 10),
         ));
         applyPinning(refreshDio);
         final res = await refreshDio.post(
-          '/auth/refresh',
+          '/refresh',
           data: {'refreshToken': refreshToken},
         );
 
