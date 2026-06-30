@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
+import '../../customers/data/customer_repository.dart';
 import '../data/quote_model.dart';
 import '../data/quote_repository.dart';
 import 'quote_providers.dart';
@@ -53,9 +54,11 @@ class QuoteListScreen extends ConsumerStatefulWidget {
 
 class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
   final _search    = TextEditingController();
-  String  _searchText = '';
-  _Filter _filter     = _Filter.all;
-  _Sort   _sort       = _Sort.dateDesc;
+  String  _searchText          = '';
+  _Filter _filter              = _Filter.all;
+  _Sort   _sort                = _Sort.dateDesc;
+  String? _selectedCustomerId;
+  String? _selectedCustomerName;
 
   @override
   void dispose() {
@@ -78,6 +81,22 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
     });
 
     return list;
+  }
+
+  Future<void> _showCustomerPicker() async {
+    final result = await showModalBottomSheet<({String id, String name})>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => _CustomerSearchSheet(ref: ref),
+    );
+    if (result != null) {
+      setState(() {
+        _selectedCustomerId   = result.id;
+        _selectedCustomerName = result.name;
+      });
+    }
   }
 
   void _showSortSheet() {
@@ -149,9 +168,10 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final async   = ref.watch(allQuotesProvider(
-      customerId: widget.customerId,
+    final primary     = Theme.of(context).colorScheme.primary;
+    final effectiveCid = widget.customerId ?? _selectedCustomerId;
+    final async        = ref.watch(allQuotesProvider(
+      customerId: effectiveCid,
       search: _searchText.isEmpty ? null : _searchText,
     ));
 
@@ -224,26 +244,66 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              children: _Filter.values.map((f) {
-                final selected = _filter == f;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(f.label,
+              children: [
+                // Durum filtreleri
+                ..._Filter.values.map((f) {
+                  final selected = _filter == f;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FilterChip(
+                      label: Text(f.label,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: selected ? Colors.white : null,
+                          )),
+                      selected: selected,
+                      onSelected: (_) => setState(() => _filter = f),
+                      selectedColor: primary,
+                      checkmarkColor: Colors.white,
+                      showCheckmark: false,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
+                  );
+                }),
+                // Musteri filtresi (sadece widget.customerId yoksa goster)
+                if (widget.customerId == null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FilterChip(
+                      avatar: Icon(
+                        _selectedCustomerId != null ? null : Icons.person_outline,
+                        size: 16,
+                        color: _selectedCustomerId != null ? Colors.white : null,
+                      ),
+                      label: Text(
+                        _selectedCustomerId != null
+                            ? _selectedCustomerName ?? 'Müşteri'
+                            : 'Müşteri',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: selected ? Colors.white : null,
-                        )),
-                    selected: selected,
-                    onSelected: (_) => setState(() => _filter = f),
-                    selectedColor: primary,
-                    checkmarkColor: Colors.white,
-                    showCheckmark: false,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                          color: _selectedCustomerId != null ? Colors.white : null,
+                        ),
+                      ),
+                      selected: _selectedCustomerId != null,
+                      onSelected: (_) => _showCustomerPicker(),
+                      selectedColor: primary,
+                      checkmarkColor: Colors.white,
+                      showCheckmark: false,
+                      deleteIcon: _selectedCustomerId != null
+                          ? const Icon(Icons.close, size: 14, color: Colors.white)
+                          : null,
+                      onDeleted: _selectedCustomerId != null
+                          ? () => setState(() {
+                                _selectedCustomerId   = null;
+                                _selectedCustomerName = null;
+                              })
+                          : null,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
                   ),
-                );
-              }).toList(),
+              ],
             ),
           ),
 
@@ -260,7 +320,7 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
                 }
                 return RefreshIndicator(
                   onRefresh: () => ref.refresh(allQuotesProvider(
-                    customerId: widget.customerId,
+                    customerId: effectiveCid,
                     search: _searchText.isEmpty ? null : _searchText,
                   ).future),
                   child: ListView.builder(
@@ -537,4 +597,130 @@ class _ErrorState extends StatelessWidget {
           ],
         ),
       );
+}
+
+// ── Müşteri Arama Bottom Sheet ────────────────────────────────────────────────
+
+class _CustomerSearchSheet extends ConsumerStatefulWidget {
+  const _CustomerSearchSheet({required this.ref});
+  // ignore: unused_field
+  final WidgetRef ref; // parent ref — ConsumerState.ref kullanilir
+
+  @override
+  ConsumerState<_CustomerSearchSheet> createState() => _CustomerSearchSheetState();
+}
+
+class _CustomerSearchSheetState extends ConsumerState<_CustomerSearchSheet> {
+  final _ctrl = TextEditingController();
+  String _query = '';
+  Future<dynamic>? _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  void _fetch() {
+    _future = ref.read(customerRepositoryProvider).getAll(
+        search: _query.isEmpty ? null : _query, pageSize: 50);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.9,
+      builder: (_, scroll) => Padding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 36, height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Müşteri Seç',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _ctrl,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Müşteri ara...',
+                  prefixIcon: const Icon(Icons.search, size: 20),
+                  isDense: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  suffixIcon: _query.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.close, size: 18),
+                          onPressed: () {
+                            _ctrl.clear();
+                            setState(() => _query = '');
+                          })
+                      : null,
+                ),
+                onChanged: (v) => setState(() { _query = v; _fetch(); }),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: FutureBuilder(
+                future: _future,
+                builder: (ctx, snap) {
+                  if (snap.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final customers = snap.data?.items ?? [];
+                  if (customers.isEmpty) {
+                    return const Center(child: Text('Müşteri bulunamadı'));
+                  }
+                  return ListView.builder(
+                    controller: scroll,
+                    itemCount: customers.length,
+                    itemBuilder: (ctx, i) {
+                      final c = customers[i];
+                      return ListTile(
+                        leading: const CircleAvatar(
+                          child: Icon(Icons.person_outline, size: 20),
+                        ),
+                        title: Text(c.name),
+                        onTap: () =>
+                            Navigator.pop(context, (id: c.id, name: c.name)),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
