@@ -98,7 +98,7 @@ class _CustomerListScreenState extends ConsumerState<CustomerListScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Symbols.error, size: 48, color: AppColors.error, fill: 1),
+              const Icon(Symbols.error, size: 48, color: AppColors.error, fill: 1),
               const SizedBox(height: 12),
               Text('$e', textAlign: TextAlign.center),
               const SizedBox(height: 16),
@@ -180,7 +180,7 @@ class _CustomerCard extends StatelessWidget {
   final Customer customer;
 
   Color _avatarColor(String name) {
-    final colors = AppColors.avatarPalette;
+    const colors = AppColors.avatarPalette;
     return colors[name.codeUnitAt(0) % colors.length];
   }
 
@@ -207,7 +207,7 @@ class _CustomerCard extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 alignment: Alignment.center,

@@ -152,10 +152,15 @@ class _RepLocationTile extends StatelessWidget {
       timeStr = 'Konum yok';
     } else {
       final diff = DateTime.now().difference(lastSeen.toLocal());
-      if (diff.inMinutes < 1)        timeStr = 'Az önce';
-      else if (diff.inHours < 1)     timeStr = '${diff.inMinutes} dk önce';
-      else if (diff.inDays < 1)      timeStr = '${diff.inHours} saat önce';
-      else                           timeStr = DateFormat('d MMM HH:mm', 'tr_TR').format(lastSeen.toLocal());
+      if (diff.inMinutes < 1) {
+        timeStr = 'Az önce';
+      } else if (diff.inHours < 1) {
+        timeStr = '${diff.inMinutes} dk önce';
+      } else if (diff.inDays < 1) {
+        timeStr = '${diff.inHours} saat önce';
+      } else {
+        timeStr = DateFormat('d MMM HH:mm', 'tr_TR').format(lastSeen.toLocal());
+      }
     }
 
     return Padding(
@@ -171,7 +176,7 @@ class _RepLocationTile extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 18,
-              backgroundColor: (hasLocation ? AppColors.success : Colors.grey).withOpacity(0.1),
+              backgroundColor: (hasLocation ? AppColors.success : Colors.grey).withValues(alpha: 0.1),
               child: Icon(
                 hasLocation ? Symbols.location_on : Symbols.location_off,
                 size: 18,
@@ -243,9 +248,9 @@ class _AdminQuickLinks extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: item.color.withOpacity(0.08),
+                    color: item.color.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: item.color.withOpacity(0.2)),
+                    border: Border.all(color: item.color.withValues(alpha: 0.2)),
                   ),
                   child: Column(
                     children: [
@@ -315,7 +320,7 @@ class _UserCard extends StatelessWidget {
   };
 
   Color get _avatarColor {
-    final colors = AppColors.avatarPalette;
+    const colors = AppColors.avatarPalette;
     return colors[user.fullName.codeUnitAt(0) % colors.length];
   }
 
@@ -352,7 +357,7 @@ class _UserCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: roleColor.withOpacity(0.1),
+                color: roleColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -375,7 +380,7 @@ class _UserCard extends StatelessWidget {
                   color: AppColors.errorBg,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
+                child: const Text(
                   'Pasif',
                   style: TextStyle(fontSize: 11, color: AppColors.error, fontWeight: FontWeight.w600),
                 ),
@@ -600,7 +605,7 @@ class _FormView extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: role,
+            initialValue: role,
             decoration: const InputDecoration(
               labelText: 'Rol',
               prefixIcon: Icon(Symbols.badge),
@@ -640,7 +645,7 @@ class _SuccessView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Icon(Symbols.check_circle, size: 56, color: AppColors.roleSales, fill: 1),
+        const Icon(Symbols.check_circle, size: 56, color: AppColors.roleSales, fill: 1),
         const SizedBox(height: 16),
         const Text(
           'Kullanıcı Oluşturuldu!',

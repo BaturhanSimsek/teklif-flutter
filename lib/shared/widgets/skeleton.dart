@@ -39,26 +39,26 @@ class SkeletonListTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
+      child: const Row(
         children: [
           SkeletonBox(width: 48, height: 48, radius: 12),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SkeletonBox(width: 140, height: 14),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 SkeletonBox(width: 90, height: 11),
               ],
             ),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               SkeletonBox(width: 70, height: 14),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               SkeletonBox(width: 50, height: 11),
             ],
           ),

@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'core/auth/auth_notifier.dart';
@@ -95,7 +94,7 @@ GoRouter router(RouterRef ref) {
 
       ShellRoute(
         builder: (_, state, child) =>
-            MainScaffold(child: child, location: state.matchedLocation),
+            MainScaffold(location: state.matchedLocation, child: child),
         routes: [
 
           // ── Dashboard ─────────────────────────────────────────────

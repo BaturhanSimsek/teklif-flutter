@@ -142,25 +142,25 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                 style: TextStyle(fontSize: 11, color: Colors.grey)),
           ),
 
-          _Section(title: 'Şirket Bilgileri', icon: Symbols.apartment),
+          const _Section(title: 'Şirket Bilgileri', icon: Symbols.apartment),
           _Field(_legalCtrl, 'Tüzel Ad (Fatura Adı)', Symbols.business_center,
               required: true),
           _Field(_cityCtrl, 'Şehir', Symbols.location_city),
           _Field(_addressCtrl, 'Adres', Symbols.home, maxLines: 2),
           const SizedBox(height: 16),
 
-          _Section(title: 'İletişim', icon: Symbols.contact_phone),
+          const _Section(title: 'İletişim', icon: Symbols.contact_phone),
           _Field(_phoneCtrl, 'Telefon', Symbols.phone, keyboardType: TextInputType.phone),
           _Field(_emailCtrl, 'E-posta', Symbols.mail, keyboardType: TextInputType.emailAddress),
           const SizedBox(height: 16),
 
-          _Section(title: 'Vergi Bilgileri', icon: Symbols.receipt_long),
+          const _Section(title: 'Vergi Bilgileri', icon: Symbols.receipt_long),
           _Field(_taxNoCtrl, 'Vergi Kimlik No', Symbols.tag,
               keyboardType: TextInputType.number),
           _Field(_taxOffCtrl, 'Vergi Dairesi', Symbols.account_balance),
           const SizedBox(height: 16),
 
-          _Section(title: 'PDF Marka Rengi', icon: Symbols.palette),
+          const _Section(title: 'PDF Marka Rengi', icon: Symbols.palette),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -179,7 +179,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
                         ? Border.all(color: Colors.white, width: 3)
                         : null,
                     boxShadow: selected
-                        ? [BoxShadow(color: color.withOpacity(0.6), blurRadius: 8, spreadRadius: 2)]
+                        ? [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 8, spreadRadius: 2)]
                         : null,
                   ),
                   child: selected
@@ -214,7 +214,7 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.07),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.07),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

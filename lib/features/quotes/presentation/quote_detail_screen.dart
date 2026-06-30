@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/pdf_service.dart';
 import '../data/quote_model.dart';
@@ -158,7 +160,7 @@ class _QuoteDetailView extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [primary.withOpacity(0.85), primary],
+                    colors: [primary.withValues(alpha: 0.85), primary],
                   ),
                 ),
                 child: SafeArea(
@@ -257,6 +259,12 @@ class _QuoteDetailView extends StatelessWidget {
                             DateFormat('dd.MM.yyyy HH:mm').format(quote.viewedAt!.toLocal())),
                     ],
                   ),
+
+                // İmzalı belge
+                if (quote.hasSignedDocument && quote.shareToken != null) ...[
+                  const SizedBox(height: 12),
+                  _SignedDocCard(shareToken: quote.shareToken!),
+                ],
                 const SizedBox(height: 16),
 
                 // Kalemler başlık
@@ -388,7 +396,7 @@ class _ItemCard extends StatelessWidget {
                   .map((e) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: primary.withOpacity(0.08),
+                          color: primary.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text('${e.key}: ${e.value}',
@@ -469,4 +477,66 @@ class _TotalRow extends StatelessWidget {
           ],
         ),
       );
+}
+
+class _SignedDocCard extends StatelessWidget {
+  const _SignedDocCard({required this.shareToken});
+  final String shareToken;
+
+  Future<void> _open() async {
+    final base = AppConstants.baseUrl.replaceFirst('/api/v1', '');
+    final url  = Uri.parse('$base/api/v1/public/quotes/$shareToken/signed-doc');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF4),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF86EFAC)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFF16A34A).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Symbols.verified, color: Color(0xFF16A34A), size: 22, fill: 1),
+              ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Kaşeli & İmzalı Belge',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Color(0xFF15803D))),
+                  const SizedBox(height: 2),
+                  Text('Müşteri tarafından yüklendi',
+                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                ],
+              ),
+            ),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF16A34A),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: _open,
+              icon: const Icon(Symbols.open_in_new, size: 16),
+              label: const Text('Görüntüle', style: TextStyle(fontSize: 13)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

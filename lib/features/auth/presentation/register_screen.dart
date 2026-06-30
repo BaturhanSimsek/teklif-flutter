@@ -105,25 +105,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [primary.withOpacity(0.85), primary],
+                    colors: [primary.withValues(alpha: 0.85), primary],
                   ),
                 ),
-                child: SafeArea(
+                child: const SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 48, 24, 16),
+                    padding: EdgeInsets.fromLTRB(24, 48, 24, 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Icon(Symbols.business, size: 32,
+                        Icon(Symbols.business, size: 32,
                             color: Colors.white, fill: 1),
-                        const SizedBox(height: 8),
-                        const Text('Firmayı Kaydet',
+                        SizedBox(height: 8),
+                        Text('Firmayı Kaydet',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white)),
-                        const Text('Ücretsiz başlayın, kredi kartı gerekmez.',
+                        Text('Ücretsiz başlayın, kredi kartı gerekmez.',
                             style: TextStyle(fontSize: 13, color: Colors.white70)),
                       ],
                     ),

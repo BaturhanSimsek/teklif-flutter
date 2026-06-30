@@ -146,11 +146,11 @@ class _CategoryTile extends StatelessWidget {
                 ]),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'delete',
                 child: Row(children: [
                   Icon(Symbols.delete, size: 18, color: AppColors.error),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Text('Sil', style: TextStyle(color: AppColors.error)),
                 ]),
               ),
@@ -200,11 +200,11 @@ class _CategoryTile extends StatelessWidget {
                   ]),
                 ),
                 const PopupMenuDivider(),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'delete',
                   child: Row(children: [
                     Icon(Symbols.delete, size: 18, color: AppColors.error),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Text('Sil', style: TextStyle(color: AppColors.error)),
                   ]),
                 ),

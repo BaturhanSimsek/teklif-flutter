@@ -80,7 +80,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [primary.withOpacity(0.85), primary],
+                    colors: [primary.withValues(alpha: 0.85), primary],
                   ),
                 ),
                 child: SafeArea(

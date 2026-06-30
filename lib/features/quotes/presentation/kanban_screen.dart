@@ -181,7 +181,7 @@ class _KanbanColumn extends StatelessWidget {
       width: _kColWidth,
       margin: const EdgeInsets.only(right: _kColGap),
       decoration: BoxDecoration(
-        color: colDef.bgColor.withOpacity(0.4),
+        color: colDef.bgColor.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -210,7 +210,7 @@ class _KanbanColumn extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                   decoration: BoxDecoration(
-                    color: colDef.color.withOpacity(0.15),
+                    color: colDef.color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -237,7 +237,7 @@ class _KanbanColumn extends StatelessWidget {
                   duration: const Duration(milliseconds: 150),
                   decoration: BoxDecoration(
                     color: hovering
-                        ? colDef.color.withOpacity(0.08)
+                        ? colDef.color.withValues(alpha: 0.08)
                         : Colors.transparent,
                     borderRadius:
                         const BorderRadius.vertical(bottom: Radius.circular(16)),
@@ -278,13 +278,13 @@ class _EmptyCol extends StatelessWidget {
             Icon(
               hovering ? Symbols.add_circle : Symbols.inbox,
               size: 36,
-              color: color.withOpacity(hovering ? 0.8 : 0.3),
+              color: color.withValues(alpha: hovering ? 0.8 : 0.3),
             ),
             const SizedBox(height: 8),
             Text(
               hovering ? 'Buraya Bırak' : 'Boş',
               style: TextStyle(
-                color: color.withOpacity(hovering ? 0.8 : 0.3),
+                color: color.withValues(alpha: hovering ? 0.8 : 0.3),
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
               ),
@@ -419,7 +419,7 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Symbols.error, size: 48, color: AppColors.error),
+            const Icon(Symbols.error, size: 48, color: AppColors.error),
             const SizedBox(height: 12),
             const Text(
               'Veriler yüklenemedi',

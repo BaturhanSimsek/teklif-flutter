@@ -57,7 +57,7 @@ class _ReportsBody extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           // ── Genel Bakış ────────────────────────────────────────────────
-          _SectionTitle('Genel Bakış'),
+          const _SectionTitle('Genel Bakış'),
           const SizedBox(height: 10),
           Row(children: [
             Expanded(child: _StatCard(
@@ -93,7 +93,7 @@ class _ReportsBody extends StatelessWidget {
           const SizedBox(height: 20),
 
           // ── Ciro (TRY) ────────────────────────────────────────────────
-          _SectionTitle('Ciro (TRY)'),
+          const _SectionTitle('Ciro (TRY)'),
           const SizedBox(height: 10),
           Row(children: [
             Expanded(child: _RevenueCard(
@@ -113,13 +113,13 @@ class _ReportsBody extends StatelessWidget {
           const SizedBox(height: 20),
 
           // ── Son 6 Ay Teklif Sayısı ────────────────────────────────────
-          _SectionTitle('Son 6 Ay — Teklif Sayısı'),
+          const _SectionTitle('Son 6 Ay — Teklif Sayısı'),
           const SizedBox(height: 10),
           _BarChart(stats: data.monthlySales),
           const SizedBox(height: 20),
 
           // ── Son 6 Ay Ciro ─────────────────────────────────────────────
-          _SectionTitle('Son 6 Ay — Onaylanan Ciro (TRY)'),
+          const _SectionTitle('Son 6 Ay — Onaylanan Ciro (TRY)'),
           const SizedBox(height: 10),
           _RevenueList(stats: data.monthlySales),
           const SizedBox(height: 20),
@@ -169,7 +169,7 @@ class _StatCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, size: 20, color: color, fill: 1),
@@ -278,7 +278,7 @@ class _BarChart extends StatelessWidget {
                       duration: const Duration(milliseconds: 600),
                       height: 100 * ratio,
                       decoration: BoxDecoration(
-                        color: primary.withOpacity(0.85),
+                        color: primary.withValues(alpha: 0.85),
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -341,7 +341,7 @@ class _RevenueList extends StatelessWidget {
                         child: Container(
                           height: 8,
                           decoration: BoxDecoration(
-                            color: primary.withOpacity(0.7),
+                            color: primary.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),

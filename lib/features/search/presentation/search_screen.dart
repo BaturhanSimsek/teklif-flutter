@@ -237,7 +237,7 @@ class _CustomerResult extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
       leading: CircleAvatar(
         radius: 19,
-        backgroundColor: c.withOpacity(0.15),
+        backgroundColor: c.withValues(alpha: 0.15),
         child: Text(
           customer.name.isNotEmpty ? customer.name[0].toUpperCase() : '?',
           style: TextStyle(color: c, fontWeight: FontWeight.w700, fontSize: 14),
@@ -269,7 +269,7 @@ class _ProductResult extends StatelessWidget {
       leading: Container(
         width: 38, height: 38,
         decoration: BoxDecoration(
-          color: primary.withOpacity(0.1),
+          color: primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(Symbols.inventory_2, size: 18, color: primary, fill: 1),
@@ -298,10 +298,10 @@ class _IdleState extends StatelessWidget {
             Container(
               width: 72, height: 72,
               decoration: BoxDecoration(
-                color: primary.withOpacity(0.08),
+                color: primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Icon(Symbols.search, size: 36, color: primary.withOpacity(0.5)),
+              child: Icon(Symbols.search, size: 36, color: primary.withValues(alpha: 0.5)),
             ),
             const SizedBox(height: 16),
             Text('Arama yapın',

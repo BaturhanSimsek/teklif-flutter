@@ -150,7 +150,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _roleColor.withOpacity(0.1),
+                          color: _roleColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -301,7 +301,7 @@ class _ThemeSelector extends ConsumerWidget {
             ],
             selected: {current},
             onSelectionChanged: (s) => notifier.setMode(s.first),
-            style: ButtonStyle(
+            style: const ButtonStyle(
               visualDensity: VisualDensity.compact,
             ),
           ),
@@ -383,7 +383,7 @@ class _BiometricTileState extends ConsumerState<_BiometricTile> {
           Switch(
             value: _enabled,
             onChanged: _toggle,
-            activeColor: widget.primary,
+            activeThumbColor: widget.primary,
           ),
         ],
       ),

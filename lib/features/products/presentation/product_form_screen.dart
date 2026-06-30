@@ -172,8 +172,9 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Zorunlu';
-                    if (double.tryParse(v.replaceAll(',', '.')) == null)
+                    if (double.tryParse(v.replaceAll(',', '.')) == null) {
                       return 'Geçersiz';
+                    }
                     return null;
                   },
                 ),
@@ -269,7 +270,7 @@ class _UnitDropdown extends StatelessWidget {
     if (units.isEmpty) return const SizedBox.shrink();
     final validValue = units.any((u) => u.id == value) ? value : null;
     return DropdownButtonFormField<String>(
-      value: validValue,
+      initialValue: validValue,
       decoration: const InputDecoration(
         labelText: 'Birim',
         prefixIcon: Icon(Symbols.straighten),
@@ -304,7 +305,7 @@ class _CategoryDropdown extends StatelessWidget {
     final validValue =
         categories.any((c) => c.id == value) ? value : null;
     return DropdownButtonFormField<String>(
-      value: validValue,
+      initialValue: validValue,
       decoration: const InputDecoration(
         labelText: 'Kategori',
         prefixIcon: Icon(Symbols.category),

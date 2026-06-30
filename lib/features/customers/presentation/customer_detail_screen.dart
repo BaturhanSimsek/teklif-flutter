@@ -41,7 +41,7 @@ class _CustomerDetailView extends StatelessWidget {
   final WidgetRef ref;
 
   Color _avatarColor(String name) {
-    final colors = AppColors.avatarPalette;
+    const colors = AppColors.avatarPalette;
     return colors[name.codeUnitAt(0) % colors.length];
   }
 
@@ -59,7 +59,7 @@ class _CustomerDetailView extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [color.withOpacity(0.75), color],
+                colors: [color.withValues(alpha: 0.75), color],
               ),
             ),
             child: SafeArea(
@@ -101,7 +101,7 @@ class _CustomerDetailView extends StatelessWidget {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.25),
+                            color: Colors.white.withValues(alpha: 0.25),
                             borderRadius: BorderRadius.circular(18),
                           ),
                           alignment: Alignment.center,
@@ -131,7 +131,7 @@ class _CustomerDetailView extends StatelessWidget {
                                 Text(
                                   customer.email,
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 13,
                                   ),
                                 ),
@@ -184,7 +184,7 @@ class _CustomerDetailView extends StatelessWidget {
                 MaterialButton(
                   onPressed: () => context.push(
                       '/quotes/new?customerId=${customer.id}&customerName=${Uri.encodeComponent(customer.name)}'),
-                  color: primary.withOpacity(0.1),
+                  color: primary.withValues(alpha: 0.1),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

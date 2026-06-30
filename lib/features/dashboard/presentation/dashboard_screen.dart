@@ -60,16 +60,16 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 20),
 
           // ── Hızlı Erişim ─────────────────────────────────────────────────
-          _SectionTitle('Hızlı Erişim'),
+          const _SectionTitle('Hızlı Erişim'),
           const SizedBox(height: 10),
           _QuickActions(canReport: canReport),
           const SizedBox(height: 20),
 
           // ── Son Teklifler ─────────────────────────────────────────────────
-          _SectionTitle('Son Teklifler'),
+          const _SectionTitle('Son Teklifler'),
           const SizedBox(height: 10),
           if (data.recentQuotes.isEmpty)
-            _EmptyCard('Henüz teklif bulunmuyor.')
+            const _EmptyCard('Henüz teklif bulunmuyor.')
           else
             ...data.recentQuotes.map((q) => _RecentQuoteTile(quote: q)),
           const SizedBox(height: 4),
@@ -133,9 +133,9 @@ class _Chip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.2)),
+            border: Border.all(color: color.withValues(alpha: 0.2)),
           ),
           child: Column(
             children: [
@@ -150,7 +150,7 @@ class _Chip extends StatelessWidget {
               Text(label,
                   style: TextStyle(
                       fontSize: 10,
-                      color: color.withOpacity(0.8),
+                      color: color.withValues(alpha: 0.8),
                       fontWeight: FontWeight.w500)),
             ],
           ),
@@ -168,13 +168,13 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final actions = [
       _Action(icon: Symbols.add_circle, label: 'Yeni Teklif',   color: AppColors.approved,  route: '/quotes/new'),
-      _Action(icon: Symbols.person_add, label: 'Yeni Müşteri',  color: AppColors.info,       route: '/customers/new'),
+      const _Action(icon: Symbols.person_add, label: 'Yeni Müşteri',  color: AppColors.info,       route: '/customers/new'),
       _Action(icon: Symbols.calendar_add_on, label: 'Ziyaret Planla', color: AppColors.pending, route: '/visit-plan'),
-      _Action(icon: Symbols.view_kanban, label: 'Kanban',        color: Colors.purple,        route: '/kanban'),
-      _Action(icon: Symbols.people,     label: 'Müşteriler',     color: Colors.teal,          route: '/customers'),
-      _Action(icon: Symbols.description,label: 'Teklifler',      color: Colors.indigo,        route: '/quotes'),
+      const _Action(icon: Symbols.view_kanban, label: 'Kanban',        color: Colors.purple,        route: '/kanban'),
+      const _Action(icon: Symbols.people,     label: 'Müşteriler',     color: Colors.teal,          route: '/customers'),
+      const _Action(icon: Symbols.description,label: 'Teklifler',      color: Colors.indigo,        route: '/quotes'),
       if (canReport)
-        _Action(icon: Symbols.bar_chart, label: 'Raporlar',      color: Colors.orange,        route: '/reports'),
+        const _Action(icon: Symbols.bar_chart, label: 'Raporlar',      color: Colors.orange,        route: '/reports'),
     ];
 
     return GridView.builder(
@@ -225,7 +225,7 @@ class _ActionTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: action.color.withOpacity(0.1),
+                color: action.color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(action.icon, size: 22, color: action.color, fill: 1),
@@ -304,7 +304,7 @@ class _RecentQuoteTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(label,

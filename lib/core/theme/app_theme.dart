@@ -53,7 +53,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: Colors.black.withOpacity(0.06),
+        shadowColor: Colors.black.withValues(alpha: 0.06),
       ),
 
       // Input — borderless Inventix stili
@@ -127,9 +127,9 @@ class AppTheme {
         elevation: 0,
         backgroundColor:
             isLight ? Colors.white : const Color(0xFF1E1E2E),
-        indicatorColor: _primary.withOpacity(0.12),
+        indicatorColor: _primary.withValues(alpha: 0.12),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
-          final base = const TextStyle(
+          const base = TextStyle(
               fontWeight: FontWeight.w500, fontSize: 11);
           if (states.contains(WidgetState.selected)) {
             return base.copyWith(

@@ -246,7 +246,7 @@ class _VisitCard extends ConsumerWidget {
           ListTile(
             contentPadding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
             leading: CircleAvatar(
-              backgroundColor: color.withOpacity(0.12),
+              backgroundColor: color.withValues(alpha: 0.12),
               child: Icon(Symbols.business, color: color, size: 20, fill: 1),
             ),
             title: Text(
@@ -260,7 +260,7 @@ class _VisitCard extends ConsumerWidget {
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -309,7 +309,7 @@ class _VisitCard extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               child: Row(
                 children: [
-                  Icon(Symbols.feedback, size: 14, color: AppColors.success),
+                  const Icon(Symbols.feedback, size: 14, color: AppColors.success),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
@@ -452,7 +452,7 @@ class _UserDropdownState extends ConsumerState<_UserDropdown> {
         if (!snap.hasData) return const LinearProgressIndicator();
         final reps = snap.data!.where((u) => u.isActive).toList();
         return DropdownButtonFormField<String>(
-          value: widget.selectedId,
+          initialValue: widget.selectedId,
           decoration: const InputDecoration(
             labelText: 'Temsilci',
             prefixIcon: Icon(Symbols.person_pin),
@@ -617,8 +617,8 @@ class _CreateVisitSheetState extends ConsumerState<_CreateVisitSheet> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (!mounted || date == null) return;
-    // ignore: use_build_context_synchronously
     final time = await showTimePicker(
+      // ignore: use_build_context_synchronously
       context: context,
       initialTime: TimeOfDay.fromDateTime(_plannedAt),
     );

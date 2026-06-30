@@ -161,7 +161,7 @@ class _ProductCard extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: primary.withOpacity(0.1),
+            color: primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(Symbols.inventory_2, color: primary, size: 24, fill: 1),

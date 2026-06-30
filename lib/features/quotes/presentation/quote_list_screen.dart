@@ -516,7 +516,7 @@ class _ErrorState extends StatelessWidget {
                 color: AppColors.error.shade50,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Icon(Symbols.error, size: 36, color: AppColors.error, fill: 1),
+              child: const Icon(Symbols.error, size: 36, color: AppColors.error, fill: 1),
             ),
             const SizedBox(height: 16),
             const Text('Bir hata oluştu',

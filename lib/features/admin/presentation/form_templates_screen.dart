@@ -126,7 +126,7 @@ class _TemplateCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: primary.withOpacity(0.1),
+                            color: primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text('Varsayılan',
@@ -414,7 +414,7 @@ class _FieldRowState extends State<_FieldRow> {
             children: [
               Expanded(
                 child: DropdownButtonFormField<int>(
-                  value: widget.draft.type,
+                  initialValue: widget.draft.type,
                   isDense: true,
                   decoration: const InputDecoration(
                     labelText: 'Tür',
