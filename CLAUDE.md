@@ -22,6 +22,18 @@ Her push/PR'da `.github/workflows/ci.yml` calisir (flutter analyze + test + debu
 - `stable` branch'i otomasyon ile yonetilir, manuel dokunma.
 - Force-push / `git reset --hard` gibi yikici islemleri kullanicinin acik onayi olmadan yapma.
 
+## Calismaya Baslarken — HER OTURUMDA
+
+1. **Once `git pull` yap.** Iki kisi ayni repoya yazdigi icin local branch geride kalmis olabilir, calismaya baslamadan once guncel kodu cek.
+2. **API baglantisini kendi ortamina uyarla.** `lib/core/constants/app_constants.dart` icindeki `baseUrl` Android emulator icin `10.0.2.2`, web icin `localhost` kullanir — fiziksel cihazda test ediyorsan kendi makinenin LAN IP'sine gecici olarak degistir, ama bunu commit etme (geri al / `git checkout -- lib/core/constants/app_constants.dart`).
+
+## Versiyonlama
+
+- Surum `pubspec.yaml` icindeki `version: X.Y.Z+build` alaninda tutulur (Semantic Versioning + build number).
+- Bir Sprint/release tamamlandiginda: `version`'i artir (MAJOR.MINOR.PATCH+build), `git tag vX.Y.Z` ile main'deki commit'i tagle, `git push platform vX.Y.Z`.
+- Kural: breaking change/major mimari degisiklik → MAJOR, yeni feature → MINOR, bugfix → PATCH; build numarasi (+N) her store release'inde 1 artar.
+- Backend (`teklif-app`) ile senkron tutmak icin ayni release doneminde ikisi de tag'lenir.
+
 ## Issue / Is Akisi
 
 1. Issue'lar `teklif-platform/teklif-flutter` altinda, `type:*`, `platform:mobile`, `priority:*` etiketleri ve Sprint milestone'u ile bulunur.
