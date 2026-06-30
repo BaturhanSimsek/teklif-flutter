@@ -60,6 +60,7 @@ dependencies:
   json_annotation: ^4.9.0
   equatable: ^2.0.5
   logger: ^2.3.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
