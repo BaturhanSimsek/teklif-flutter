@@ -22,6 +22,22 @@ final authDioProvider = AutoDisposeProvider<Dio>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthDioRef = AutoDisposeProviderRef<Dio>;
+String _$reportingDioHash() => r'8ab3b88613ccbb247dc28437e8ebf99c6b8449d1';
+
+/// See also [reportingDio].
+@ProviderFor(reportingDio)
+final reportingDioProvider = AutoDisposeProvider<Dio>.internal(
+  reportingDio,
+  name: r'reportingDioProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$reportingDioHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ReportingDioRef = AutoDisposeProviderRef<Dio>;
 String _$dioHash() => r'cd223a3447de8dca44d319ec7358b5e5b464af27';
 
 /// See also [dio].

@@ -21,6 +21,14 @@ class AppConstants {
     return 'http://10.0.2.2:5076/api/auth';
   }
 
+  // ReportingService: dashboard, raporlar, audit log, excel export
+  static const String _definedReportingUrl = String.fromEnvironment('REPORTING_SERVICE_URL');
+  static String get reportingServiceUrl {
+    if (_definedReportingUrl.isNotEmpty) return _definedReportingUrl;
+    if (kIsWeb) return 'http://localhost:5078/api/v1/reports';
+    return 'http://10.0.2.2:5078/api/v1/reports';
+  }
+
   // Üretimde sertifika parmak izi: openssl x509 -fingerprint -sha256 -in cert.pem
   // dart-define: flutter build apk --dart-define=CERT_PIN=AA:BB:CC:...
   static const String certPin = String.fromEnvironment('CERT_PIN');
