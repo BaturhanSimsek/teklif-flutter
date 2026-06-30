@@ -38,7 +38,19 @@ Her push/PR'da `.github/workflows/ci.yml` calisir (flutter analyze + test + debu
 
 1. Issue'lar `teklif-platform/teklif-flutter` altinda, `type:*`, `platform:mobile`, `priority:*` etiketleri ve Sprint milestone'u ile bulunur.
 2. Bir issue'nun backend tarafinda karsiligi varsa body'sinde `Backend: teklif-app#N` referansi olur — ilgili API/sozlesmeyi anlamak icin o issue'ya bak.
-3. PR acarken `.github/pull_request_template.md` (org `.github` reposundan gelir) doldurulur: Degisiklik Ozeti, Bagli Issue, Platform/Test checklist.
+3. **Bir issue'ya baslarken proje board'da Status'unu "In Progress" yap** — item id'sini bul (`gh project item-list 1 --owner teklif-platform --format json`), sonra: `gh project item-edit --project-id PVT_kwDOEcRKps4BcBqK --id <itemId> --field-id PVTSSF_lADOEcRKps4BcBqKzhWtgng --single-select-option-id 47fc9ee4`. Todo → In Progress → Done gecisi takip edilir, direkt Todo'dan Done'a atlanmaz.
+4. PR acarken `.github/pull_request_template.md` (org `.github` reposundan gelir) doldurulur: Degisiklik Ozeti, Bagli Issue, Platform/Test checklist.
+
+## Commit Mesaji Formati — ZORUNLU
+
+Bir issue/task uzerinde calisirken atilan her commit'in basina ilgili issue numarasi koseli parantezle yazilir:
+
+```
+[5] - Teklif CRUD ekraninda tarih filtresi eklendi
+[1] - Login validasyon hatasi duzeltildi
+```
+
+Issue'ya bagli olmayan genel/altyapi commit'lerinde (CI fix, CLAUDE.md guncellemesi vb.) numara zorunlu degildir, ama varsa kullanilmalidir.
 
 ## Bir Isi "Done" Yaparken — ZORUNLU FORMAT
 
