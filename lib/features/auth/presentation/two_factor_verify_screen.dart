@@ -7,6 +7,7 @@ import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/constants/app_constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../../core/notifications/notification_service.dart';
 import '../data/auth_model.dart';
 
 class TwoFactorVerifyScreen extends ConsumerStatefulWidget {
@@ -49,6 +50,11 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
       await storage.write(key: AppConstants.userRoleKey,           value: response.role);
       await storage.write(key: AppConstants.userIdKey,             value: response.userId);
       await storage.write(key: AppConstants.mustChangePasswordKey, value: response.mustChangePassword.toString());
+
+      // Başarılı 2FA dogrulamasi → FCM token'ı kaydet (normal login akisinda da yapiliyor)
+      ref.read(notificationServiceProvider)
+          .requestPermissionAndRegisterToken()
+          .ignore();
 
       if (mounted) context.go('/dashboard');
     } on DioException catch (e) {
