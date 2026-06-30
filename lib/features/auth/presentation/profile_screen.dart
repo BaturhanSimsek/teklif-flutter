@@ -94,6 +94,84 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (mounted) context.go('/login');
   }
 
+  Future<void> _deleteAccount() async {
+    HapticFeedback.heavyImpact();
+
+    // 1. adim — sonuclari aciklayan uyari
+    final firstStep = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Hesabı Sil'),
+        content: const Text(
+          'Hesabınız ve hesabınıza bağlı veriler KVKK kapsamında silinecek. '
+          'Bu işlemden sonra bu hesapla giriş yapamazsınız. Devam etmek istiyor musunuz?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Vazgeç'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Devam Et'),
+          ),
+        ],
+      ),
+    );
+    if (firstStep != true || !mounted) return;
+
+    // 2. adim — yazarak onaylama
+    final confirmCtrl = TextEditingController();
+    final secondStep = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Son Onay'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Onaylamak için aşağıya "SİL" yazın.'),
+            const SizedBox(height: 12),
+            TextField(
+              controller: confirmCtrl,
+              autofocus: true,
+              textCapitalization: TextCapitalization.characters,
+              decoration: const InputDecoration(hintText: 'SİL'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Vazgeç'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Hesabı Sil'),
+          ),
+        ],
+      ),
+    );
+    final confirmed = secondStep == true &&
+        confirmCtrl.text.trim().toUpperCase() == 'SİL';
+    confirmCtrl.dispose();
+    if (!confirmed || !mounted) return;
+
+    try {
+      final dio = ref.read(dioProvider);
+      await dio.delete('/account');
+      await ref.read(authRepositoryProvider).logout();
+      if (mounted) context.go('/');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Hata: $e')));
+      }
+    }
+  }
+
   static const _roleLabels = {
     'Admin':   'Yönetici',
     'Manager': 'Müdür',
@@ -248,6 +326,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   label: 'Çıkış Yap',
                   color: AppColors.error,
                   onTap: _logout,
+                ),
+                const SizedBox(height: 8),
+
+                // Hesabı Sil (KVKK)
+                _ActionTile(
+                  icon: Symbols.delete_forever,
+                  label: 'Hesabı Sil',
+                  color: AppColors.error,
+                  onTap: _deleteAccount,
                 ),
               ],
             ),
