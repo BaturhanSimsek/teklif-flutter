@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_routes.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../data/auth_model.dart';
@@ -35,7 +37,7 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
     setState(() => _loading = true);
     try {
       final dio = ref.read(authDioProvider);
-      final res = await dio.post('/2fa/verify', data: {
+      final res = await dio.post(AuthPaths.twoFaVerify, data: {
         'twoFactorToken': widget.twoFactorToken,
         'code':           code,
       });
@@ -63,7 +65,7 @@ class _TwoFactorVerifyScreenState extends ConsumerState<TwoFactorVerifyScreen> {
         ));
       }
 
-      if (mounted) context.go('/dashboard');
+      if (mounted) context.go(AppRoutes.dashboard);
     } on DioException catch (e) {
       final msg = ApiException.fromDio(e).message;
       if (mounted) {

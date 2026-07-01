@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import 'dashboard_model.dart';
 
 part 'dashboard_repository.g.dart';
@@ -14,7 +15,7 @@ class DashboardRepository {
   final Dio _dio;
 
   Future<DashboardData> get() async {
-    final res = await _dio.get('/dashboard');
+    final res = await _dio.get(ReportingPaths.dashboard);
     return DashboardData.fromJson(res.data as Map<String, dynamic>);
   }
 }

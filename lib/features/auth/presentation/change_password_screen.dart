@@ -7,7 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_routes.dart';
 
 class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key, this.forced = false});
@@ -43,13 +45,13 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     setState(() => _loading = true);
     try {
       final dio = ref.read(authDioProvider);
-      await dio.post('/change-password', data: {
+      await dio.post(AuthPaths.changePassword, data: {
         'currentPassword': _currentCtrl.text,
         'newPassword':     _newCtrl.text,
       });
       const storage = FlutterSecureStorage();
       await storage.write(key: AppConstants.mustChangePasswordKey, value: 'false');
-      if (mounted) context.go('/quotes');
+      if (mounted) context.go(AppRoutes.quotes);
     } on DioException catch (e) {
       setState(() => _loading = false);
       final msg = e.response?.data?['detail'] ?? 'Bir hata oluştu.';

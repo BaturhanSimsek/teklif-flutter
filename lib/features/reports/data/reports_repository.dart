@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/constants/api_paths.dart';
 import 'reports_model.dart';
 
 part 'reports_repository.g.dart';
@@ -16,7 +17,7 @@ class ReportsRepository {
 
   Future<ReportsData> get() async {
     try {
-      final res = await _dio.get('/summary');
+      final res = await _dio.get(ReportingPaths.summary);
       return ReportsData.fromJson(res.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);

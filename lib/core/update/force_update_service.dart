@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../constants/api_paths.dart';
 
 class ForceUpdateService {
   ForceUpdateService(this._dio);
@@ -9,7 +10,7 @@ class ForceUpdateService {
   Future<UpdateCheckResult> check() async {
     try {
       final info = await PackageInfo.fromPlatform();
-      final res  = await _dio.get('/app-version');
+      final res  = await _dio.get(ApiPaths.appVersion);
       final data = res.data as Map<String, dynamic>;
 
       final current = _parse(info.version);

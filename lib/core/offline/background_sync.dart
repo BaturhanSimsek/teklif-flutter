@@ -4,6 +4,7 @@ import 'outbox_entry.dart';
 import 'outbox_repository.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
+import '../constants/api_paths.dart';
 
 // Workmanager'in cagirdigi top-level callback — isolate'ta calisir,
 // provider/BuildContext erisimi yoktur, direkt servisleri kullanir.
@@ -51,28 +52,28 @@ Future<void> _processEntry(OutboxEntry entry, Dio dio) async {
     case OutboxEntityType.quote:
       switch (entry.operation) {
         case OutboxOperation.create:
-          await dio.post('/quotes', data: payload,
+          await dio.post(ApiPaths.quotes, data: payload,
               options: Options(headers: headers));
         case OutboxOperation.send:
-          await dio.post('/quotes/${payload['id']}/send',
+          await dio.post(ApiPaths.quoteSend(payload['id'] as String),
               options: Options(headers: headers));
         case OutboxOperation.update:
-          await dio.put('/quotes/${payload['id']}', data: payload,
+          await dio.put(ApiPaths.quoteById(payload['id'] as String), data: payload,
               options: Options(headers: headers));
         case OutboxOperation.delete:
-          await dio.delete('/quotes/${payload['id']}',
+          await dio.delete(ApiPaths.quoteById(payload['id'] as String),
               options: Options(headers: headers));
       }
     case OutboxEntityType.customer:
       switch (entry.operation) {
         case OutboxOperation.create:
-          await dio.post('/customers', data: payload,
+          await dio.post(ApiPaths.customers, data: payload,
               options: Options(headers: headers));
         case OutboxOperation.update:
-          await dio.put('/customers/${payload['id']}', data: payload,
+          await dio.put(ApiPaths.customer(payload['id'] as String), data: payload,
               options: Options(headers: headers));
         case OutboxOperation.delete:
-          await dio.delete('/customers/${payload['id']}',
+          await dio.delete(ApiPaths.customer(payload['id'] as String),
               options: Options(headers: headers));
         case OutboxOperation.send:
           break;

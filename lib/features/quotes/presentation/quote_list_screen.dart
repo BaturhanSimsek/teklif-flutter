@@ -9,6 +9,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
 import '../../customers/data/customer_repository.dart';
@@ -148,7 +150,7 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
   Future<void> _exportExcel() async {
     try {
       final dio  = ref.read(reportingDioProvider);
-      final res  = await dio.get('/export/excel',
+      final res  = await dio.get(ReportingPaths.exportExcel,
           options: Options(responseType: ResponseType.bytes));
 
       final dir  = await getTemporaryDirectory();
@@ -183,7 +185,7 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
           IconButton(
             icon: const Icon(Symbols.view_kanban),
             tooltip: 'Kanban Görünümü',
-            onPressed: () => context.push('/kanban'),
+            onPressed: () => context.push(AppRoutes.kanban),
           ),
           IconButton(
             icon: const Icon(Symbols.table_view),
@@ -201,7 +203,7 @@ class _QuoteListScreenState extends ConsumerState<QuoteListScreen> {
             child: IconButton.filled(
               icon: const Icon(Symbols.add, size: 22),
               tooltip: 'Yeni Teklif',
-              onPressed: () => context.push('/quotes/new'),
+              onPressed: () => context.push(AppRoutes.quoteNew),
               style: IconButton.styleFrom(
                 backgroundColor: primary,
                 foregroundColor: Colors.white,
@@ -365,7 +367,7 @@ class _DismissibleQuote extends ConsumerWidget {
     if (quote.isApproved) {
       return _QuoteCard(
         quote: quote,
-        onTap: () => context.push('/quotes/${quote.id}'),
+        onTap: () => context.push(AppRoutes.quoteDetail(quote.id)),
       );
     }
 
@@ -419,7 +421,7 @@ class _DismissibleQuote extends ConsumerWidget {
       ),
       child: _QuoteCard(
         quote: quote,
-        onTap: () => context.push('/quotes/${quote.id}'),
+        onTap: () => context.push(AppRoutes.quoteDetail(quote.id)),
       ),
     );
   }

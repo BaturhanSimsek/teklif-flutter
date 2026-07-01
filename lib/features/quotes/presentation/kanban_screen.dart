@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/kanban_model.dart';
 import '../data/quote_repository.dart';
@@ -148,7 +149,7 @@ class _KanbanScreenState extends ConsumerState<KanbanScreen> {
                                 colDef: col,
                                 cards:  _lists[col.status]!,
                                 onDrop: (card) => _moveCard(card, col),
-                                onTap:  (card) => context.push('/quotes/${card.id}'),
+                                onTap:  (card) => context.push(AppRoutes.quoteDetail(card.id)),
                               ),
                             )
                             .toList(),

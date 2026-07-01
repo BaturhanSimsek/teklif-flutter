@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/auth/biometric_service.dart';
+import '../../../core/constants/api_paths.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../data/auth_repository.dart';
 import 'change_password_screen.dart';
@@ -34,7 +36,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _load() async {
     try {
       final dio = ref.read(dioProvider);
-      final res = await dio.get('/profile');
+      final res = await dio.get(ApiPaths.profile);
       final data = res.data as Map<String, dynamic>;
       setState(() {
         _nameCtrl.text = data['fullName'] as String? ?? '';
@@ -52,7 +54,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     setState(() => _loading = true);
     try {
       final dio = ref.read(dioProvider);
-      await dio.put('/profile', data: {'fullName': _nameCtrl.text.trim()});
+      await dio.put(ApiPaths.profile, data: {'fullName': _nameCtrl.text.trim()});
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Profil güncellendi.')));
@@ -91,7 +93,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     await ref.read(authRepositoryProvider).logout();
     Clipboard.setData(const ClipboardData(text: '')); // G15
-    if (mounted) context.go('/login');
+    if (mounted) context.go(AppRoutes.login);
   }
 
   Future<void> _deleteAccount() async {
@@ -161,9 +163,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     try {
       final dio = ref.read(dioProvider);
-      await dio.delete('/account');
+      await dio.delete(ApiPaths.account);
       await ref.read(authRepositoryProvider).logout();
-      if (mounted) context.go('/');
+      if (mounted) context.go(AppRoutes.splash);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)

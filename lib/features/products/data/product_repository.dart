@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
 import 'product_model.dart';
 
@@ -26,7 +27,7 @@ class ProductRepository {
   }) async {
     final cacheKey = 'cache:products:$search:$page:$pageSize';
     try {
-      final res = await _dio.get('/products', queryParameters: {
+      final res = await _dio.get(ApiPaths.products, queryParameters: {
         if (search != null && search.isNotEmpty) 'search': search,
         'page': page,
         'pageSize': pageSize,
@@ -55,7 +56,7 @@ class ProductRepository {
     String?          categoryId,
     String?          notes,
   }) async {
-    final res = await _dio.post('/products', data: {
+    final res = await _dio.post(ApiPaths.products, data: {
       'name':          name,
       'unitId':        unitId,
       'salePrice':     salePrice,
@@ -76,7 +77,7 @@ class ProductRepository {
     String?          categoryId,
     String?          notes,
   }) async {
-    await _dio.put('/products/$id', data: {
+    await _dio.put(ApiPaths.product(id), data: {
       'name':          name,
       'unitId':        unitId,
       'salePrice':     salePrice,
@@ -87,5 +88,5 @@ class ProductRepository {
     });
   }
 
-  Future<void> delete(String id) => _dio.delete('/products/$id');
+  Future<void> delete(String id) => _dio.delete(ApiPaths.product(id));
 }

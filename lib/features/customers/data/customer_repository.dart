@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
 import '../../../core/offline/outbox_entry.dart';
 import '../../../core/offline/outbox_repository.dart';
@@ -30,7 +31,7 @@ class CustomerRepository {
   }) async {
     final cacheKey = 'cache:customers:$search:$page:$pageSize';
     try {
-      final res = await _dio.get('/customers', queryParameters: {
+      final res = await _dio.get(ApiPaths.customers, queryParameters: {
         if (search != null && search.isNotEmpty) 'search': search,
         'page': page,
         'pageSize': pageSize,
@@ -70,7 +71,7 @@ class CustomerRepository {
 
     if (online) {
       final ik  = _cuuid.v4();
-      final res = await _dio.post('/customers', data: payload,
+      final res = await _dio.post(ApiPaths.customers, data: payload,
           options: Options(headers: {'X-Idempotency-Key': ik}));
       return (res.data as Map<String, dynamic>)['id'] as String;
     }
@@ -88,7 +89,7 @@ class CustomerRepository {
   }
 
   Future<void> delete(String id) async {
-    await _dio.delete('/customers/$id');
+    await _dio.delete(ApiPaths.customer(id));
   }
 
   Future<void> update({
@@ -101,7 +102,7 @@ class CustomerRepository {
     String? taxOffice,
     String? notes,
   }) async {
-    await _dio.put('/customers/$id', data: {
+    await _dio.put(ApiPaths.customer(id), data: {
       'id':        id,
       'name':      name,
       'phone':     phone,

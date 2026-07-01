@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import 'tenant_model.dart';
 
 part 'tenant_repository.g.dart';
@@ -14,7 +15,7 @@ class TenantRepository {
   final Dio _dio;
 
   Future<TenantSettings> getSettings() async {
-    final res = await _dio.get('/tenants/settings');
+    final res = await _dio.get(ApiPaths.tenantsSettings);
     return TenantSettings.fromJson(res.data as Map<String, dynamic>);
   }
 
@@ -29,7 +30,7 @@ class TenantRepository {
     String? address,
     String? primaryColor,
   }) async {
-    await _dio.put('/tenants/settings', data: {
+    await _dio.put(ApiPaths.tenantsSettings, data: {
       'companyLegalName': companyLegalName,
       'city':             city,
       'phone':            phone,

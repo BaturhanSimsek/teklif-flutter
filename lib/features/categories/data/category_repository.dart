@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import 'category_model.dart';
 
 part 'category_repository.g.dart';
@@ -18,7 +19,7 @@ class CategoryRepository {
   final Dio _dio;
 
   Future<List<CategoryModel>> getAll() async {
-    final res = await _dio.get('/categories');
+    final res = await _dio.get(ApiPaths.categories);
     final list = res.data as List;
     return list.map((e) => CategoryModel.fromJson(e as Map<String, dynamic>)).toList();
   }
@@ -28,7 +29,7 @@ class CategoryRepository {
     String? parentId,
     int sortOrder = 0,
   }) async {
-    final res = await _dio.post('/categories', data: {
+    final res = await _dio.post(ApiPaths.categories, data: {
       'name':      name,
       'parentId':  parentId,
       'sortOrder': sortOrder,
@@ -42,12 +43,12 @@ class CategoryRepository {
     String? parentId,
     int sortOrder = 0,
   }) async {
-    await _dio.put('/categories/$id', data: {
+    await _dio.put(ApiPaths.category(id), data: {
       'name':      name,
       'parentId':  parentId,
       'sortOrder': sortOrder,
     });
   }
 
-  Future<void> delete(String id) => _dio.delete('/categories/$id');
+  Future<void> delete(String id) => _dio.delete(ApiPaths.category(id));
 }

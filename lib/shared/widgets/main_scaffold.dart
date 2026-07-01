@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../core/auth/current_user_provider.dart';
+import '../../core/constants/app_routes.dart';
 
 class MainScaffold extends ConsumerWidget {
   const MainScaffold({super.key, required this.child, required this.location});
@@ -12,17 +13,17 @@ class MainScaffold extends ConsumerWidget {
 
   // Sabit 4 sekme — herkes görür
   static const _baseTabs = [
-    (path: '/dashboard',  icon: Symbols.dashboard,      label: 'Dashboard'),
-    (path: '/quotes',     icon: Symbols.description,    label: 'Teklifler'),
-    (path: '/customers',  icon: Symbols.people,          label: 'Müşteriler'),
-    (path: '/visit-plan', icon: Symbols.calendar_month,  label: 'Ziyaret'),
+    (path: AppRoutes.dashboard,  icon: Symbols.dashboard,      label: 'Dashboard'),
+    (path: AppRoutes.quotes,     icon: Symbols.description,    label: 'Teklifler'),
+    (path: AppRoutes.customers,  icon: Symbols.people,          label: 'Müşteriler'),
+    (path: AppRoutes.visitPlans, icon: Symbols.calendar_month,  label: 'Ziyaret'),
   ];
 
   // 5. sekme: Admin/Manager → Yönetim, Sales → Profil
   static const _adminTab =
-      (path: '/admin',   icon: Symbols.admin_panel_settings, label: 'Yönetim');
+      (path: AppRoutes.admin,   icon: Symbols.admin_panel_settings, label: 'Yönetim');
   static const _profileTab =
-      (path: '/profile', icon: Symbols.person,               label: 'Profil');
+      (path: AppRoutes.profile, icon: Symbols.person,               label: 'Profil');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

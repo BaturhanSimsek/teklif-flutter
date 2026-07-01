@@ -5,7 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_routes.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -52,7 +54,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     try {
       final dio = ref.read(dioProvider);
-      final res = await dio.post('/tenants/register', data: {
+      final res = await dio.post(ApiPaths.tenantsRegister, data: {
         'companyName':   _companyCtrl.text.trim(),
         'slug':          _toSlug(_companyCtrl.text),
         'adminEmail':    _emailCtrl.text.trim(),
@@ -68,7 +70,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       await storage.write(
           key: AppConstants.mustChangePasswordKey, value: 'false');
 
-      if (mounted) context.go('/dashboard');
+      if (mounted) context.go(AppRoutes.dashboard);
     } on DioException catch (e) {
       setState(() => _loading = false);
       final detail = e.response?.data?['detail'] ??
@@ -97,7 +99,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             foregroundColor: Colors.white,
             leading: IconButton(
               icon: const Icon(Symbols.arrow_back),
-              onPressed: () => context.go('/login'),
+              onPressed: () => context.go(AppRoutes.login),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -244,7 +246,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const Text('Zaten hesabınız var mı?',
                             style: TextStyle(color: Colors.grey)),
                         TextButton(
-                          onPressed: () => context.go('/login'),
+                          onPressed: () => context.go(AppRoutes.login),
                           child: const Text('Giriş Yap'),
                         ),
                       ],

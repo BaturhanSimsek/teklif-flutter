@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/cache/local_cache.dart';
+import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
 import '../../../core/offline/outbox_entry.dart';
 import '../../../core/offline/outbox_repository.dart';
@@ -42,7 +43,7 @@ class QuoteRepository {
   }) async {
     final cacheKey = '$_cacheKeyList:$customerId:$search:$page:$pageSize';
     try {
-      final res = await _dio.get('/quotes', queryParameters: {
+      final res = await _dio.get(ApiPaths.quotes, queryParameters: {
         if (customerId != null) 'customerId': customerId,
         if (search != null && search.isNotEmpty) 'search': search,
         'page': page,
@@ -67,7 +68,7 @@ class QuoteRepository {
   Future<List<QuoteSummary>> getByCustomer(String customerId) async {
     final cacheKey = 'cache:quotes:by-customer:$customerId';
     try {
-      final res  = await _dio.get('/quotes/by-customer/$customerId');
+      final res  = await _dio.get(ApiPaths.quoteByCustomer(customerId));
       final list = res.data as List<dynamic>;
       final result = list.map((e) => QuoteSummary.fromJson(e as Map<String, dynamic>)).toList();
       await LocalCache.set(cacheKey, res.data);
@@ -85,7 +86,7 @@ class QuoteRepository {
   Future<QuoteDetail> getById(String quoteId) async {
     final cacheKey = '$_cacheKeyDetail$quoteId';
     try {
-      final res    = await _dio.get('/quotes/$quoteId');
+      final res    = await _dio.get(ApiPaths.quoteById(quoteId));
       final result = QuoteDetail.fromJson(res.data as Map<String, dynamic>);
       await LocalCache.set(cacheKey, res.data);
       return result;
@@ -103,7 +104,7 @@ class QuoteRepository {
     if (await _isOnline()) {
       // Online: direkt sunucuya gonder
       final idempotencyKey = _uuid.v4();
-      final res = await _dio.post('/quotes', data: payload,
+      final res = await _dio.post(ApiPaths.quotes, data: payload,
           options: Options(headers: {'X-Idempotency-Key': idempotencyKey}));
       return (res.data as Map<String, dynamic>)['id'] as String;
     }
@@ -122,14 +123,14 @@ class QuoteRepository {
   }
 
   Future<void> approve(String quoteId, {bool approve = true}) async {
-    await _dio.patch('/quotes/$quoteId/approve', queryParameters: {'approve': approve});
+    await _dio.patch(ApiPaths.quoteApprove(quoteId), queryParameters: {'approve': approve});
     await LocalCache.clear('$_cacheKeyDetail$quoteId');
   }
 
   Future<void> send(String quoteId) async {
     if (await _isOnline()) {
       final idempotencyKey = _uuid.v4();
-      await _dio.post('/quotes/$quoteId/send',
+      await _dio.post(ApiPaths.quoteSend(quoteId),
           options: Options(headers: {'X-Idempotency-Key': idempotencyKey}));
       await LocalCache.clear('$_cacheKeyDetail$quoteId');
       return;
@@ -147,40 +148,40 @@ class QuoteRepository {
   }
 
   Future<String> revise(String quoteId) async {
-    final res = await _dio.post('/quotes/$quoteId/revise');
+    final res = await _dio.post(ApiPaths.quoteRevise(quoteId));
     return (res.data as Map<String, dynamic>)['id'] as String;
   }
 
   Future<void> cancel(String quoteId) async {
-    await _dio.delete('/quotes/$quoteId');
+    await _dio.delete(ApiPaths.quoteById(quoteId));
     await LocalCache.clear('$_cacheKeyDetail$quoteId');
   }
 
   Future<List<QuoteSummary>> getRevisions(String quoteId) async {
-    final res = await _dio.get('/quotes/$quoteId/revisions');
+    final res = await _dio.get(ApiPaths.quoteRevisions(quoteId));
     return (res.data as List)
         .map((j) => QuoteSummary.fromJson(j as Map<String, dynamic>))
         .toList();
   }
 
   Future<String> generateShareLink(String quoteId) async {
-    final res = await _dio.post('/quotes/$quoteId/share-link');
+    final res = await _dio.post(ApiPaths.quoteShareLink(quoteId));
     return (res.data as Map<String, dynamic>)['url'] as String;
   }
 
   Future<List<AiQuoteItemSuggestion>> aiGenerate(String prompt) async {
-    final res = await _dio.post('/quotes/ai-generate', data: {'prompt': prompt});
+    final res = await _dio.post(ApiPaths.quotesAiGenerate, data: {'prompt': prompt});
     return (res.data as List)
         .map((j) => AiQuoteItemSuggestion.fromJson(j as Map<String, dynamic>))
         .toList();
   }
 
   Future<KanbanBoard> getKanban() async {
-    final res = await _dio.get('/quotes/kanban');
+    final res = await _dio.get(ApiPaths.quotesKanban);
     return KanbanBoard.fromJson(res.data as Map<String, dynamic>);
   }
 
   Future<void> moveStage(String quoteId, String stage) async {
-    await _dio.patch('/quotes/$quoteId/stage', data: {'stage': stage});
+    await _dio.patch(ApiPaths.quoteStage(quoteId), data: {'stage': stage});
   }
 }

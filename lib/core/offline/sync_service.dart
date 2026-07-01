@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../api/api_client.dart';
+import '../constants/api_paths.dart';
 import 'outbox_entry.dart';
 import 'outbox_repository.dart';
 
@@ -98,16 +99,16 @@ class SyncService {
       OutboxOperation op, Map<String, dynamic> payload, Map<String, String> h) async {
     switch (op) {
       case OutboxOperation.create:
-        await _dio.post('/quotes', data: payload, options: Options(headers: h));
+        await _dio.post(ApiPaths.quotes, data: payload, options: Options(headers: h));
       case OutboxOperation.update:
         final id = payload['id'] as String;
-        await _dio.put('/quotes/$id', data: payload, options: Options(headers: h));
+        await _dio.put(ApiPaths.quoteById(id), data: payload, options: Options(headers: h));
       case OutboxOperation.send:
         final id = payload['id'] as String;
-        await _dio.post('/quotes/$id/send', options: Options(headers: h));
+        await _dio.post(ApiPaths.quoteSend(id), options: Options(headers: h));
       case OutboxOperation.delete:
         final id = payload['id'] as String;
-        await _dio.delete('/quotes/$id', options: Options(headers: h));
+        await _dio.delete(ApiPaths.quoteById(id), options: Options(headers: h));
     }
   }
 
@@ -115,13 +116,13 @@ class SyncService {
       OutboxOperation op, Map<String, dynamic> payload, Map<String, String> h) async {
     switch (op) {
       case OutboxOperation.create:
-        await _dio.post('/customers', data: payload, options: Options(headers: h));
+        await _dio.post(ApiPaths.customers, data: payload, options: Options(headers: h));
       case OutboxOperation.update:
         final id = payload['id'] as String;
-        await _dio.put('/customers/$id', data: payload, options: Options(headers: h));
+        await _dio.put(ApiPaths.customer(id), data: payload, options: Options(headers: h));
       case OutboxOperation.delete:
         final id = payload['id'] as String;
-        await _dio.delete('/customers/$id', options: Options(headers: h));
+        await _dio.delete(ApiPaths.customer(id), options: Options(headers: h));
       case OutboxOperation.send:
         break;
     }

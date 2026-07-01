@@ -41,6 +41,11 @@ Her push/PR'da `.github/workflows/ci.yml` calisir (flutter analyze + test + debu
 3. **Bir issue'ya baslarken proje board'da Status'unu "In Progress" yap VE issue'yu kendine ata** — item id'sini bul (`gh project item-list 1 --owner teklif-platform --format json`), sonra: `gh project item-edit --project-id PVT_kwDOEcRKps4BcBqK --id <itemId> --field-id PVTSSF_lADOEcRKps4BcBqKzhWtgng --single-select-option-id 47fc9ee4` ve `gh issue edit <no> --repo teklif-platform/teklif-flutter --add-assignee @me`. Sadece Status yetmez — Assignee olmadan board'a bakan kisi "bu is basladi" gorur ama "kim yapiyor" goremez, iki kisilik takimda bu karisikliga yol acar. Todo → In Progress → Done gecisi takip edilir, direkt Todo'dan Done'a atlanmaz.
 4. PR acarken `.github/pull_request_template.md` (org `.github` reposundan gelir) doldurulur: Degisiklik Ozeti, Bagli Issue, Platform/Test checklist.
 
+## Kod Stili — ZORUNLU
+
+- **Hardcoded string yasak**: API endpoint path'leri `lib/core/constants/api_paths.dart` içindeki `ApiPaths`, `AuthPaths`, `ReportingPaths` sınıflarından; route path'leri `lib/core/constants/app_routes.dart` içindeki `AppRoutes`'tan kullanılmalı. Yeni endpoint veya route eklendiğinde ÖNCE bu dosyalara const ekle, sonra kullan.
+- `'/' prefix`li hardcoded string literal yazmak yasak — her zaman const referansı kullan.
+
 ## Commit Mesaji Formati — ZORUNLU
 
 Bir issue/task uzerinde calisirken atilan her commit'in basina ilgili issue numarasi koseli parantezle yazilir:

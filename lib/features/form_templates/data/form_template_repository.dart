@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import 'form_template_model.dart';
 
 part 'form_template_repository.g.dart';
@@ -18,7 +19,7 @@ class FormTemplateRepository {
   final Dio _dio;
 
   Future<List<FormTemplate>> getAll() async {
-    final res = await _dio.get('/formtemplates');
+    final res = await _dio.get(ApiPaths.formTemplates);
     final list = res.data as List<dynamic>;
     return list.map((e) => FormTemplate.fromJson(e as Map<String, dynamic>)).toList();
   }
@@ -29,7 +30,7 @@ class FormTemplateRepository {
     bool isDefault = false,
     required List<Map<String, dynamic>> fields,
   }) async {
-    final res = await _dio.post('/formtemplates', data: {
+    final res = await _dio.post(ApiPaths.formTemplates, data: {
       'name':        name,
       'description': description,
       'isDefault':   isDefault,
@@ -38,5 +39,5 @@ class FormTemplateRepository {
     return res.data['id'] as String;
   }
 
-  Future<void> delete(String id) => _dio.delete('/formtemplates/$id');
+  Future<void> delete(String id) => _dio.delete(ApiPaths.formTemplate(id));
 }

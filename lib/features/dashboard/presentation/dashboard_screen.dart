@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/auth/current_user_provider.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/dashboard_model.dart';
 import '../data/dashboard_repository.dart';
@@ -74,7 +75,7 @@ class _Body extends StatelessWidget {
             ...data.recentQuotes.map((q) => _RecentQuoteTile(quote: q)),
           const SizedBox(height: 4),
           TextButton(
-            onPressed: () => context.go('/quotes'),
+            onPressed: () => context.go(AppRoutes.quotes),
             child: const Text('Tüm teklifleri gör →'),
           ),
         ],
@@ -167,14 +168,14 @@ class _QuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actions = [
-      _Action(icon: Symbols.add_circle, label: 'Yeni Teklif',   color: AppColors.approved,  route: '/quotes/new'),
-      const _Action(icon: Symbols.person_add, label: 'Yeni Müşteri',  color: AppColors.info,       route: '/customers/new'),
-      _Action(icon: Symbols.calendar_add_on, label: 'Ziyaret Planla', color: AppColors.pending, route: '/visit-plan'),
-      const _Action(icon: Symbols.view_kanban, label: 'Kanban',        color: Colors.purple,        route: '/kanban'),
-      const _Action(icon: Symbols.people,     label: 'Müşteriler',     color: Colors.teal,          route: '/customers'),
-      const _Action(icon: Symbols.description,label: 'Teklifler',      color: Colors.indigo,        route: '/quotes'),
+      _Action(icon: Symbols.add_circle, label: 'Yeni Teklif',   color: AppColors.approved,  route: AppRoutes.quoteNew),
+      const _Action(icon: Symbols.person_add, label: 'Yeni Müşteri',  color: AppColors.info,       route: AppRoutes.customerNew),
+      _Action(icon: Symbols.calendar_add_on, label: 'Ziyaret Planla', color: AppColors.pending, route: AppRoutes.visitPlans),
+      const _Action(icon: Symbols.view_kanban, label: 'Kanban',        color: Colors.purple,        route: AppRoutes.kanban),
+      const _Action(icon: Symbols.people,     label: 'Müşteriler',     color: Colors.teal,          route: AppRoutes.customers),
+      const _Action(icon: Symbols.description,label: 'Teklifler',      color: Colors.indigo,        route: AppRoutes.quotes),
       if (canReport)
-        const _Action(icon: Symbols.bar_chart, label: 'Raporlar',      color: Colors.orange,        route: '/reports'),
+        const _Action(icon: Symbols.bar_chart, label: 'Raporlar',      color: Colors.orange,        route: AppRoutes.reports),
     ];
 
     return GridView.builder(
