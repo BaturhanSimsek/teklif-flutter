@@ -185,7 +185,7 @@ GoRouter router(RouterRef ref) {
 
           // ── Ziyaret Planı ─────────────────────────────────────────
           GoRoute(
-            path: '/visit-plan',
+            path: '/visit-plans',
             builder: (_, __) => const VisitPlanScreen(),
           ),
 
