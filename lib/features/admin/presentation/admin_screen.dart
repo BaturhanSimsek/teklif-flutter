@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/skeleton.dart';
 import '../data/rep_location_model.dart';
@@ -33,27 +34,27 @@ class AdminScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Symbols.inventory_2),
             tooltip: 'Ürünler',
-            onPressed: () => context.push('/admin/products'),
+            onPressed: () => context.push(AppRoutes.adminProducts),
           ),
           IconButton(
             icon: const Icon(Symbols.category),
             tooltip: 'Kategoriler',
-            onPressed: () => context.push('/admin/categories'),
+            onPressed: () => context.push(AppRoutes.adminCategories),
           ),
           IconButton(
             icon: const Icon(Symbols.straighten),
             tooltip: 'Birimler',
-            onPressed: () => context.push('/admin/units'),
+            onPressed: () => context.push(AppRoutes.adminUnits),
           ),
           IconButton(
             icon: const Icon(Symbols.article),
             tooltip: 'Form Şablonları',
-            onPressed: () => context.push('/admin/templates'),
+            onPressed: () => context.push(AppRoutes.adminTemplates),
           ),
           IconButton(
             icon: const Icon(Symbols.settings),
             tooltip: 'Firma Ayarları',
-            onPressed: () => context.push('/admin/settings'),
+            onPressed: () => context.push(AppRoutes.adminSettings),
           ),
           IconButton(
             icon: const Icon(Symbols.person_add),
@@ -229,10 +230,10 @@ class _AdminQuickLinks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (icon: Symbols.bar_chart,      label: 'Raporlar',  color: Colors.orange,     route: '/reports'),
-      (icon: Symbols.view_kanban,    label: 'Kanban',    color: Colors.purple,     route: '/kanban'),
-      (icon: Symbols.person,         label: 'Profil',    color: Colors.teal,       route: '/profile'),
-      (icon: Symbols.search,         label: 'Ara',       color: Colors.indigo,     route: '/search'),
+      (icon: Symbols.bar_chart,      label: 'Raporlar',  color: Colors.orange,     route: AppRoutes.reports),
+      (icon: Symbols.view_kanban,    label: 'Kanban',    color: Colors.purple,     route: AppRoutes.kanban),
+      (icon: Symbols.person,         label: 'Profil',    color: Colors.teal,       route: AppRoutes.profile),
+      (icon: Symbols.search,         label: 'Ara',       color: Colors.indigo,     route: AppRoutes.search),
     ];
 
     return Padding(

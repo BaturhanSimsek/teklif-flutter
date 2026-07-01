@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../features/customers/data/customer_model.dart';
 import '../../../features/customers/data/customer_repository.dart';
@@ -128,7 +129,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             icon: Symbols.people,
                             title: 'Müşteriler',
                             color: primary,
-                            onSeeAll: () => context.go('/customers'),
+                            onSeeAll: () => context.go(AppRoutes.customers),
                           ),
                           ..._customers.map((c) => _CustomerResult(customer: c)),
                           const SizedBox(height: 16),
@@ -138,7 +139,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             icon: Symbols.inventory_2,
                             title: 'Ürünler',
                             color: primary,
-                            onSeeAll: () => context.go('/admin/products'),
+                            onSeeAll: () => context.go(AppRoutes.adminProducts),
                           ),
                           ..._products.map((p) => _ProductResult(product: p)),
                         ],
@@ -216,7 +217,7 @@ class _QuoteResult extends StatelessWidget {
         quote.isApproved ? 'Onaylandı' : 'Bekliyor',
         style: TextStyle(fontSize: 11, color: color),
       ),
-      onTap: () => context.push('/quotes/${quote.id}'),
+      onTap: () => context.push(AppRoutes.quoteDetail(quote.id)),
     );
   }
 }
@@ -249,7 +250,7 @@ class _CustomerResult extends StatelessWidget {
           ? Text(customer.phone,
               style: const TextStyle(fontSize: 12, color: Colors.grey))
           : null,
-      onTap: () => context.push('/customers/${customer.id}'),
+      onTap: () => context.push(AppRoutes.customerDetail(customer.id)),
     );
   }
 }
@@ -279,7 +280,7 @@ class _ProductResult extends StatelessWidget {
       subtitle: Text(
           '${product.unitName ?? ''}${product.unitName != null ? '  ·  ' : ''}${_curr.format(product.salePrice)}',
           style: const TextStyle(fontSize: 12, color: Colors.grey)),
-      onTap: () => context.push('/admin/products'),
+      onTap: () => context.push(AppRoutes.adminProducts),
     );
   }
 }

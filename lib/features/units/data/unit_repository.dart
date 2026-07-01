@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/constants/api_paths.dart';
 import 'unit_model.dart';
 
 part 'unit_repository.g.dart';
@@ -18,7 +19,7 @@ class UnitRepository {
   final Dio _dio;
 
   Future<List<UnitModel>> getAll() async {
-    final res = await _dio.get('/units');
+    final res = await _dio.get(ApiPaths.units);
     final list = res.data as List;
     return list.map((e) => UnitModel.fromJson(e as Map<String, dynamic>)).toList();
   }
@@ -28,7 +29,7 @@ class UnitRepository {
     String symbol = '',
     int sortOrder = 0,
   }) async {
-    final res = await _dio.post('/units', data: {
+    final res = await _dio.post(ApiPaths.units, data: {
       'name':      name,
       'symbol':    symbol,
       'sortOrder': sortOrder,
@@ -42,12 +43,12 @@ class UnitRepository {
     String symbol = '',
     int sortOrder = 0,
   }) async {
-    await _dio.put('/units/$id', data: {
+    await _dio.put(ApiPaths.unit(id), data: {
       'name':      name,
       'symbol':    symbol,
       'sortOrder': sortOrder,
     });
   }
 
-  Future<void> delete(String id) => _dio.delete('/units/$id');
+  Future<void> delete(String id) => _dio.delete(ApiPaths.unit(id));
 }

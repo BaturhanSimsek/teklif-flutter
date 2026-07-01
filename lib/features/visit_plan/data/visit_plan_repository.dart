@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
+import '../../../core/constants/api_paths.dart';
 import 'visit_plan_model.dart';
 
 part 'visit_plan_repository.g.dart';
@@ -16,7 +17,7 @@ class VisitPlanRepository {
 
   Future<List<VisitPlan>> getPlans({String? date, String? userId}) async {
     try {
-      final res = await _dio.get('/visit-plans', queryParameters: {
+      final res = await _dio.get(ApiPaths.visitPlans, queryParameters: {
         if (date != null) 'date': date,
         if (userId != null) 'userId': userId,
       });
@@ -33,7 +34,7 @@ class VisitPlanRepository {
     String? assignedUserId,
   }) async {
     try {
-      await _dio.post('/visit-plans', data: {
+      await _dio.post(ApiPaths.visitPlans, data: {
         'customerId': customerId,
         'plannedAt':  plannedAt.toIso8601String(),
         if (notes != null)          'notes':          notes,
@@ -46,7 +47,7 @@ class VisitPlanRepository {
 
   Future<void> updateStatus(String id, int status, {String? outcome}) async {
     try {
-      await _dio.patch('/visit-plans/$id/status', data: {
+      await _dio.patch(ApiPaths.visitPlanStatus(id), data: {
         'id': id,
         'status': status,
         if (outcome != null) 'outcome': outcome,

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/api/api_client.dart';
 import '../../core/update/force_update_dialog.dart';
 import '../../core/update/force_update_service.dart';
+import '../../core/constants/app_routes.dart';
 import '../../features/auth/data/auth_repository.dart';
 import 'onboarding_screen.dart';
 
@@ -60,13 +61,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
 
     if (!onboardingDone) {
-      context.go('/onboarding');
+      context.go(AppRoutes.onboarding);
       return;
     }
 
     final loggedIn = await ref.read(authRepositoryProvider).isLoggedIn();
     if (!mounted) return;
-    context.go(loggedIn ? '/quotes' : '/login');
+    context.go(loggedIn ? AppRoutes.quotes : AppRoutes.login);
   }
 
   @override

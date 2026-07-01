@@ -1,3 +1,4 @@
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -196,7 +197,7 @@ class _CustomerCard extends StatelessWidget {
         border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: InkWell(
-        onTap: () => context.push('/customers/${customer.id}'),
+        onTap: () => context.push(AppRoutes.customerDetail(customer.id)),
         borderRadius: BorderRadius.circular(18),
         child: Padding(
           padding: const EdgeInsets.all(14),

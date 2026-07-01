@@ -1,3 +1,4 @@
+import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (avail && enabled && mounted) {
       final ok = await svc.authenticate();
-      if (ok && mounted) context.go('/dashboard');
+      if (ok && mounted) context.go(AppRoutes.dashboard);
     }
   }
 
@@ -56,7 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _tryBiometric() async {
     HapticFeedback.mediumImpact();
     final ok = await ref.read(biometricServiceProvider).authenticate();
-    if (ok && mounted) context.go('/dashboard');
+    if (ok && mounted) context.go(AppRoutes.dashboard);
   }
 
   Future<void> _submit() async {
@@ -67,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!mounted) return;
 
       if (response.twoFactorRequired && response.twoFactorToken != null) {
-        context.push('/2fa-verify', extra: response.twoFactorToken);
+        context.push(AppRoutes.twoFaVerify, extra: response.twoFactorToken);
       } else {
         // Başarılı login → FCM token'ı kaydet
         ref.read(notificationServiceProvider)
@@ -79,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             backgroundColor: AppColors.success,
           ));
         }
-        context.go('/dashboard');
+        context.go(AppRoutes.dashboard);
       }
     } on Exception catch (e) {
       final msg = e is ApiException ? e.message : e.toString();
@@ -250,7 +251,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               const Text('Firmanız kayıtlı değil mi?',
                                   style: TextStyle(color: Colors.grey, fontSize: 13)),
                               TextButton(
-                                onPressed: () => context.go('/register'),
+                                onPressed: () => context.go(AppRoutes.register),
                                 child: const Text('Ücretsiz Kaydol'),
                               ),
                             ],

@@ -26,5 +26,13 @@ class AppRoutes {
   static String customerDetail(String id) => '/customers/$id';
 
   static const visitPlans    = '/visit-plans';
-  static const admin         = '/admin';
+  static const onboarding    = '/onboarding';
+  static const search        = '/search';
+
+  static const admin             = '/admin';
+  static const adminProducts     = '/admin/products';
+  static const adminCategories   = '/admin/categories';
+  static const adminUnits        = '/admin/units';
+  static const adminTemplates    = '/admin/templates';
+  static const adminSettings     = '/admin/settings';
 }

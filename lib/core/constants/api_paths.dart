@@ -51,10 +51,15 @@ class ApiPaths {
   static const formTemplates    = '/formtemplates';
   static String formTemplate(String id) => '/formtemplates/$id';
 
+  // ── Birimler ─────────────────────────────────────────────────────────────────
+  static const units            = '/units';
+  static String unit(String id) => '/units/$id';
+
   // ── Ziyaret Planları ─────────────────────────────────────────────────────────
   static const visitPlans       = '/visit-plans';
-  static String visitPlan(String id) => '/visit-plans/$id';
-  static String visitPlanDone(String id) => '/visit-plans/$id/done';
+  static String visitPlan(String id)       => '/visit-plans/$id';
+  static String visitPlanStatus(String id) => '/visit-plans/$id/status';
+  static String visitPlanDone(String id)   => '/visit-plans/$id/done';
 
   // ── Exchange Rate ────────────────────────────────────────────────────────────
   static const exchangeRates    = '/exchange-rates';
