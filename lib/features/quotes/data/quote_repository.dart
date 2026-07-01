@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
@@ -55,13 +56,13 @@ class QuoteRepository {
       );
       await LocalCache.set(cacheKey, res.data);
       return result;
-    } on DioException {
+    } on DioException catch (e) {
       final cached = await LocalCache.get<PagedResult<QuoteSummary>>(
         cacheKey,
         (j) => PagedResult.fromJson(j as Map<String, dynamic>, QuoteSummary.fromJson),
       );
       if (cached != null) return cached;
-      rethrow;
+      throw ApiException.fromDio(e);
     }
   }
 
@@ -73,13 +74,13 @@ class QuoteRepository {
       final result = list.map((e) => QuoteSummary.fromJson(e as Map<String, dynamic>)).toList();
       await LocalCache.set(cacheKey, res.data);
       return result;
-    } on DioException {
+    } on DioException catch (e) {
       final cached = await LocalCache.get<List<QuoteSummary>>(
         cacheKey,
         (j) => (j as List).map((e) => QuoteSummary.fromJson(e as Map<String, dynamic>)).toList(),
       );
       if (cached != null) return cached;
-      rethrow;
+      throw ApiException.fromDio(e);
     }
   }
 
@@ -90,13 +91,13 @@ class QuoteRepository {
       final result = QuoteDetail.fromJson(res.data as Map<String, dynamic>);
       await LocalCache.set(cacheKey, res.data);
       return result;
-    } on DioException {
+    } on DioException catch (e) {
       final cached = await LocalCache.get<QuoteDetail>(
         cacheKey,
         (j) => QuoteDetail.fromJson(j as Map<String, dynamic>),
       );
       if (cached != null) return cached;
-      rethrow;
+      throw ApiException.fromDio(e);
     }
   }
 

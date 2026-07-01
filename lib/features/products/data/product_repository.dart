@@ -39,13 +39,13 @@ class ProductRepository {
       );
       await LocalCache.set(cacheKey, res.data);
       return result;
-    } on DioException {
+    } on DioException catch (e) {
       final cached = await LocalCache.get<PagedResult<Product>>(
         cacheKey,
         (j) => PagedResult.fromJson(j as Map<String, dynamic>, Product.fromJson),
       );
       if (cached != null) return cached;
-      rethrow;
+      throw ApiException.fromDio(e);
     }
   }
 

@@ -251,19 +251,20 @@ class _RecentQuoteTile extends StatelessWidget {
   const _RecentQuoteTile({required this.quote});
   final RecentQuote quote;
 
+  // QuoteStatus enum: Draft=1, Sent=2, Approved=3, Rejected=4, Expired=5
   static final _statusColors = <int, Color>{
-    0: AppColors.info,
-    1: AppColors.pending,
-    2: AppColors.approved,
-    3: AppColors.error,
-    4: Colors.grey,
+    1: AppColors.info,
+    2: AppColors.pending,
+    3: AppColors.approved,
+    4: AppColors.error,
+    5: Colors.grey,
   };
-  static const _statusLabels = {
-    0: 'Taslak',
-    1: 'Gönderildi',
-    2: 'Onaylandı',
-    3: 'Reddedildi',
-    4: 'Süresi Doldu',
+  static const _statusLabels = <int, String>{
+    1: 'Taslak',
+    2: 'Gönderildi',
+    3: 'Onaylandı',
+    4: 'Reddedildi',
+    5: 'Süresi Doldu',
   };
 
   @override

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
@@ -42,13 +43,13 @@ class CustomerRepository {
       );
       await LocalCache.set(cacheKey, res.data);
       return result;
-    } on DioException {
+    } on DioException catch (e) {
       final cached = await LocalCache.get<PagedResult<Customer>>(
         cacheKey,
         (j) => PagedResult.fromJson(j as Map<String, dynamic>, Customer.fromJson),
       );
       if (cached != null) return cached;
-      rethrow;
+      throw ApiException.fromDio(e);
     }
   }
 
