@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/constants/api_paths.dart';
 import 'tenant_model.dart';
 
@@ -15,8 +16,12 @@ class TenantRepository {
   final Dio _dio;
 
   Future<TenantSettings> getSettings() async {
-    final res = await _dio.get(ApiPaths.tenantsSettings);
-    return TenantSettings.fromJson(res.data as Map<String, dynamic>);
+    try {
+      final res = await _dio.get(ApiPaths.tenantsSettings);
+      return TenantSettings.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> updateSettings({
@@ -30,16 +35,20 @@ class TenantRepository {
     String? address,
     String? primaryColor,
   }) async {
-    await _dio.put(ApiPaths.tenantsSettings, data: {
-      'companyLegalName': companyLegalName,
-      'city':             city,
-      'phone':            phone,
-      'email':            email,
-      'logoUrl':          logoUrl,
-      'taxNumber':        taxNumber,
-      'taxOffice':        taxOffice,
-      'address':          address,
-      'primaryColor':     primaryColor,
-    });
+    try {
+      await _dio.put(ApiPaths.tenantsSettings, data: {
+        'companyLegalName': companyLegalName,
+        'city':             city,
+        'phone':            phone,
+        'email':            email,
+        'logoUrl':          logoUrl,
+        'taxNumber':        taxNumber,
+        'taxOffice':        taxOffice,
+        'address':          address,
+        'primaryColor':     primaryColor,
+      });
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 }

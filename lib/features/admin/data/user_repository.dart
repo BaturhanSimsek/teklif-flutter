@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/constants/api_paths.dart';
 import 'user_model.dart';
 
@@ -15,10 +16,14 @@ class UserRepository {
   final Dio _dio;
 
   Future<List<AppUser>> getAll() async {
-    final res = await _dio.get(ApiPaths.users);
-    return (res.data as List)
-        .map((e) => AppUser.fromJson(e as Map<String, dynamic>))
-        .toList();
+    try {
+      final res = await _dio.get(ApiPaths.users);
+      return (res.data as List)
+          .map((e) => AppUser.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<CreateUserResult> create({
@@ -26,19 +31,31 @@ class UserRepository {
     required String email,
     required String role,
   }) async {
-    final res = await _dio.post(ApiPaths.users, data: {
-      'fullName': fullName,
-      'email':    email,
-      'role':     role,
-    });
-    return CreateUserResult.fromJson(res.data as Map<String, dynamic>);
+    try {
+      final res = await _dio.post(ApiPaths.users, data: {
+        'fullName': fullName,
+        'email':    email,
+        'role':     role,
+      });
+      return CreateUserResult.fromJson(res.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> toggleActive(String userId) async {
-    await _dio.patch(ApiPaths.userToggle(userId));
+    try {
+      await _dio.patch(ApiPaths.userToggle(userId));
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> changeRole(String userId, String role) async {
-    await _dio.patch(ApiPaths.userRole(userId), data: {'role': role});
+    try {
+      await _dio.patch(ApiPaths.userRole(userId), data: {'role': role});
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 }

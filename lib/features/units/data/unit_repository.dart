@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/constants/api_paths.dart';
 import 'unit_model.dart';
 
@@ -19,9 +20,13 @@ class UnitRepository {
   final Dio _dio;
 
   Future<List<UnitModel>> getAll() async {
-    final res = await _dio.get(ApiPaths.units);
-    final list = res.data as List;
-    return list.map((e) => UnitModel.fromJson(e as Map<String, dynamic>)).toList();
+    try {
+      final res = await _dio.get(ApiPaths.units);
+      final list = res.data as List;
+      return list.map((e) => UnitModel.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<String> create({
@@ -29,12 +34,16 @@ class UnitRepository {
     String symbol = '',
     int sortOrder = 0,
   }) async {
-    final res = await _dio.post(ApiPaths.units, data: {
-      'name':      name,
-      'symbol':    symbol,
-      'sortOrder': sortOrder,
-    });
-    return res.data['id'] as String;
+    try {
+      final res = await _dio.post(ApiPaths.units, data: {
+        'name':      name,
+        'symbol':    symbol,
+        'sortOrder': sortOrder,
+      });
+      return res.data['id'] as String;
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> update({
@@ -43,12 +52,22 @@ class UnitRepository {
     String symbol = '',
     int sortOrder = 0,
   }) async {
-    await _dio.put(ApiPaths.unit(id), data: {
-      'name':      name,
-      'symbol':    symbol,
-      'sortOrder': sortOrder,
-    });
+    try {
+      await _dio.put(ApiPaths.unit(id), data: {
+        'name':      name,
+        'symbol':    symbol,
+        'sortOrder': sortOrder,
+      });
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
-  Future<void> delete(String id) => _dio.delete(ApiPaths.unit(id));
+  Future<void> delete(String id) async {
+    try {
+      await _dio.delete(ApiPaths.unit(id));
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
 }

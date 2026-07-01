@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_exception.dart';
 import '../../../core/cache/local_cache.dart';
 import '../../../core/constants/api_paths.dart';
 import '../../../core/models/paged_result.dart';
@@ -56,16 +57,20 @@ class ProductRepository {
     String?          categoryId,
     String?          notes,
   }) async {
-    final res = await _dio.post(ApiPaths.products, data: {
-      'name':          name,
-      'unitId':        unitId,
-      'salePrice':     salePrice,
-      'purchasePrice': purchasePrice,
-      'categoryId':    categoryId,
-      'notes':         notes,
-      'photoUrl':      null,
-    });
-    return res.data['id'] as String;
+    try {
+      final res = await _dio.post(ApiPaths.products, data: {
+        'name':          name,
+        'unitId':        unitId,
+        'salePrice':     salePrice,
+        'purchasePrice': purchasePrice,
+        'categoryId':    categoryId,
+        'notes':         notes,
+        'photoUrl':      null,
+      });
+      return res.data['id'] as String;
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
   Future<void> update({
@@ -77,16 +82,26 @@ class ProductRepository {
     String?          categoryId,
     String?          notes,
   }) async {
-    await _dio.put(ApiPaths.product(id), data: {
-      'name':          name,
-      'unitId':        unitId,
-      'salePrice':     salePrice,
-      'purchasePrice': purchasePrice,
-      'categoryId':    categoryId,
-      'notes':         notes,
-      'photoUrl':      null,
-    });
+    try {
+      await _dio.put(ApiPaths.product(id), data: {
+        'name':          name,
+        'unitId':        unitId,
+        'salePrice':     salePrice,
+        'purchasePrice': purchasePrice,
+        'categoryId':    categoryId,
+        'notes':         notes,
+        'photoUrl':      null,
+      });
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
   }
 
-  Future<void> delete(String id) => _dio.delete(ApiPaths.product(id));
+  Future<void> delete(String id) async {
+    try {
+      await _dio.delete(ApiPaths.product(id));
+    } on DioException catch (e) {
+      throw ApiException.fromDio(e);
+    }
+  }
 }
